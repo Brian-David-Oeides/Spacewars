@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
     private float _speed = 3.5f;
 
     // Start is called before the first frame update
@@ -16,7 +17,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Get the position of the game object each update
-        transform.Translate(Vector3.left * _speed * Time.deltaTime);
+        float horizontalInput = Input.GetAxis("Horizontal");
+        // new Vector3 (-5,0,0) * 5 * real-time
+        transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime); 
     }
 }
