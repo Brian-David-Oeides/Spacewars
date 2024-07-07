@@ -18,7 +18,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        // new Vector3 (-5,0,0) * 5 * real-time
-        transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime); 
+        float verticalInput = Input.GetAxis("Vertical");
+        // new Vector3 (1,0,0) * 0 * 3.5f * real-time
+        // transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
+        // transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
+        Vector3 direction = new Vector3(horizontalInput, verticalInput,0);
+        transform.Translate(direction * _speed * Time.deltaTime)
     }
 }
