@@ -154,6 +154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 3.5
+  _laserPrefab: {fileID: 705893345422961782, guid: 801d3b62e695d43479ddaa93f8466112,
+    type: 3}
 --- !u!65 &72919924
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -418,12 +420,12 @@ PrefabInstance:
     - target: {fileID: 29666111229597154, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.34
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 29666111229597154, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.89
+      value: 1.71
       objectReference: {fileID: 0}
     - target: {fileID: 29666111229597154, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
@@ -463,6 +465,11 @@ PrefabInstance:
     - target: {fileID: 29666111229597154, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 520348052382306290, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 705893345422961782, guid: 801d3b62e695d43479ddaa93f8466112,
