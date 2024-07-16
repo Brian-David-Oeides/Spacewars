@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
     // declare game object to instantiate
     [SerializeField]
-    public GameObject _enemyPrefab;
+    private GameObject _enemyPrefab;
+    [SerializeField]
+    private GameObject _enemyContainer;
    
     void Start()
     {
@@ -28,8 +29,9 @@ public class SpawnManager : MonoBehaviour
             // define the position for he enemy prefab
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
             // Instantiate enemy Prefab
-            Instantiate(_enemyPrefab,positionToSpawn, Quaternion.identity);
+            GameObject newEnemy = Instantiate(_enemyPrefab,positionToSpawn, Quaternion.identity);
             // yield wait for 5 seconds
+            newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5.0f); // delay 5 frames then call next line
         }  
     }
