@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
+    private bool _stopSpawning = false;
    
     void Start()
     {
@@ -24,7 +25,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnRoutine()
     {
         // while loop
-        while (true)
+        while (_stopSpawning == false)
         {
             // define the position for he enemy prefab
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
@@ -34,5 +35,10 @@ public class SpawnManager : MonoBehaviour
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5.0f); // delay 5 frames then call next line
         }  
+    }
+
+    public void OnPlayerDeath()
+    {
+        _stopSpawning = true;
     }
 }
