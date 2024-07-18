@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -24,21 +25,20 @@ public class SpawnManager : MonoBehaviour
     // Spawn game objects every 5 seconds
     IEnumerator SpawnRoutine()
     {
-        // while loop
+        
         while (_stopSpawning == false)
         {
-            // define the position for he enemy prefab
+           
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            // Instantiate enemy Prefab
             GameObject newEnemy = Instantiate(_enemyPrefab,positionToSpawn, Quaternion.identity);
-            // yield wait for 5 seconds
             newEnemy.transform.parent = _enemyContainer.transform;
-            yield return new WaitForSeconds(5.0f); // delay 5 frames then call next line
-        }  
+            yield return new WaitForSeconds(5.0f); 
+        }
     }
 
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
     }
+    
 }
