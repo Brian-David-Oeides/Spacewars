@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         // If other is equal to the player:
         if (other.tag == "Player")
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            // Then destroy this
+            
             Destroy(this.gameObject);
         }
 
