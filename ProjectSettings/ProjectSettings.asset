@@ -706,10 +706,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: a9031334-c765-4060-84f1-4d700f435f17
+  cloudProjectId: 
   framebufferDepthMemorylessMode: 0
-  projectName: Spacewars 2024-07-05_21-37-51
-  organizationId: whodo_youdo
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

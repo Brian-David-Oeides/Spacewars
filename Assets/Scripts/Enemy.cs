@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,10 +20,11 @@ public class Enemy : MonoBehaviour
         // this game object move 4 m/s
         transform.Translate(Vector3.down * _speed * Time.deltaTime );
         
-        float randomX = Random.Range(-8f, 8f);
+        
         // if (this transforms position on Y is lest than -5)
         if (transform.position.y < -5f)
         {   // get transform's position set it to new vector that is random
+            float randomX = Random.Range(-8f, 8f);
             transform.position = new Vector3(randomX, 7, 0);
         }
     }
@@ -31,7 +33,6 @@ public class Enemy : MonoBehaviour
     {
         // If other is equal to the player:
         if (other.tag == "Player")
-        
         {
             // Damage the player and null check
             Player player = other.transform.GetComponent<Player>();
