@@ -76,13 +76,6 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
-            
-        
-            
-
-        
-
-        
     }
 
     public void Damage()
@@ -96,4 +89,23 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void TripleShotActive()
+    {
+        // tripleShotActive becomes true
+        _isTripleShotActive = true;
+        // start the power down coroutine for triple shot
+        StartCoroutine(TripleShotPowerDownRoutine());
+    }
+
+    // IEnumerator TripleShotPowerDownRoutine
+    IEnumerator TripleShotPowerDownRoutine()
+    {
+        // wait five seconds
+        yield return new WaitForSeconds(5.0f);
+        // turn of the triple shot - set to false
+        _isTripleShotActive = false;
+    }
+    
+    
 }
