@@ -45,6 +45,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1452879832333736664, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3025446809688971966, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_RootOrder
@@ -120,6 +125,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser
       objectReference: {fileID: 0}
+    - target: {fileID: 1452879832333736664, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3025446809688971966, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_RootOrder
@@ -194,6 +204,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: laser (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452879832333736664, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3025446809688971966, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}

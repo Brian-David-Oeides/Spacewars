@@ -7,12 +7,10 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3.0f;
-    // Start is called before the first frame update
     
-    void Start()
-    {
-        
-    }
+    // ID for power ups
+    [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield
+    private int powerUpID; 
 
     // Update is called once per frame
     void Update()
@@ -31,11 +29,25 @@ public class PowerUp : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            // communicate with Player script, get a reference to the component, assign the referent to the component
             Player player = other.transform.GetComponent<Player>();
+           
             if (player != null)
             {
-                player.TripleShotActive();
+                // if powerUpID == 0 
+                if (powerUpID == 0)
+                {
+                    player.TripleShotActive();
+                }
+                // else if powerUpID == 1 
+                else if (powerUpID == 1)
+                {   // {speed power up}
+                    player.SpeedBoostActive();
+                }
+                // else if powerUpID == 2 
+                else if (powerUpID == 2)
+                {   // {shield power up}
+                    Debug.Log("Shield Collected!");
+                }
             }
 
             Destroy(this.gameObject);
