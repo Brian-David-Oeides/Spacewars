@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 3.5f;
     [SerializeField]
-    private float _speed2 = 7f;
+    private float _speedMultiplier = 2;
+    // private float _speed2 = 7.0f;
     [SerializeField]
     private GameObject _laserPrefab; 
     [SerializeField]
@@ -52,16 +53,8 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput,0);
-
-        // when variable speedboost power up collected = on
-        if (_isSpeedBoostActive == true)
-        {   // {move direction at twice the speed}
-            transform.Translate(direction * _speed2 * Time.deltaTime);
-        }
-        else // or else 
-        {   // {move direction at normal speed}
-            transform.Translate(direction * _speed * Time.deltaTime);
-        }
+        transform.Translate(_speed * Time.deltaTime * direction);
+        
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -122,6 +115,7 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
+        _speed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
     
@@ -129,6 +123,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
+        _speed /= _speedMultiplier;
     }
-    
 }
