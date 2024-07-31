@@ -5,25 +5,20 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    // declare game object to instantiate
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
-    private GameObject _tripleShotPowerUpPrefab;
-    [SerializeField]
-    private GameObject _speedBoostPowerUpPrefab;
+    private GameObject[] powerUps;
     private bool _stopSpawning = false;
    
     void Start()
     {
         StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnTripleShotPowerUpRoutine());
-        StartCoroutine(SpawnSpeedBoostPowerUpRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
     }
 
-    // Spawn game objects every 5 seconds
     IEnumerator SpawnEnemyRoutine()
     {
         
@@ -36,27 +31,16 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnTripleShotPowerUpRoutine()
+    IEnumerator SpawnPowerUpRoutine()
     {
-        // every 3-8 seconds spawn in a power up
         while (_stopSpawning == false)
         {
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            Instantiate(_tripleShotPowerUpPrefab, positionToSpawn, Quaternion.identity);
+            int randomPowerUp = Random.Range(0, 2);
+            Instantiate(powerUps[randomPowerUp], positionToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(3f, 8f));
         }
     }
-    IEnumerator SpawnSpeedBoostPowerUpRoutine()
-    {
-        // every 3-8 seconds spawn in a power up
-        while (_stopSpawning == false)
-        {
-            Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            Instantiate(_speedBoostPowerUpPrefab, positionToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(3f, 8f));
-        }
-    }
-
     public void OnPlayerDeath()
     {
         _stopSpawning = true;

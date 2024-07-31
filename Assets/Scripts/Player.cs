@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
-        _isSpeedBoostActive = false;
         _speed /= _speedMultiplier;
+        _isSpeedBoostActive = false;
     }
 }
