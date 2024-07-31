@@ -20,11 +20,10 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private SpawnManager _spawnManager;
 
-    [SerializeField]
     private bool _isTripleShotActive = false;
-    //variable to control the speed boost
-    [SerializeField]
     private bool _isSpeedBoostActive = false;
+    [SerializeField]
+    private bool _isShieldActive = false;
 
     void Start()
     {
@@ -85,6 +84,16 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        // if shield is active
+        if (_isShieldActive == true)
+        {
+            _isShieldActive = false;
+            return; 
+        }
+        // do nothing
+        // deactivate shields
+        // return; 
+
         _lives -=1;
 
         
@@ -103,12 +112,9 @@ public class Player : MonoBehaviour
         StartCoroutine(TripleShotPowerDownRoutine());
     }
 
-    // IEnumerator TripleShotPowerDownRoutine
     IEnumerator TripleShotPowerDownRoutine()
-    {
-        // wait five seconds
+    { 
         yield return new WaitForSeconds(5.0f);
-        // turn of the triple shot - set to false
         _isTripleShotActive = false;
     }
 
@@ -124,5 +130,10 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         _speed /= _speedMultiplier;
         _isSpeedBoostActive = false;
+    }
+
+    public void ShieldActive()
+    {
+        _isShieldActive = true;
     }
 }
