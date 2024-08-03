@@ -22,8 +22,10 @@ public class Player : MonoBehaviour
 
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
-    [SerializeField]
     private bool _isShieldActive = false;
+
+    [SerializeField]
+    private GameObject _Shield;
 
     void Start()
     {
@@ -84,15 +86,14 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        // if shield is active
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
+            // disable reference data type to shield
+
+            _Shield.SetActive(false);
             return; 
         }
-        // do nothing
-        // deactivate shields
-        // return; 
 
         _lives -=1;
 
@@ -135,5 +136,7 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldActive = true;
+        // enable the reference data type for shield sprite
+        _Shield.SetActive(true);
     }
 }
