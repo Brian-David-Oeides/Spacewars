@@ -9,15 +9,27 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _scoreText;
 
+    [SerializeField]
+    private Image _livesImg;
+
+    [SerializeField]
+    private Sprite[] _liveSprites;
+
     // Start is called before the first frame update
     void Start()
     {
-        // assign text component to the reference data type
         _scoreText.text = "Score: " + 0;
     }
 
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score: " + playerScore.ToString();
+    }
+
+    public void UpdateLives(int currentLives)
+    {
+        // access display Image sprite
+        // give it a new one based on the current lies index
+        _livesImg.sprite = _liveSprites[currentLives];
     }
 }

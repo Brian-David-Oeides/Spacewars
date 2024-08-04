@@ -106,6 +106,8 @@ public class Player : MonoBehaviour
         }
 
         _lives -=1;
+        // access the UI Manager from the player
+        _uiManager.UpdateLives(_lives);
 
         
         if (_lives < 1)
