@@ -10,6 +10,9 @@ public class UIManager : MonoBehaviour
     private Text _scoreText;
 
     [SerializeField]
+    private Text _gameOverText;
+
+    [SerializeField]
     private Image _livesImg;
 
     [SerializeField]
