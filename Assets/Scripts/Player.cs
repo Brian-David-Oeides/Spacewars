@@ -27,14 +27,24 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _Shield;
 
+    [SerializeField]
+    private int _score; 
+    private UIManager _uiManager;
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is Null!");
+        }
+
+        if (_uiManager == null)
+        {
+            Debug.LogError("UI Manager is NULL!");
         }
     }
 
@@ -139,4 +149,12 @@ public class Player : MonoBehaviour
         // enable the reference data type for shield sprite
         _Shield.SetActive(true);
     }
+
+    // create method add 10 to this game object’s score
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
+    }
+    // communicate with UI to update the score
 }

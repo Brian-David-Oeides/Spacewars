@@ -8,10 +8,12 @@ public class Enemy : MonoBehaviour
     // how fast is the enemy moving?
     [SerializeField]
     private float _speed = 4f;
-    // Start is called before the first frame update
+
+    private Player _player;
+    
     void Start()
     {
-        
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -31,10 +33,8 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // If other is equal to the player:
         if (other.tag == "Player")
         {
-            // Damage the player and null check
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
@@ -44,12 +44,15 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        // If other is equal to the laser:
         if (other.tag == "Laser")
-        // Destroy the laser
         {
             Destroy(other.gameObject);
-            // Destroy this game object
+
+            if (_player != null)
+            {
+                _player.AddScore(Random.Range(5, 10));
+            }
+
             Destroy(this.gameObject);
         }
         
