@@ -5,15 +5,29 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // how fast is the enemy moving?
     [SerializeField]
     private float _speed = 4f;
 
     private Player _player;
+    // reference to Animator component
+    private Animator _explosionAnimation;  
     
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        
+        if (_player == null)
+        {
+            Debug.LogError("The player is NULL.");
+        }
+        // assign the component to the animation
+        _explosionAnimation = GetComponent<Animator>();
+        
+        if (_explosionAnimation == null)
+        {
+            Debug.LogError("The player is NULL.");
+        }
+        
     }
 
     // Update is called once per frame
@@ -40,8 +54,11 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            
-            Destroy(this.gameObject);
+
+            // use SetTrigger anim
+            _explosionAnimation.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(this.gameObject, 2.8f); //add time delay parameter for anim
         }
 
         if (other.tag == "Laser")
@@ -53,7 +70,10 @@ public class Enemy : MonoBehaviour
                 _player.AddScore(Random.Range(5, 10));
             }
 
-            Destroy(this.gameObject);
+            // use SetTrigger anim
+            _explosionAnimation.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(this.gameObject, 2.8f); 
         }
         
     }
