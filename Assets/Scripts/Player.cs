@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _Shield;
 
+    [SerializeField] 
+    private GameObject _damagedLeftEngine, _damagedRightEngine;
+
     [SerializeField]
     private int _score; 
     private UIManager _uiManager;
@@ -99,17 +102,26 @@ public class Player : MonoBehaviour
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
-            // disable reference data type to shield
-
             _Shield.SetActive(false);
             return; 
         }
 
         _lives -=1;
-        // access the UI Manager from the player
+        
         _uiManager.UpdateLives(_lives);
 
-        
+        // if lives == 2 
+        if (_lives == 2)
+        {
+            // enable Damage Right Engine
+            _damagedRightEngine.SetActive(true);
+        }
+        else if (_lives == 1) // else if lives == 1 
+        {
+            // enable Damage Left Engine
+            _damagedLeftEngine.SetActive(true);
+        }
+
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
