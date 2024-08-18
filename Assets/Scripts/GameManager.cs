@@ -16,11 +16,18 @@ public class GameManager : MonoBehaviour
             // restart the current scene
             SceneManager.LoadScene(1); // current game scene
         }
+
+        // if Escape key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // quit application
+            Application.Quit();
+        }
+
     }
 
     public void GameOver()
     {
         _isGameOver = true;
     }
-
 }
