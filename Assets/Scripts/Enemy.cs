@@ -6,11 +6,18 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 4f;
+    private float _speed = 2f;
+    private float _fireRate = 3.0f;
+    private float _canFire = -1;
+
+    [SerializeField]
+    private GameObject _enemyLaserPrefab;
 
     private Player _player;
     private Animator _explosionAnimation;
     private AudioSource _audioSource;
+
+    private bool _isDestroyed = false;
     
     void Start()
     {
@@ -33,10 +40,34 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime );
-        
+        if (_isDestroyed)
+        {
+            return;
+        }
+
+
+        CalculateMovement();
+
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+            
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+        }
+    }
+
+    void CalculateMovement()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
         if (transform.position.y < -5f)
-        {  
+        {
             float randomX = Random.Range(-8f, 8f);
             transform.position = new Vector3(randomX, 7, 0);
         }
@@ -56,6 +87,7 @@ public class Enemy : MonoBehaviour
             _explosionAnimation.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
+            _isDestroyed = true;
             Destroy(this.gameObject, 2.8f); 
         }
 
@@ -65,14 +97,15 @@ public class Enemy : MonoBehaviour
 
             if (_player != null)
             {
-                _player.AddScore(Random.Range(5, 10));
+                _player.AddScore(10);
             }
 
             _explosionAnimation.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
+            _isDestroyed = true;
 
-            Destroy(GetComponent<Collider2D>());
+            Destroy(GetComponent<Collider2D>()); 
             Destroy(this.gameObject, 2.8f); 
         }
         
