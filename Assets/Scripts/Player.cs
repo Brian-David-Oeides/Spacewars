@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 3.5f;
     [SerializeField]
-    private float _speedMultiplier = 2;
-    // private float _speed2 = 7.0f;
+    private float _speedMultiplier = 2.0f;
+    [SerializeField]
+    private float _thrust = 2.0f;
+
     [SerializeField]
     private GameObject _laserPrefab; 
     [SerializeField]
@@ -21,11 +23,10 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
 
     private bool _isTripleShotActive = false;
-    private bool _isSpeedBoostActive = false;
     private bool _isShieldActive = false;
 
     [SerializeField]
-    private GameObject _Shield;
+    private GameObject _shield;
 
     [SerializeField] 
     private GameObject _damagedLeftEngine, _damagedRightEngine;
@@ -34,10 +35,8 @@ public class Player : MonoBehaviour
     private int _score; 
     private UIManager _uiManager;
 
-    // variable to store audio clip
     [SerializeField]
     private AudioClip _laserSoundClip;
-    // reference data type variable to retrieve the audiosource
     private AudioSource _audioSource; 
 
 
@@ -76,6 +75,7 @@ public class Player : MonoBehaviour
         {
            FireLaser();
         }
+       
     }
 
     void CalculateMovement()
@@ -84,8 +84,16 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput,0);
-        transform.Translate(_speed * Time.deltaTime * direction);
         
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            transform.Translate((_speed *_thrust) * Time.deltaTime * direction);
+        }
+        else 
+        {
+            transform.Translate(_speed * Time.deltaTime * direction);
+        }
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -103,17 +111,15 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
 
-        // when variable triple shot powerup collected = on
         if (_isTripleShotActive == true)
         {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
         }
-        else // or else
+        else
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
 
-        // play laser audio clip
         _audioSource.Play();
     }
 
@@ -122,7 +128,7 @@ public class Player : MonoBehaviour
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
-            _Shield.SetActive(false);
+            _shield.SetActive(false);
             return; 
         }
 
@@ -130,15 +136,12 @@ public class Player : MonoBehaviour
         
         _uiManager.UpdateLives(_lives);
 
-        // if lives == 2 
         if (_lives == 2)
         {
-            // enable Damage Right Engine
             _damagedRightEngine.SetActive(true);
         }
-        else if (_lives == 1) // else if lives == 1 
+        else if (_lives == 1)
         {
-            // enable Damage Left Engine
             _damagedLeftEngine.SetActive(true);
         }
 
@@ -151,9 +154,8 @@ public class Player : MonoBehaviour
 
     public void TripleShotActive()
     {
-        // tripleShotActive becomes true
         _isTripleShotActive = true;
-        // start the power down coroutine for triple shot
+
         StartCoroutine(TripleShotPowerDownRoutine());
     }
 
@@ -165,7 +167,7 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        _isSpeedBoostActive = true;
+        
         _speed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
@@ -174,21 +176,19 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _speed /= _speedMultiplier;
-        _isSpeedBoostActive = false;
+        
     }
 
     public void ShieldActive()
     {
         _isShieldActive = true;
-        // enable the reference data type for shield sprite
-        _Shield.SetActive(true);
+
+        _shield.SetActive(true);
     }
 
-    // create method add 10 to this game object’s score
     public void AddScore(int points)
     {
         _score += points;
         _uiManager.UpdateScore(_score);
     }
-    // communicate with UI to update the score
 }

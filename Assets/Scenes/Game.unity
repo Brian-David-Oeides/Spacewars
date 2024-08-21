@@ -800,10 +800,7 @@ MonoBehaviour:
   _enemyPrefab: {fileID: 4592132561658774000, guid: 9483c60c3b1925c499736f398df5fa57,
     type: 3}
   _enemyContainer: {fileID: 956673684}
-  powerUps:
-  - {fileID: 1843770189775917078, guid: 717f97611055731458eaa87186dd6741, type: 3}
-  - {fileID: 3483291870811100692, guid: 18d8a29af920edd489d3e1e529d0a811, type: 3}
-  - {fileID: 2893678496585060441, guid: 2e8b9f563ffd37f4a922838c49b8f609, type: 3}
+  _powerUps: []
 --- !u!4 &835654910
 Transform:
   m_ObjectHideFlags: 0
@@ -1524,13 +1521,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 3.5
   _speedMultiplier: 2
+  _thrust: 3
   _laserPrefab: {fileID: 149638757680312343, guid: 801d3b62e695d43479ddaa93f8466112,
     type: 3}
   _tripleShotPrefab: {fileID: 4680617392245537253, guid: 0222a5abf67474547b9444bfd4fecdda,
     type: 3}
   _fireRate: 0.15
   _lives: 3
-  _Shield: {fileID: 1016258783}
+  _shield: {fileID: 0}
   _damagedLeftEngine: {fileID: 490120629}
   _damagedRightEngine: {fileID: 1810626385}
   _score: 0

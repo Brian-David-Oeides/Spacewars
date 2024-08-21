@@ -9,16 +9,15 @@ public class PowerUp : MonoBehaviour
     private float _speed = 3.0f;
     
     [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield
-    private int powerUpID;
+    private int _powerUpID;
     [SerializeField]
     private AudioClip _clip;
 
   
     void Update()
     {
-        // move down speed of 3 (visible in the Inspector)
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        // destroy this when below game view
+
         if (this.transform.position.y < -4.7f)
         {
             Destroy(this.gameObject);
@@ -33,7 +32,7 @@ public class PowerUp : MonoBehaviour
 
             AudioSource.PlayClipAtPoint(_clip, transform.position); 
 
-            switch(powerUpID)
+            switch(_powerUpID)
             {
                 case 0:
                     player.TripleShotActive();

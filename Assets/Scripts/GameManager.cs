@@ -10,17 +10,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // if the R key is pressed
         if (Input.GetKeyDown(KeyCode.R) && _isGameOver == true)
         {
-            // restart the current scene
-            SceneManager.LoadScene(1); // current game scene
+            SceneManager.LoadScene(1);
         }
 
-        // if Escape key is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // quit application
             Application.Quit();
         }
 
