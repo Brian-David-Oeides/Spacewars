@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject _shield;
+    [SerializeField]
+    private int _shieldsRemaining;
 
     [SerializeField] 
     private GameObject _damagedLeftEngine, _damagedRightEngine;
@@ -124,11 +126,23 @@ public class Player : MonoBehaviour
     }
 
     public void Damage()
-    {
+    {   // if shield is active
         if (_isShieldActive == true)
         {
-            _isShieldActive = false;
-            _shield.SetActive(false);
+            _shieldsRemaining--;
+
+            if (_shieldsRemaining <= 0)
+            {
+                _isShieldActive = false; //deactivate shield
+                _shield.SetActive(false); // deactivate visual representation
+            }
+            else
+            {
+                // Change shield color based on remaining collisions
+                float colorValue = _shieldsRemaining / 3f; 
+                // get the color of the shield sprite set it to a new color
+                _shield.GetComponent<SpriteRenderer>().color = new Color(1f, colorValue, colorValue, 1f);
+            }
             return; 
         }
 
@@ -167,7 +181,6 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        
         _speed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
@@ -181,9 +194,12 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
-        _isShieldActive = true;
+        _isShieldActive = true; // shields activate 
+        _shieldsRemaining = 3; // access the 3 shields
+        _shield.SetActive(true); // representaion of shield is set to true
 
-        _shield.SetActive(true);
+        // Get the shield's color and set to white
+        _shield.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     public void AddScore(int points)
