@@ -135,6 +135,8 @@ public class Player : MonoBehaviour
             {
                 _isShieldActive = false; //deactivate shield
                 _shield.SetActive(false); // deactivate visual representation
+                // Reset the color of the lives image after shield deactivates
+                _uiManager.ResetLivesColor();
             }
             else
             {
@@ -142,6 +144,8 @@ public class Player : MonoBehaviour
                 float colorValue = _shieldsRemaining / 3f; 
                 // get the color of the shield sprite set it to a new color
                 _shield.GetComponent<SpriteRenderer>().color = new Color(1f, colorValue, colorValue, 1f);
+                // Communicate with UIManager to update shield color
+                _uiManager.UpdateShieldColor(colorValue);
             }
             return; 
         }
@@ -194,11 +198,11 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
-        _isShieldActive = true; // shields activate 
+        _isShieldActive = true; // shields activate on power up collected
         _shieldsRemaining = 3; // access the 3 shields
         _shield.SetActive(true); // representaion of shield is set to true
 
-        // Get the shield's color and set to white
+        // Get the shield's color and set to white 
         _shield.GetComponent<SpriteRenderer>().color = Color.white;
     }
 

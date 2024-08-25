@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
 
     private GameManager _gameManager;
 
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +55,20 @@ public class UIManager : MonoBehaviour
         }
 
     }
+    public void UpdateShieldColor(float colorValue)
+    {
+        // define and set the Color and change color 
+        Color newColor = Color.Lerp(Color.red, Color.white, colorValue);
+        // access the Color property of the lives image sprite
+        _livesImg.color = newColor;
+    }
+
+    public void ResetLivesColor()
+    {
+        // Reset the color of the lives image to the default color (white)
+        _livesImg.color = Color.white;
+    }
+
 
     void GameOverSequence()
     {
