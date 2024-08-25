@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -39,15 +38,30 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private AudioClip _laserSoundClip;
-    private AudioSource _audioSource; 
+    private AudioSource _audioSource;
 
+    // can fire laser turned on
+    private bool _canFireLaser = true;
+    // store the maximum ammo count 15 shots
+    [SerializeField]
+    private int _maxAmmo = 15;
+    // count the current amount of ammo
+    private int _currentAmmo;
+
+    // Audio clip file
+    [SerializeField]
+    private AudioClip _outOfAmmo;
 
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+
+        // current ammo count starts at max ammo count 
+        _currentAmmo = _maxAmmo;
 
         if (_spawnManager == null)
         {
@@ -72,8 +86,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-     
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        // check to see if FireLaser is turned on
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _canFireLaser)
         {
            FireLaser();
         }
@@ -111,18 +125,34 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        _canFire = Time.time + _fireRate;
-
-        if (_isTripleShotActive == true)
+        // if the current ammo count is greater than 0 can fire
+        if (_currentAmmo > 0)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
-        }
 
-        _audioSource.Play();
+            _canFire = Time.time + _fireRate;
+
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            }
+
+            _audioSource.Play();
+
+            // decrease current ammo in increments of 1
+            _currentAmmo--;
+
+            // Check if ammo is 0 after firing
+            if (_currentAmmo <= 0)
+            {
+                _canFireLaser = false; // Disable firing
+                // play out of ammo audio one time
+                _audioSource.PlayOneShot(_outOfAmmo);
+            }
+        }
     }
 
     public void Damage()
