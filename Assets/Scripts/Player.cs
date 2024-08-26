@@ -40,15 +40,12 @@ public class Player : MonoBehaviour
     private AudioClip _laserSoundClip;
     private AudioSource _audioSource;
 
-    // can fire laser turned on
     private bool _canFireLaser = true;
-    // store the maximum ammo count 15 shots
+
     [SerializeField]
     private int _maxAmmo = 15;
-    // count the current amount of ammo
     private int _currentAmmo;
 
-    // Audio clip file
     [SerializeField]
     private AudioClip _outOfAmmo;
 
@@ -125,10 +122,8 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        // if the current ammo count is greater than 0 can fire
         if (_currentAmmo > 0)
         {
-
             _canFire = Time.time + _fireRate;
 
             if (_isTripleShotActive == true)
@@ -144,6 +139,8 @@ public class Player : MonoBehaviour
 
             // decrease current ammo in increments of 1
             _currentAmmo--;
+            // Update the ammo UI
+            _uiManager.UpdateAmmoUI(_currentAmmo); 
 
             // Check if ammo is 0 after firing
             if (_currentAmmo <= 0)
@@ -154,6 +151,12 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    /*void OutOfAmmoFeedback()
+    {
+        // Additional feedback code (like flashing the ammo UI)
+        _uiManager.FlashAmmoUI(); // Example: Implement this method in your UIManager to flash the ammo count
+    }*/
 
     public void Damage()
     {   // if shield is active
