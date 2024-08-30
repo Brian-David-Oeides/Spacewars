@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int currentLives)
     {
         
-        _livesImg.sprite = _liveSprites[currentLives];
+        _livesImg.sprite = _liveSprites[currentLives]; // Update Sprites to reflect the number of lives
 
         if (currentLives == 0)
         {
@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
     public void UpdateShieldColor(float colorValue)
     {
         // define and set the Color and change color 

@@ -228,11 +228,10 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
-        _isShieldActive = true; // shields activate on power up collected
-        _shieldsRemaining = 3; // access the 3 shields
-        _shield.SetActive(true); // representaion of shield is set to true
+        _isShieldActive = true; 
+        _shieldsRemaining = 3; 
+        _shield.SetActive(true); 
 
-        // Get the shield's color and set to white 
         _shield.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
@@ -248,8 +247,24 @@ public class Player : MonoBehaviour
         _uiManager.UpdateAmmoUI(_currentAmmo);
     }
 
-    //public void HealthActive()
-    // update the uiManager
+    public void HealthPowerUp()
+    {
+        if (_lives < 3) // Assuming the max lives is 3
+        {
+            _lives++;
+            _uiManager.UpdateLives(_lives); // Update the UI to reflect the new lives count
+        }
+
+        // Reset any animations or settings related to lives
+        ResetDamageIndicators();
+    }
+
+    private void ResetDamageIndicators()
+    {
+        _damagedLeftEngine.SetActive(false);
+        _damagedRightEngine.SetActive(false);
+        _uiManager.ResetLivesColor(); // Reset any color changes made by shield or damage
+    }
 
     public void AddScore(int points)
     {
