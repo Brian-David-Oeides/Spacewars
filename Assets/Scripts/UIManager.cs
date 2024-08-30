@@ -21,13 +21,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Sprite[] _liveSprites;
 
-    // UI Text displaying ammo count
     [SerializeField]
     private Text _ammoText; 
 
     private GameManager _gameManager;
 
-    //private Coroutine _flashAmmoRoutine; // Reference to manage the ammo flashing routine
+    private Coroutine _flashAmmoRoutine; 
 
     void Start()
     {
@@ -76,29 +75,43 @@ public class UIManager : MonoBehaviour
         _ammoText.text = "Ammo Count: " + currentAmmo.ToString();
     }
 
-    /*public void FlashAmmoUI()
+    public void FlashAmmoUI()
     {
-        // Check if there's already a flashing routine running, and stop it
-        if (_flashAmmoRoutine != null)
-        {
-            StopCoroutine(_flashAmmoRoutine);
+        if (_flashAmmoRoutine == null)
+        { 
+            // Start a new flashing routine for the ammo UI
+            _flashAmmoRoutine = StartCoroutine(FlashAmmoRoutine());
         }
-
-        // Start a new flashing routine for the ammo UI
-        _flashAmmoRoutine = StartCoroutine(FlashAmmoRoutine());
     }
 
-    private IEnumerator FlashAmmoRoutine()
+    public void StopFlashingAmmoUI()
+    {
+        // check if the flashAmmoRoutin is on ...
+        if (_flashAmmoRoutine != null)
+        {
+            // then flashing text
+            StopCoroutine(_flashAmmoRoutine);
+            // disable the component
+            _flashAmmoRoutine = null;
+            // reset the color to default
+            _ammoText.color = Color.white; 
+        }
+    }
+
+    IEnumerator FlashAmmoRoutine()
     {
         while (true)
         {
+            // set text color to red
             _ammoText.color = Color.red;
+            // wait .5 sec
             yield return new WaitForSeconds(0.5f);
+            // set text color to red
             _ammoText.color = Color.white;
+            // wait .5 sec
             yield return new WaitForSeconds(0.5f);
         }
     }
-    */// new stop
 
     void GameOverSequence()
     {

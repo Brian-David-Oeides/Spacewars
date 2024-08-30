@@ -124,6 +124,7 @@ public class Player : MonoBehaviour
     {
         if (_currentAmmo > 0)
         {
+
             _canFire = Time.time + _fireRate;
 
             if (_isTripleShotActive == true)
@@ -148,15 +149,11 @@ public class Player : MonoBehaviour
                 _canFireLaser = false; // Disable firing
                 // play out of ammo audio one time
                 _audioSource.PlayOneShot(_outOfAmmo);
+                // access the UI Manager script coroutine
+                _uiManager.FlashAmmoUI();
             }
         }
     }
-
-    /*void OutOfAmmoFeedback()
-    {
-        // Additional feedback code (like flashing the ammo UI)
-        _uiManager.FlashAmmoUI(); // Example: Implement this method in your UIManager to flash the ammo count
-    }*/
 
     public void Damage()
     {   // if shield is active
@@ -238,6 +235,21 @@ public class Player : MonoBehaviour
         // Get the shield's color and set to white 
         _shield.GetComponent<SpriteRenderer>().color = Color.white;
     }
+
+    public void AmmoActive()
+    {
+        _currentAmmo = _maxAmmo; // reset ammo to max
+        _canFireLaser = true; // enable firing
+
+        // stop flashing coroutine when ammo pickup
+        _uiManager.StopFlashingAmmoUI();
+
+        // update the ammo UI to show full ammo
+        _uiManager.UpdateAmmoUI(_currentAmmo);
+    }
+
+    //public void HealthActive()
+    // update the uiManager
 
     public void AddScore(int points)
     {
