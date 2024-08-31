@@ -14,6 +14,10 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab; 
     [SerializeField]
     private GameObject _tripleShotPrefab;
+
+    [SerializeField]
+    private GameObject _multiShotPrefab;
+
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
@@ -22,6 +26,9 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
 
     private bool _isTripleShotActive = false;
+
+    private bool _isMultiShotActive = false;
+
     private bool _isShieldActive = false;
 
     [SerializeField]
@@ -124,10 +131,14 @@ public class Player : MonoBehaviour
     {
         if (_currentAmmo > 0)
         {
-
             _canFire = Time.time + _fireRate;
 
-            if (_isTripleShotActive == true)
+            // enable multishot
+            if (_multiShotPrefab == true)
+            {   // call multishot method
+                FireMultiShot();
+            }
+            else if (_isTripleShotActive == true)
             {
                 Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
             }
@@ -200,6 +211,28 @@ public class Player : MonoBehaviour
         }
     }
 
+    void FireMultiShot()
+    {
+        // Instantiate projectiles in different directions
+        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 0));    // Up
+        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 25));   // Up-Right
+        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, -25));  // Up-Left
+        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 45));   // Right
+        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, -45));  // Left
+    }
+
+    public void MultiShotActive()
+    {
+        _isMultiShotActive = true;
+
+        StartCoroutine(MultiShotPowerDownRoutine());
+    }
+
+    IEnumerator MultiShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isMultiShotActive = false;
+    }
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
