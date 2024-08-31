@@ -237,33 +237,39 @@ public class Player : MonoBehaviour
 
     public void AmmoActive()
     {
-        _currentAmmo = _maxAmmo; // reset ammo to max
-        _canFireLaser = true; // enable firing
+        _currentAmmo = _maxAmmo; 
+        _canFireLaser = true; 
 
-        // stop flashing coroutine when ammo pickup
         _uiManager.StopFlashingAmmoUI();
-
-        // update the ammo UI to show full ammo
         _uiManager.UpdateAmmoUI(_currentAmmo);
     }
 
-    public void HealthPowerUp()
+    // method to increase player health when Health Power-Up is collected
+    public void HealthPowerUp() 
     {
-        if (_lives < 3) // Assuming the max lives is 3
+        if (_lives < 3) // if lives is 3
         {
-            _lives++;
-            _uiManager.UpdateLives(_lives); // Update the UI to reflect the new lives count
+            _lives++; // add lives increments 1
+            _uiManager.UpdateLives(_lives); // update the UI to reflect the new lives count
         }
 
-        // Reset any animations or settings related to lives
+        // reset any animations or settings related to lives
         ResetDamageIndicators();
     }
 
-    private void ResetDamageIndicators()
+    private void ResetDamageIndicators() // method resets damage animations and lives color
     {
-        _damagedLeftEngine.SetActive(false);
-        _damagedRightEngine.SetActive(false);
-        _uiManager.ResetLivesColor(); // Reset any color changes made by shield or damage
+        if (_damagedRightEngine.activeSelf)
+        {
+            _damagedRightEngine.SetActive(false); // set damage left enging to false
+        }
+        else if (_damagedLeftEngine.activeSelf)
+        {
+            _damagedRightEngine.SetActive(false); // set damage right engine false
+        }
+         
+        _uiManager.ResetLivesColor(); // reset color changes to shield damage
+
     }
 
     public void AddScore(int points)
