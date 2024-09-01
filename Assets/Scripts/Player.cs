@@ -133,10 +133,10 @@ public class Player : MonoBehaviour
         {
             _canFire = Time.time + _fireRate;
 
-            // enable multishot
-            if (_multiShotPrefab == true)
-            {   // call multishot method
-                FireMultiShot();
+            
+            if (_isMultiShotActive == true) // check if multishot power up was collected
+            {   // Instantiate multishot
+                Instantiate(_multiShotPrefab, transform.position, Quaternion.identity);
             }
             else if (_isTripleShotActive == true)
             {
@@ -211,28 +211,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    void FireMultiShot()
+    public void MultiShotActive() // multishot power up method
     {
-        // Instantiate projectiles in different directions
-        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 0));    // Up
-        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 25));   // Up-Right
-        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, -25));  // Up-Left
-        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, 45));   // Right
-        Instantiate(_multiShotPrefab, transform.position, Quaternion.Euler(0, 0, -45));  // Left
-    }
-
-    public void MultiShotActive()
-    {
+        // enable the Multishot
         _isMultiShotActive = true;
-
+        // start a coroutine 
         StartCoroutine(MultiShotPowerDownRoutine());
     }
 
-    IEnumerator MultiShotPowerDownRoutine()
+    IEnumerator MultiShotPowerDownRoutine() // method to stop coroutine
     {
-        yield return new WaitForSeconds(5.0f);
-        _isMultiShotActive = false;
+        yield return new WaitForSeconds(5.0f); // delay for 5 sec
+        _isMultiShotActive = false; // disable power up
     }
+
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
