@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 3.5f;
+    private float _speed = 3.5f; // normal speed
     [SerializeField]
-    private float _speedMultiplier = 2.0f;
+    private float _speedMultiplier = 2.0f; // doubles the speed x2 in speed boost power up routine
+    private float _thrusterSpeed;
+
     [SerializeField]
-    private float _thrust = 2.0f;
+    private float _thrustDuration = 5.0f;  // duration thrusters are active
+    [SerializeField]
+    private float _thrustCooldown = 10.0f;  // cooldown duration before thrusters can be activated again
+    private bool _isThrusterActive = false;  // tracks if thrusters are active
+    private bool _isThrustOnCooldown = false;  // tracks if thrusters are on cooldown
+
 
     [SerializeField]
     private GameObject _laserPrefab; 
@@ -67,6 +75,8 @@ public class Player : MonoBehaviour
         // current ammo count starts at max ammo count 
         _currentAmmo = _maxAmmo;
 
+        _thrusterSpeed = _speed; // starting point for thruster speed is normal speed 
+
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is Null!");
@@ -85,17 +95,20 @@ public class Player : MonoBehaviour
         {
             _audioSource.clip = _laserSoundClip;
         }
+
     }
 
     void Update()
     {
         CalculateMovement();
+        HandleThrusterInput();
+
         // check to see if FireLaser is turned on
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _canFireLaser)
         {
            FireLaser();
         }
-       
+
     }
 
     void CalculateMovement()
@@ -105,15 +118,7 @@ public class Player : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput,0);
         
-
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            transform.Translate((_speed *_thrust) * Time.deltaTime * direction);
-        }
-        else 
-        {
-            transform.Translate(_speed * Time.deltaTime * direction);
-        }
+        transform.Translate(_thrusterSpeed * Time.deltaTime * direction);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -125,6 +130,41 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.29f, transform.position.y, 0);
         }
+    }
+
+    private void HandleThrusterInput()
+    {
+        // Activate thrusters if A or D and LeftShift is pressed && not in cooldown
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKey(KeyCode.LeftShift) && !_isThrustOnCooldown)
+        {
+            ActivateThrusters(); // then activate thrusters
+        }
+    }
+
+    private void ActivateThrusters()
+    {
+        _isThrusterActive = true; // set thrusters to true
+        _isThrustOnCooldown = true; // start the thrust cooldown timer
+        _thrusterSpeed = _speed * _speedMultiplier; // thrusterspeed increase
+
+        // update the UIManager to show thruster activation and start countdown
+        _uiManager.StartThrusterSlider(_thrustDuration, _thrustCooldown);
+        Invoke("DeactivateThrusters", _thrustDuration); // automatically deactivate thrusters after 5 seconds
+    }
+
+    private void DeactivateThrusters()
+    {
+        _isThrusterActive = false; // disable thrusters
+        _thrusterSpeed = _speed; // reset speed to normal
+
+        // delay 10 seconds then call reset
+        Invoke("ResetThrusterCooldown", _thrustCooldown);
+    }
+
+    private void ResetThrusterCooldown()
+    {
+        _isThrustOnCooldown = false;
+        _uiManager.ResetThrusterSlider(); // notify UIManager that thrusters can be reactivated
     }
 
     void FireLaser()

@@ -26,7 +26,14 @@ public class UIManager : MonoBehaviour
 
     private GameManager _gameManager;
 
-    private Coroutine _flashAmmoRoutine; 
+    private Coroutine _flashAmmoRoutine;
+
+    [SerializeField]
+    private Slider _thrusterSlider; // reference slot for Slider object - thrusters
+
+    // New variable for percentage text
+    [SerializeField]
+    private Text _thrusterPercentageText;  // reference Text component of thruster percentage
 
     void Start()
     {
@@ -39,7 +46,27 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("GameManager is NULL.");
         }
+
+        if (_thrusterSlider != null) // check that the Slider is not inactive
+        {
+            _thrusterSlider.maxValue = 1; // start the slider at maximum value
+            _thrusterSlider.value = 1; // get the current value
+        }
+        else
+        {
+            Debug.LogError("Thruster Slider is not assigned in the Inspector.");
+        }
+        
+        if (_thrusterPercentageText != null) // check that the Text is not inactive
+        {
+            UpdateThrusterPercentageText(1);  // start Text at 100% thruster charge
+        }
+        else
+        {
+            Debug.LogError("Thruster Percentage Text is not assigned in the Inspector.");
+        }
     }
+
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score: " + playerScore.ToString();
@@ -111,6 +138,63 @@ public class UIManager : MonoBehaviour
             _ammoText.color = Color.white;
             // wait .5 sec
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    // start thruster slider with thrust duration and cooldown
+    public void StartThrusterSlider(float thrustDuration, float thrustCooldown)
+    {
+        if (_thrusterSlider != null) // check if thrusterslider is not inactive
+        {
+            _thrusterSlider.value = 1; // set slider to full to show thrusters are active
+            UpdateThrusterPercentageText(1);  // update percentage to 100%
+            StartCoroutine(ThrusterSliderRoutine(thrustDuration, thrustCooldown));// start Coroutine
+        }
+    }
+
+    // coroutine to manage the slider value for both thrust duration and cooldown
+    private IEnumerator ThrusterSliderRoutine(float thrustDuration, float thrustCooldown)
+    {
+        float elapsedTime = 0; // initialize time elapsed
+
+        // count down the thruster duration
+        while (elapsedTime < thrustDuration)
+        {
+            elapsedTime += Time.deltaTime; // add time 
+            _thrusterSlider.value = Mathf.Lerp(1, 0, elapsedTime / thrustDuration);
+            UpdateThrusterPercentageText(_thrusterSlider.value);  // update percentage text based on slider value
+            yield return null;
+        }
+
+        // start cooldown for thrusters
+        elapsedTime = 0;
+        while (elapsedTime < thrustCooldown)
+        {
+            elapsedTime += Time.deltaTime;
+            _thrusterSlider.value = Mathf.Lerp(0, 1, elapsedTime / thrustCooldown);
+            UpdateThrusterPercentageText(_thrusterSlider.value);
+            yield return null;
+        }
+
+        ResetThrusterSlider();
+    }
+
+    // method to reset the thruster slider after cooldown completes
+    public void ResetThrusterSlider()
+    {
+        if (_thrusterSlider != null)
+        {
+            _thrusterSlider.value = 1;  // reset slider to full charge
+            UpdateThrusterPercentageText(1);  // update percentage to 100%
+        }
+    }
+
+    private void UpdateThrusterPercentageText(float sliderValue)
+    {
+        if (_thrusterPercentageText != null) // check if Text is not Inactive
+        {
+            int percentage = Mathf.RoundToInt(sliderValue * 100);  // convert slider value (0 to 1) to percentage (0% to 100%)
+            _thrusterPercentageText.text = percentage.ToString() + "%"; // convert text to string
         }
     }
 
