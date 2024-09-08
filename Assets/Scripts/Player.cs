@@ -22,13 +22,13 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab; 
     [SerializeField]
     private GameObject _tripleShotPrefab;
-
     [SerializeField]
     private GameObject _multiShotPrefab;
 
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
+    
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -207,32 +207,29 @@ public class Player : MonoBehaviour
     }
 
     public void Damage()
-    {   // if shield is active
+    {   
         if (_isShieldActive == true)
         {
             _shieldsRemaining--;
 
             if (_shieldsRemaining <= 0)
             {
-                _isShieldActive = false; //deactivate shield
-                _shield.SetActive(false); // deactivate visual representation
-                // Reset the color of the lives image after shield deactivates
+                _isShieldActive = false; 
+                _shield.SetActive(false); 
+                
                 _uiManager.ResetLivesColor();
             }
             else
             {
-                // Change shield color based on remaining collisions
                 float colorValue = _shieldsRemaining / 3f; 
-                // get the color of the shield sprite set it to a new color
                 _shield.GetComponent<SpriteRenderer>().color = new Color(1f, colorValue, colorValue, 1f);
-                // Communicate with UIManager to update shield color
+                
                 _uiManager.UpdateShieldColor(colorValue);
             }
             return; 
         }
 
         _lives -=1;
-        
         _uiManager.UpdateLives(_lives);
 
         if (_lives == 2)

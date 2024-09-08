@@ -17,12 +17,15 @@ public class Enemy : MonoBehaviour
     private Animator _explosionAnimation;
     private AudioSource _audioSource;
 
+    private ShakeCamera _cameraShake; // get reference to ShakeCamera script
+
     private bool _isDestroyed = false;
     
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>(); //get the main camera and Shake script
         
         if (_player == null)
         {
@@ -82,6 +85,10 @@ public class Enemy : MonoBehaviour
             if (player != null)
             {
                 player.Damage();
+                if (_cameraShake != null)
+                {
+                    StartCoroutine(_cameraShake.Shake(0.3f, 0.5f)); // collision with Player 
+                }
             }
 
             _explosionAnimation.SetTrigger("OnEnemyDeath");

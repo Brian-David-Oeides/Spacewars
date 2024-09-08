@@ -8,6 +8,14 @@ public class Laser : MonoBehaviour
     private float _speed = 8.0f;
     private bool _isEnemyLaser = false;
 
+    private ShakeCamera _cameraShake;
+
+    // add the Start() method to initialize the main camera
+    private void Start()
+    {
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+    }
+
     void Update()
     {
         if (_isEnemyLaser == false)
@@ -64,6 +72,10 @@ public class Laser : MonoBehaviour
             if (player != null)
             {
                 player.Damage();
+                if (_cameraShake != null)
+                {
+                    StartCoroutine(_cameraShake.Shake(0.1f, 0.2f)); // collision with laser
+                }
             }
         }
     }
