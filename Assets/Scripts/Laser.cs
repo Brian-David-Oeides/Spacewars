@@ -11,7 +11,7 @@ public class Laser : MonoBehaviour
     private ShakeCamera _cameraShake;
 
     // add the Start() method to initialize the main camera
-    private void Start()
+    void Start()
     {
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
     }
