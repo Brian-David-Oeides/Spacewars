@@ -17,15 +17,26 @@ public class Enemy : MonoBehaviour
     private Animator _explosionAnimation;
     private AudioSource _audioSource;
 
-    private ShakeCamera _cameraShake; // get reference to ShakeCamera script
-
+    private ShakeCamera _cameraShake; 
     private bool _isDestroyed = false;
-    
+
+    // add virtual method for calculate movement 
+    protected virtual void CalculateMovement()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if (transform.position.y < -5f)
+        {
+            float randomX = Random.Range(-8f, 8f);
+            transform.position = new Vector3(randomX, 7, 0);
+        }
+    }
+
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
-        _cameraShake = Camera.main.GetComponent<ShakeCamera>(); //get the main camera and Shake script
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>(); 
         
         if (_player == null)
         {
@@ -49,30 +60,25 @@ public class Enemy : MonoBehaviour
         }
 
 
-        CalculateMovement();
+        CalculateMovement(); // polymorphism used for movement
 
         if (Time.time > _canFire)
-        {
-            _fireRate = Random.Range(3f, 7f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-            
-            for (int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
+        {   // declare cache of FireLasers() method 
+            FireLasers();
         }
     }
 
-    void CalculateMovement()
+    // create new FireLasers() method
+    private void FireLasers()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        _fireRate = Random.Range(3f, 7f);
+        _canFire = Time.time + _fireRate;
+        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
-        if (transform.position.y < -5f)
+        for (int i = 0; i < lasers.Length; i++)
         {
-            float randomX = Random.Range(-8f, 8f);
-            transform.position = new Vector3(randomX, 7, 0);
+            lasers[i].AssignEnemyLaser();
         }
     }
 
@@ -87,15 +93,11 @@ public class Enemy : MonoBehaviour
                 player.Damage();
                 if (_cameraShake != null)
                 {
-                    StartCoroutine(_cameraShake.Shake(0.3f, 0.5f)); // collision with Player 
+                    StartCoroutine(_cameraShake.Shake(0.3f, 0.5f));  
                 }
             }
 
-            _explosionAnimation.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _audioSource.Play();
-            _isDestroyed = true;
-            Destroy(this.gameObject, 2.8f); 
+            TriggerEnemyDeath();
         }
 
         if (other.tag == "Laser")
@@ -107,13 +109,18 @@ public class Enemy : MonoBehaviour
                 _player.AddScore(10);
             }
 
-            _explosionAnimation.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _audioSource.Play();
-            _isDestroyed = true;
-            Destroy(GetComponent<Collider2D>()); 
-            Destroy(this.gameObject, 2.8f); 
+            TriggerEnemyDeath();
         }
         
+    }
+    // custom method for enemy death
+    private void TriggerEnemyDeath()
+    {
+        // call method for enemy death
+        _explosionAnimation.SetTrigger("OnEnemyDeath");
+        _speed = 0;
+        _audioSource.Play();
+        _isDestroyed = true;
+        Destroy(this.gameObject, 2.8f);
     }
 }
