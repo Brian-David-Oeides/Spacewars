@@ -6,7 +6,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 2f;
+    protected float _speed = 2f;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
@@ -32,6 +32,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void SetLaserPrefab(GameObject laserPrefab) // make enemyLaserPrefab accessible
+    {
+        if (laserPrefab == null)
+        {
+            Debug.LogError("Laser prefab is NULL!");
+            return;
+        }
+
+        _enemyLaserPrefab = laserPrefab;
+    }
+
+
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -49,7 +61,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The player is NULL.");
         }
-        
+
     }
 
     void Update()

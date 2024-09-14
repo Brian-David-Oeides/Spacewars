@@ -804,6 +804,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 4592132561658774000, guid: 9483c60c3b1925c499736f398df5fa57,
     type: 3}
+  _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+    type: 3}
   _enemyContainer: {fileID: 956673684}
   _powerUps:
   - {fileID: 1843770189775917078, guid: 717f97611055731458eaa87186dd6741, type: 3}
