@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     private float _thrustDuration = 5.0f;  // duration thrusters are active
     [SerializeField]
     private float _thrustCooldown = 10.0f;  // cooldown duration before thrusters can be activated again
-    private bool _isThrusterActive = false;  // tracks if thrusters are active
+    //private bool _isThrusterActive = false;  // tracks if thrusters are active
     private bool _isThrustOnCooldown = false;  // tracks if thrusters are on cooldown
 
 
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
 
     private void ActivateThrusters()
     {
-        _isThrusterActive = true; // set thrusters to true
+        //_isThrusterActive = true; // set thrusters to true
         _isThrustOnCooldown = true; // start the thrust cooldown timer
         _thrusterSpeed = _speed * _speedMultiplier; // thrusterspeed increase
 
@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
 
     private void DeactivateThrusters()
     {
-        _isThrusterActive = false; // disable thrusters
+        //_isThrusterActive = false; // disable thrusters
         _thrusterSpeed = _speed; // reset speed to normal
 
         // delay 10 seconds then call reset

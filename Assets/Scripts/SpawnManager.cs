@@ -7,8 +7,6 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyPrefab;
-    [SerializeField] 
-    private GameObject _enemyLaserPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
@@ -36,26 +34,22 @@ public class SpawnManager : MonoBehaviour
             switch (randomEnemyType)
             {
                 case 0:
-                    // Assign SideToSideEnemy component and set laser prefab
+                    // SideToSideEnemy component 
                     newEnemy.AddComponent<SideToSideEnemy>();
                     SideToSideEnemy sideToSideEnemy = newEnemy.GetComponent<SideToSideEnemy>();
-                    sideToSideEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
                 /*case 1:
-                    // Assign CirclingEnemy component and set laser prefab
+                    // assign CirclingEnemy 
                     newEnemy.AddComponent<CirclingEnemy>();
                     CirclingEnemy circlingEnemy = newEnemy.GetComponent<CirclingEnemy>();
-                    circlingEnemy._enemyLaserPrefab = enemyLaserPrefab;
                     break;
-
                 case 2:
-                    // Assign AngledEnemy component and set laser prefab
+                    // AngledEnemy component
                     newEnemy.AddComponent<AngledEnemy>();
                     AngledEnemy angledEnemy = newEnemy.GetComponent<AngledEnemy>();
-                    angledEnemy._enemyLaserPrefab = enemyLaserPrefab;
                     break;*/
                 default:
-                    Debug.LogError("Unknown enemy type");
+                    Debug.LogError("default enemy type");
                     break;
             }
 

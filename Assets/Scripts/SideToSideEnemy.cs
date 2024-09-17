@@ -6,13 +6,10 @@ public class SideToSideEnemy : Enemy
 {
     // lateral movement boundaries
     private float _amplitude = 2.0f;
-
     // lateral movement speed (affects how fast the enemy moves side to side)
     private float _frequency = 6.0f;
-
     // time tracker for the cosine function
     private float _timeCounter = 0.0f;
-
 
     protected override void CalculateMovement()
     { 
@@ -31,4 +28,5 @@ public class SideToSideEnemy : Enemy
         // Log position for debugging
         Debug.Log("SideToSideEnemy position: " + transform.position);
     }
+
 }

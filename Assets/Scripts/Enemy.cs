@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     private float _canFire = -1;
 
     [SerializeField]
-    private GameObject _enemyLaserPrefab;
+    protected GameObject _enemyLaserPrefab;
 
     private Player _player;
     private Animator _explosionAnimation;
@@ -32,18 +32,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void SetLaserPrefab(GameObject laserPrefab) // make enemyLaserPrefab accessible
-    {
-        if (laserPrefab == null)
-        {
-            Debug.LogError("Laser prefab is NULL!");
-            return;
-        }
-
-        _enemyLaserPrefab = laserPrefab;
-    }
-
-
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -62,9 +50,12 @@ public class Enemy : MonoBehaviour
             Debug.LogError("The player is NULL.");
         }
 
+        // set the initial fire time to avoid immediate firing after spawn
+        _canFire = Time.time + Random.Range(1f, 2f); // Random delay between 1 to 3 seconds
+
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (_isDestroyed)
         {
@@ -81,11 +72,12 @@ public class Enemy : MonoBehaviour
     }
 
     // create new FireLasers() method
-    private void FireLasers()
+    protected virtual void FireLasers()
     {
-        _fireRate = Random.Range(3f, 7f);
+        _fireRate = Random.Range(3f, 5f);
         _canFire = Time.time + _fireRate;
-        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+
+        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
         for (int i = 0; i < lasers.Length; i++)
