@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -13,13 +13,13 @@ public class SpawnManager : MonoBehaviour
     private GameObject[] _powerUps;
     private bool _stopSpawning = false;
 
-    public void StartSpawning()
+    public void StartSpawning() 
     {
-        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnEnemyRoutine()); 
         StartCoroutine(SpawnPowerUpRoutine());
     }
 
-    IEnumerator SpawnEnemyRoutine()
+    IEnumerator SpawnEnemyRoutine() 
     {
         yield return new WaitForSeconds(3.0f);
 
@@ -29,7 +29,7 @@ public class SpawnManager : MonoBehaviour
             GameObject newEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
 
-            int randomEnemyType = Random.Range(0, 2);
+            int randomEnemyType = Random.Range(0, 3);
 
             switch (randomEnemyType)
             {
@@ -38,12 +38,12 @@ public class SpawnManager : MonoBehaviour
                     newEnemy.AddComponent<SideToSideEnemy>();
                     SideToSideEnemy sideToSideEnemy = newEnemy.GetComponent<SideToSideEnemy>();
                     break;
-                /*case 1:
+                case 1:
                     // assign CirclingEnemy 
-                    newEnemy.AddComponent<CirclingEnemy>();
-                    CirclingEnemy circlingEnemy = newEnemy.GetComponent<CirclingEnemy>();
+                    newEnemy.AddComponent<ChasingEnemy>();
+                    ChasingEnemy chasingEnemy = newEnemy.GetComponent<ChasingEnemy>();
                     break;
-                case 2:
+                /*case 2:
                     // AngledEnemy component
                     newEnemy.AddComponent<AngledEnemy>();
                     AngledEnemy angledEnemy = newEnemy.GetComponent<AngledEnemy>();
@@ -84,6 +84,7 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(3f, 8f));
         }
     }
+
     public void OnPlayerDeath()
     {
         _stopSpawning = true;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class SideToSideEnemy : Enemy
 {
     // lateral movement boundaries
-    private float _amplitude = 2.0f;
+    private float _amplitude = 6.0f;
     // lateral movement speed (affects how fast the enemy moves side to side)
     private float _frequency = 6.0f;
     // time tracker for the cosine function

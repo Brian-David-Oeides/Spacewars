@@ -8,17 +8,17 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     protected float _speed = 2f;
     private float _fireRate = 3.0f;
-    private float _canFire = -1;
+    protected float _canFire = -1;
 
     [SerializeField]
     protected GameObject _enemyLaserPrefab;
 
-    private Player _player;
+    protected Player _player;
     private Animator _explosionAnimation;
     private AudioSource _audioSource;
 
     private ShakeCamera _cameraShake; 
-    private bool _isDestroyed = false;
+    protected bool _isDestroyed = false;
 
     // add virtual method for calculate movement 
     protected virtual void CalculateMovement()
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Start()
+    protected virtual void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
@@ -50,8 +50,8 @@ public class Enemy : MonoBehaviour
             Debug.LogError("The player is NULL.");
         }
 
-        // set the initial fire time to avoid immediate firing after spawn
-        _canFire = Time.time + Random.Range(1f, 2f); // Random delay between 1 to 3 seconds
+        // set initial fire time to avoid immediate firing before spawn
+        _canFire = Time.time + Random.Range(0.5f, 3f); // random delay 
 
     }
 
