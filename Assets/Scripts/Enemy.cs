@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -69,6 +69,11 @@ public class Enemy : MonoBehaviour
         {   // declare cache of FireLasers() method 
             FireLasers();
         }
+    }
+
+    public void SetLaserPrefab(GameObject laserPrefab)
+    {
+        _enemyLaserPrefab = laserPrefab;
     }
 
     // create new FireLasers() method
