@@ -7,7 +7,8 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _enemyPrefab;
-    [SerializeField] private GameObject _enemyLaserPrefab;
+    [SerializeField] 
+    private GameObject _enemyLaserPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]

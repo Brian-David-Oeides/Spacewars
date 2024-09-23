@@ -5,51 +5,54 @@ using UnityEngine;
 public class ChasingEnemy : Enemy
 {
     private Transform _playerTransform;
-    private float _offsetDistance = 3.0f; // Adjust this value for how much offset you want
-    //private float _moveSpeed = 3.0f; // You can change this for faster or slower movement
-    private float _triggerDistance = 4.0f; // Distance at which the enemy moves past the player
-    private float _pastPositionY = -5f; // Target Y position to move past the player
+    private float _angle;
+    private bool _isFallingBack = false;  // New flag to control state
 
-    // Override the base class movement calculation
-    protected override void CalculateMovement()
+    protected override void Start()
     {
-        if (_player == null)
-        {
-            // Find the player if not already assigned
-            _player = GameObject.Find("Player").GetComponent<Player>();
-        }
-
+        base.Start();
         if (_player != null)
         {
-            _playerTransform = _player.transform;
+            _playerTransform = GameObject.FindWithTag("Player").transform;
+        }
+    }
 
-            // Calculate the distance between the enemy and the player
-            float distanceToPlayer = Vector3.Distance(transform.position, _playerTransform.position);
+    protected override void CalculateMovement()
+    {
+        if (_playerTransform != null && !_isFallingBack)
+        {
+            Vector3 directionToPlayer = _playerTransform.position - transform.position;
 
-            // If the enemy is within the trigger distance, move it past the player to a position with y < -5f
-            if (distanceToPlayer <= _triggerDistance)
+            // Calculate angle towards the player
+            _angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg + 90f;
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, _angle));
+
+            // Calculate distance to player
+            float distanceToPlayer = Vector3.Distance(this.transform.position, _playerTransform.position);
+
+            // If within 3.0f of the player, move away
+            if (distanceToPlayer < 4.0f)
             {
-                Vector3 targetPosition = new Vector3(transform.position.x, _pastPositionY, transform.position.z);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
+                _isFallingBack = true;  // Set fallback mode, stop chasing
             }
             else
             {
-                // Calculate the direction towards the player
-                Vector3 direction = (_playerTransform.position - transform.position).normalized;
-
-                // Offset the movement direction to avoid direct collision
-                Vector3 offsetDirection = direction * _offsetDistance;
-
-                // Move the enemy towards the offset position near the player
-                transform.position = Vector3.MoveTowards(transform.position, _playerTransform.position + offsetDirection, _speed * Time.deltaTime);
+                // Move towards the player
+                Vector3 moveDirection = directionToPlayer.normalized;
+                transform.Translate(moveDirection * _speed * Time.deltaTime, Space.World);
             }
         }
 
-        // Reset enemy position if it goes off-screen
-        if (transform.position.y < _pastPositionY)
+        if (_isFallingBack)  // Now only execute this once we enter fallback mode
         {
-            float randomX = Random.Range(-8f, 8f);
-            transform.position = new Vector3(randomX, 7, 0);
+            // Move down the y-axis
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+            // If position goes below -5.0f, destroy or reset
+            if (transform.position.y < -5.0f)
+            {
+                Destroy(this.gameObject);  // Or reset position depending on behavior needed
+            }
         }
     }
 }
