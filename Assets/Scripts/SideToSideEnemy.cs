@@ -5,7 +5,7 @@ using UnityEngine;
 public class SideToSideEnemy : Enemy
 {
     // lateral movement boundaries
-    private float _amplitude = 6.0f;
+    private float _amplitude = 4.0f;
     // lateral movement speed (affects how fast the enemy moves side to side)
     private float _frequency = 6.0f;
     // time tracker for the cosine function
@@ -26,7 +26,7 @@ public class SideToSideEnemy : Enemy
         this.transform.position = new Vector3(x, newY, this.transform.position.z);
 
         // Log position for debugging
-        Debug.Log("SideToSideEnemy position: " + transform.position);
+        //Debug.Log("SideToSideEnemy position: " + transform.position);
     }
 
 }

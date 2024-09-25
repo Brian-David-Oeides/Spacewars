@@ -51,17 +51,16 @@ public class Enemy : MonoBehaviour
         }
 
         // set initial fire time to avoid immediate firing before spawn
-        _canFire = Time.time + Random.Range(0.5f, 3f); // random delay 
+        _canFire = Time.time + Random.Range(1f, 3f); // random delay 
 
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (_isDestroyed)
         {
             return;
         }
-
 
         CalculateMovement(); // polymorphism used for movement
 
@@ -79,7 +78,7 @@ public class Enemy : MonoBehaviour
     // create new FireLasers() method
     protected virtual void FireLasers()
     {
-        _fireRate = Random.Range(3f, 5f);
+        _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
 
         GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);

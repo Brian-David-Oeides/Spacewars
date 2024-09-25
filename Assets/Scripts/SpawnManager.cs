@@ -7,8 +7,7 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _enemyPrefab;
-    [SerializeField] 
-    private GameObject _enemyLaserPrefab;
+    [SerializeField] private GameObject _enemyLaserPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
@@ -37,20 +36,19 @@ public class SpawnManager : MonoBehaviour
             {
                 case 0:
                     // SideToSideEnemy component 
-                    newEnemy.AddComponent<SideToSideEnemy>();
-                    SideToSideEnemy sideToSideEnemy = newEnemy.GetComponent<SideToSideEnemy>();
+                    SideToSideEnemy sideToSideEnemy = newEnemy.AddComponent<SideToSideEnemy>();
+                    sideToSideEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
                 case 1:
-                    // assign CirclingEnemy 
-                    newEnemy.AddComponent<ChasingEnemy>();
-                    ChasingEnemy chasingEnemy = newEnemy.GetComponent<ChasingEnemy>();
+                    // assign ChasingEnemy 
+                    ChasingEnemy chasingEnemy = newEnemy.AddComponent<ChasingEnemy>();
                     chasingEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
-                /*case 2:
-                    // AngledEnemy component
-                    newEnemy.AddComponent<AngledEnemy>();
-                    AngledEnemy angledEnemy = newEnemy.GetComponent<AngledEnemy>();
-                    break;*/
+                case 2:
+                    // CirclingEnemy component
+                    CirclingEnemy circlingEnemy = newEnemy.AddComponent<CirclingEnemy>();
+                    circlingEnemy.SetLaserPrefab(_enemyLaserPrefab);
+                    break;
                 default:
                     Debug.LogError("default enemy type");
                     break;

@@ -6,7 +6,7 @@ public class ChasingEnemy : Enemy
 {
     private Transform _playerTransform;
     private float _angle;
-    private bool _isFallingBack = false;  // New flag to control state
+    private bool _isFallingBack = false;  // new flag to control state
 
     protected override void Start()
     {
@@ -21,37 +21,41 @@ public class ChasingEnemy : Enemy
     {
         if (_playerTransform != null && !_isFallingBack)
         {
-            Vector3 directionToPlayer = _playerTransform.position - transform.position;
+            Vector3 directionToPlayer = _playerTransform.position - this.transform.position;
 
-            // Calculate angle towards the player
+            // calculate angle towards the player
             _angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg + 90f;
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, _angle));
+            this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _angle));
 
-            // Calculate distance to player
+            // calculate distance to player
             float distanceToPlayer = Vector3.Distance(this.transform.position, _playerTransform.position);
 
-            // If within 3.0f of the player, move away
-            if (distanceToPlayer < 4.0f)
+            // if within 6.0f of the player, fallback
+            if (distanceToPlayer < 6.0f)
             {
-                _isFallingBack = true;  // Set fallback mode, stop chasing
+                _isFallingBack = true;  // enable fallback mode, stop chasing
             }
             else
             {
-                // Move towards the player
+                // move towards the player
                 Vector3 moveDirection = directionToPlayer.normalized;
-                transform.Translate(moveDirection * _speed * Time.deltaTime, Space.World);
+                this.transform.Translate(moveDirection * _speed * Time.deltaTime, Space.World);
             }
         }
 
-        if (_isFallingBack)  // Now only execute this once we enter fallback mode
+        if (_isFallingBack)  // enter fallback mode
         {
-            // Move down the y-axis
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            // move down the y-axis
+            this.transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-            // If position goes below -5.0f, destroy or reset
-            if (transform.position.y < -5.0f)
+            // if position goes below -4.6f, destroy or reset
+            if (this.transform.position.y < -4.6f)
             {
-                Destroy(this.gameObject);  // Or reset position depending on behavior needed
+                // rotate towards the negative y-axis
+                this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0)); // face downwards
+
+                Destroy(this.gameObject);  // or reset position depending on behavior needed
+                Debug.Log("Chasing enemy self-destructed.");
             }
         }
     }
