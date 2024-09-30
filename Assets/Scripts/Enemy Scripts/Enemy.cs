@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     protected float _fireRate = 3.0f;
     protected float _canFire = -1;
 
+    protected bool _canBaseFire = true; // default for base class
+
     [SerializeField]
     protected GameObject _enemyLaserPrefab;
 
@@ -51,7 +53,7 @@ public class Enemy : MonoBehaviour
         }
 
         // set initial fire time to avoid immediate firing before spawn
-        _canFire = Time.time + Random.Range(1f, 3f); // random delay 
+        _canFire = Time.time + Random.Range(0.2f, 3f); // random delay 
 
     }
 
@@ -62,10 +64,10 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        CalculateMovement(); // polymorphism used for movement
-
-        if (Time.time > _canFire)
-        {   // declare cache of FireLasers() method 
+        CalculateMovement(); 
+        // _canFire enabled
+        if (_canBaseFire && Time.time > _canFire)
+        {   
             FireLasers();
         }
     }

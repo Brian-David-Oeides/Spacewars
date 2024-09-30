@@ -11,6 +11,13 @@ public class SideToSideEnemy : Enemy
     // time tracker for the cosine function
     private float _timeCounter = 0.0f;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        _canBaseFire = false; // prevent base class from firing 
+    }
+
     protected override void CalculateMovement()
     { 
         // increment based on real-time * frequency

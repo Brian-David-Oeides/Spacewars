@@ -30,7 +30,7 @@ public class SpawnManager : MonoBehaviour
             GameObject newEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
 
-            int randomEnemyType = Random.Range(0, 3);
+            int randomEnemyType = Random.Range(0, 4);
 
             switch (randomEnemyType)
             {
@@ -49,6 +49,11 @@ public class SpawnManager : MonoBehaviour
                     CirclingEnemy circlingEnemy = newEnemy.AddComponent<CirclingEnemy>();
                     circlingEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
+                /*case 3:
+                    // CirclingEnemy component
+                    Circlingleft circlingLeft = newEnemy.AddComponent<Circlingleft>();
+                    circlingLeft.SetLaserPrefab(_enemyLaserPrefab);
+                    break;*/
                 default:
                     Debug.LogError("default enemy type");
                     break;

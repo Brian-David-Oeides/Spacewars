@@ -11,6 +11,9 @@ public class ChasingEnemy : Enemy
     protected override void Start()
     {
         base.Start();
+
+        _canBaseFire = false; // prevent base class from firing
+
         if (_player != null)
         {
             _playerTransform = GameObject.FindWithTag("Player").transform;
@@ -54,7 +57,7 @@ public class ChasingEnemy : Enemy
                 // rotate towards the negative y-axis
                 this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0)); // face downwards
 
-                Destroy(this.gameObject);  // or reset position depending on behavior needed
+                Destroy(this.gameObject);  // destroy chasingenemy
                 Debug.Log("Chasing enemy self-destructed.");
             }
         }
