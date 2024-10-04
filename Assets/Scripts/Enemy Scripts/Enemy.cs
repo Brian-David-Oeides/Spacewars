@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour
     private ShakeCamera _cameraShake; 
     protected bool _isDestroyed = false;
 
+    protected float _increaseWaveSpeed;     // speed that is adjusted based on wave number
+
     // add virtual method for calculate movement 
     protected virtual void CalculateMovement()
     {
@@ -38,8 +40,13 @@ public class Enemy : MonoBehaviour
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
-        _cameraShake = Camera.main.GetComponent<ShakeCamera>(); 
-        
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+
+        // set initial fire time to avoid immediate firing before spawn
+        _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
+
+        _increaseWaveSpeed = _speed; // set speed to increased speed based on wave
+
         if (_player == null)
         {
             Debug.LogError("The player is NULL.");
@@ -51,10 +58,6 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The player is NULL.");
         }
-
-        // set initial fire time to avoid immediate firing before spawn
-        _canFire = Time.time + Random.Range(0.2f, 3f); // random delay 
-
     }
 
     protected virtual void Update()
@@ -70,6 +73,14 @@ public class Enemy : MonoBehaviour
         {   
             FireLasers();
         }
+    }
+
+    // method to adjust enemy stats based on the wave number
+    public void InitializeForWave(int wave)
+    {
+        // increase enemy speed based on wave number (e.g., 10% increase per wave)
+        _increaseWaveSpeed = _speed * (1 + (wave * 0.1f));
+        // further adjustments such as health, attack rate, etc., can be added here
     }
 
     public void SetLaserPrefab(GameObject laserPrefab)
@@ -131,6 +142,19 @@ public class Enemy : MonoBehaviour
         _speed = 0;
         _audioSource.Play();
         _isDestroyed = true;
+
+        // inform WaveManager enemy was destroyed
+        WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
+
+        if (waveManager != null)
+        {
+            waveManager.EnemyDestroyed(); // notify WaveManager about enemy's destruction
+        }
+        else
+        {
+            Debug.LogError("WaveManager is NULL or not found!");
+        }
+
         Destroy(this.gameObject, 2.8f);
     }
 }

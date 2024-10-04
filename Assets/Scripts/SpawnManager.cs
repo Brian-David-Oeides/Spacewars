@@ -6,28 +6,32 @@ public class SpawnManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject _enemyPrefab;
-    [SerializeField] private GameObject _enemyLaserPrefab;
+    private GameObject[] _enemyPrefab; //add array
+    [SerializeField] 
+    private GameObject _enemyLaserPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
     private GameObject[] _powerUps;
+
     private bool _stopSpawning = false;
 
-    public void StartSpawning() 
+    public void StartSpawning(int enemyCount, int wave) // add enemy count and wave number
     {
-        StartCoroutine(SpawnEnemyRoutine()); 
+        StartCoroutine(SpawnEnemyRoutine(enemyCount, wave)); 
         StartCoroutine(SpawnPowerUpRoutine());
     }
 
-    IEnumerator SpawnEnemyRoutine() 
+    IEnumerator SpawnEnemyRoutine(int enemyCount, int wave) 
     {
         yield return new WaitForSeconds(3.0f);
 
-        while (_stopSpawning == false)
+        for (int i = 0; i < enemyCount; i++)
         {
+            if (_stopSpawning) yield break;
+
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
+            GameObject newEnemy = Instantiate(_enemyPrefab[0], positionToSpawn, Quaternion.identity); //[0]
             newEnemy.transform.parent = _enemyContainer.transform;
 
             int randomEnemyType = Random.Range(0, 4);
@@ -35,31 +39,35 @@ public class SpawnManager : MonoBehaviour
             switch (randomEnemyType)
             {
                 case 0:
-                    // SideToSideEnemy component 
                     SideToSideEnemy sideToSideEnemy = newEnemy.AddComponent<SideToSideEnemy>();
                     sideToSideEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
-                case 1:
-                    // assign ChasingEnemy 
+                case 1: 
                     ChasingEnemy chasingEnemy = newEnemy.AddComponent<ChasingEnemy>();
                     chasingEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
                 case 2:
-                    // CirclingEnemy component
                     CirclingEnemy circlingEnemy = newEnemy.AddComponent<CirclingEnemy>();
                     circlingEnemy.SetLaserPrefab(_enemyLaserPrefab);
                     break;
-                /*case 3:
-                    // CirclingEnemy component
+                case 3:
                     Circlingleft circlingLeft = newEnemy.AddComponent<Circlingleft>();
                     circlingLeft.SetLaserPrefab(_enemyLaserPrefab);
-                    break;*/
+                    break;
                 default:
                     Debug.LogError("default enemy type");
                     break;
             }
+            
+            // customize enemy stats for current wave (e.g., speed scaling)
+            Enemy enemyComponent = newEnemy.GetComponent<Enemy>();
 
-            yield return new WaitForSeconds(5.0f); 
+            if (enemyComponent != null)
+            {
+                enemyComponent.InitializeForWave(wave); // adjust stats based on wave
+            }
+
+            yield return new WaitForSeconds(3.0f); 
         }
     }
 
@@ -70,20 +78,20 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            int randomValue = Random.Range(0, 100); //Random value between 0 and 99
-            int randomPowerUpIndex; // a new variable stores chance power up is spawned
+            int randomValue = Random.Range(0, 100); 
+            int randomPowerUpIndex; 
 
-            if (randomValue < 5) // if random value is less than 5%
+            if (randomValue < 5) 
             {
-                randomPowerUpIndex = 5; // then spawn power up index 5
+                randomPowerUpIndex = 5; 
             }
-            else if (randomValue < 35) // or else if random value less than 35%
+            else if (randomValue < 35) 
             {
-                randomPowerUpIndex = Random.Range(0, 5); // then spawn power up index 0 to 5
+                randomPowerUpIndex = Random.Range(0, 5); 
             }
             else // or else
             {
-                randomPowerUpIndex = Random.Range(0, _powerUps.Length);// random power up select any power up
+                randomPowerUpIndex = Random.Range(0, _powerUps.Length);
             }
 
             Instantiate(_powerUps[randomPowerUpIndex], positionToSpawn, Quaternion.identity);
@@ -95,5 +103,11 @@ public class SpawnManager : MonoBehaviour
     {
         _stopSpawning = true;
     }
-    
+
+    // reset to allow spawning again if needed (for example, after restart)
+    public void ResetSpawning()
+    {
+        _stopSpawning = false; // enable spawning
+    }
+
 }

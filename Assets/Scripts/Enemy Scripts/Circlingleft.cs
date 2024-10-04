@@ -5,17 +5,19 @@ using UnityEngine;
 public class Circlingleft : Enemy
 {   
     private float _circleRadius = 3.5f; // Radius of the circle
-    private bool _isCircling = true;
+    private bool _isCircling = false;
     private Vector3 _startPosition;
     private float _circleAngle = 0f; // Angle to calculate circle position
     private float _angularSpeed; // Angular speed for consistent movement
- 
+    private Vector3 _circleCenter; // Center of the circle
+    private bool _circleCompleted = false;  // Counter for completed circles
+
     protected override void Start()
     {
         base.Start();
         Debug.Log("Circling Left Enemy Initialized.");
 
-        _startPosition = transform.position; // Set the starting position for circling
+        _canBaseFire = false; // prevent base class from firing
 
         // set angular speed based on the linear speed 
         _angularSpeed = _speed * 3.5f;
@@ -23,6 +25,15 @@ public class Circlingleft : Enemy
 
     protected override void CalculateMovement()
     {
+        if (!_isCircling && transform.position.y <= 5.5f && !_circleCompleted)
+        {
+            // at y = 5.5f, start circling
+            _isCircling = true;
+
+            // offset center of circle's radius to left (along the -x-axis)
+            _circleCenter = new Vector3(transform.position.x + _circleRadius, transform.position.y, 0);
+        }
+
         if (_isCircling)
         {
             // Decrease _circleAngle for counterclockwise (leftward) movement
@@ -33,7 +44,7 @@ public class Circlingleft : Enemy
             float yOffset = Mathf.Sin(_circleAngle) * _circleRadius;
 
             // Update position for circular movement
-            Vector3 currentPosition = new Vector3(_startPosition.x + xOffset, _startPosition.y + yOffset, 0);
+            Vector3 currentPosition = new Vector3(_circleCenter.x + xOffset, _circleCenter.y + yOffset, 0);
             transform.position = currentPosition;
 
             // Calculate the tangent vector (direction of movement)
@@ -55,9 +66,16 @@ public class Circlingleft : Enemy
             {
                 _circleAngle = 0f; // Reset the angle
                 _isCircling = false;
+                _circleCompleted = true;  // mark circle as completed
             }
         }
-        else
+        else if (!_circleCompleted)
+        {
+            // continue moving downward once circling is done
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
+
+        if (_circleCompleted)
         {
             // Move down the Y-axis once the circle is completed
             transform.Translate(Vector3.down * _speed * Time.deltaTime);

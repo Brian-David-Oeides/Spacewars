@@ -9,7 +9,14 @@ public class CirclingEnemy : Enemy
     private bool _circleCompleted = false;  // Counter for completed circles
     private Vector3 _circleCenter; // Center of the circle
     private float _circleAngle = 0f; // Angle to calculate circle position
-    
+
+    protected override void Start()
+    {
+        base.Start();
+
+        _canBaseFire = false; // prevent base class from firing
+
+    }
 
     protected override void CalculateMovement()
     {

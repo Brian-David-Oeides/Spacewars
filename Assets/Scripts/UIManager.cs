@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    // declare reference data type
     [SerializeField]
     private Text _scoreText;
 
@@ -22,18 +21,20 @@ public class UIManager : MonoBehaviour
     private Sprite[] _liveSprites;
 
     [SerializeField]
-    private Text _ammoText; 
+    private Text _ammoText;
+
+    [SerializeField]
+    private Text _waveText; // new field for displaying wave number
 
     private GameManager _gameManager;
 
     private Coroutine _flashAmmoRoutine;
 
     [SerializeField]
-    private Slider _thrusterSlider; // reference slot for Slider object - thrusters
+    private Slider _thrusterSlider; 
 
-    // New variable for percentage text
     [SerializeField]
-    private Text _thrusterPercentageText;  // reference Text component of thruster percentage
+    private Text _thrusterPercentageText;  
 
     void Start()
     {
@@ -65,6 +66,8 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("Thruster Percentage Text is not assigned in the Inspector.");
         }
+
+        _waveText.gameObject.SetActive(false); // Hide wave text at start
     }
 
     public void UpdateScore(int playerScore)
@@ -73,33 +76,28 @@ public class UIManager : MonoBehaviour
     }
 
     public void UpdateLives(int currentLives)
-    {
-        
-        _livesImg.sprite = _liveSprites[currentLives]; // Update Sprites to reflect the number of lives
+    {    
+        _livesImg.sprite = _liveSprites[currentLives]; 
 
         if (currentLives == 0)
         {
             GameOverSequence();
         }
-
     }
 
     public void UpdateShieldColor(float colorValue)
-    {
-        // define and set the Color and change color 
+    { 
         Color newColor = Color.Lerp(Color.red, Color.white, colorValue);
-        // access the Color property of the lives image sprite
+
         _livesImg.color = newColor;
     }
     public void ResetLivesColor()
     {
-        // Reset the color of the lives image to the default color (white)
         _livesImg.color = Color.white;
     }
 
     public void UpdateAmmoUI(int currentAmmo)
     {
-        // update the ammo display on the UI
         _ammoText.text = "Ammo Count: " + currentAmmo.ToString();
     }
 
@@ -107,21 +105,16 @@ public class UIManager : MonoBehaviour
     {
         if (_flashAmmoRoutine == null)
         { 
-            // Start a new flashing routine for the ammo UI
             _flashAmmoRoutine = StartCoroutine(FlashAmmoRoutine());
         }
     }
 
     public void StopFlashingAmmoUI()
     {
-        // check if the flashAmmoRoutin is on ...
         if (_flashAmmoRoutine != null)
         {
-            // then flashing text
             StopCoroutine(_flashAmmoRoutine);
-            // disable the component
             _flashAmmoRoutine = null;
-            // reset the color to default
             _ammoText.color = Color.white; 
         }
     }
@@ -130,39 +123,32 @@ public class UIManager : MonoBehaviour
     {
         while (true)
         {
-            // set text color to red
             _ammoText.color = Color.red;
-            // wait .5 sec
             yield return new WaitForSeconds(0.5f);
-            // set text color to red
             _ammoText.color = Color.white;
-            // wait .5 sec
             yield return new WaitForSeconds(0.5f);
         }
     }
 
-    // start thruster slider with thrust duration and cooldown
     public void StartThrusterSlider(float thrustDuration, float thrustCooldown)
     {
-        if (_thrusterSlider != null) // check if thrusterslider is not inactive
+        if (_thrusterSlider != null) 
         {
-            _thrusterSlider.value = 1; // set slider to full to show thrusters are active
-            UpdateThrusterPercentageText(1);  // update percentage to 100%
-            StartCoroutine(ThrusterSliderRoutine(thrustDuration, thrustCooldown));// start Coroutine
+            _thrusterSlider.value = 1; 
+            UpdateThrusterPercentageText(1); 
+            StartCoroutine(ThrusterSliderRoutine(thrustDuration, thrustCooldown));
         }
     }
 
-    // coroutine to manage the slider value for both thrust duration and cooldown
     private IEnumerator ThrusterSliderRoutine(float thrustDuration, float thrustCooldown)
     {
-        float elapsedTime = 0; // initialize time elapsed
+        float elapsedTime = 0; 
 
-        // count down the thruster duration
         while (elapsedTime < thrustDuration)
         {
-            elapsedTime += Time.deltaTime; // add time 
+            elapsedTime += Time.deltaTime;  
             _thrusterSlider.value = Mathf.Lerp(1, 0, elapsedTime / thrustDuration);
-            UpdateThrusterPercentageText(_thrusterSlider.value);  // update percentage text based on slider value
+            UpdateThrusterPercentageText(_thrusterSlider.value);  
             yield return null;
         }
 
@@ -179,22 +165,21 @@ public class UIManager : MonoBehaviour
         ResetThrusterSlider();
     }
 
-    // method to reset the thruster slider after cooldown completes
     public void ResetThrusterSlider()
     {
         if (_thrusterSlider != null)
         {
-            _thrusterSlider.value = 1;  // reset slider to full charge
-            UpdateThrusterPercentageText(1);  // update percentage to 100%
+            _thrusterSlider.value = 1; 
+            UpdateThrusterPercentageText(1);  
         }
     }
 
     private void UpdateThrusterPercentageText(float sliderValue)
     {
-        if (_thrusterPercentageText != null) // check if Text is not Inactive
+        if (_thrusterPercentageText != null)
         {
-            int percentage = Mathf.RoundToInt(sliderValue * 100);  // convert slider value (0 to 1) to percentage (0% to 100%)
-            _thrusterPercentageText.text = percentage.ToString() + "%"; // convert text to string
+            int percentage = Mathf.RoundToInt(sliderValue * 100);
+            _thrusterPercentageText.text = percentage.ToString() + "%";
         }
     }
 
@@ -215,5 +200,18 @@ public class UIManager : MonoBehaviour
             _gameOverText.text = " ";
             yield return new WaitForSeconds(0.5f);
         }
+    }
+    // method to display current wave number
+    public void DisplayWave(int waveNumber)
+    { 
+        _waveText.text = $"Wave {waveNumber} Starting!"; // set wave text
+        _waveText.gameObject.SetActive(true);  // show  wave text
+        StartCoroutine(HideWaveTextAfterDelay()); // hide after delay
+    }
+
+    IEnumerator HideWaveTextAfterDelay()
+    {
+        yield return new WaitForSeconds(2f); // Display the wave text for 2 seconds
+        _waveText.gameObject.SetActive(false); // Hide the wave text
     }
 }
