@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1208363262094735344}
   - component: {fileID: 4507565136240621963}
   - component: {fileID: 5531205469276721678}
+  - component: {fileID: 2674693946942245410}
   m_Layer: 0
-  m_Name: Negative_Power_Up
+  m_Name: Disable_FireLaser_Power_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,3 +103,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2674693946942245410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9050809167885638972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dfdf604d61215f42b75ec21dadc7d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 3
+  _powerUpID: 6
+  _clip: {fileID: 8300000, guid: 1de543e92d26f0747bf952e03a511449, type: 3}

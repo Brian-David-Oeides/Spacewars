@@ -5,21 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 3.5f; // normal speed
+    private float _speed = 3.5f;
     [SerializeField]
-    private float _speedMultiplier = 2.0f; // doubles the speed x2 in speed boost power up routine
+    private float _speedMultiplier = 2.0f;
     private float _thrusterSpeed;
 
     [SerializeField]
-    private float _thrustDuration = 5.0f;  // duration thrusters are active
+    private float _thrustDuration = 5.0f;
     [SerializeField]
-    private float _thrustCooldown = 10.0f;  // cooldown duration before thrusters can be activated again
+    private float _thrustCooldown = 10.0f;
     //private bool _isThrusterActive = false;  // tracks if thrusters are active
-    private bool _isThrustOnCooldown = false;  // tracks if thrusters are on cooldown
+    private bool _isThrustOnCooldown = false;
 
 
     [SerializeField]
-    private GameObject _laserPrefab; 
+    private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
-    
+
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -44,18 +44,18 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _shieldsRemaining;
 
-    [SerializeField] 
+    [SerializeField]
     private GameObject _damagedLeftEngine, _damagedRightEngine;
 
     [SerializeField]
-    private int _score; 
+    private int _score;
     private UIManager _uiManager;
 
     [SerializeField]
     private AudioClip _laserSoundClip;
     private AudioSource _audioSource;
 
-    private bool _canFireLaser = true;
+    private bool _canFireLaser = true; // disable the firelaser on EMPE pickup
 
     [SerializeField]
     private int _maxAmmo = 15;
@@ -72,10 +72,9 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
 
-        // current ammo count starts at max ammo count 
         _currentAmmo = _maxAmmo;
 
-        _thrusterSpeed = _speed; // starting point for thruster speed is normal speed 
+        _thrusterSpeed = _speed;
 
         if (_spawnManager == null)
         {
@@ -106,7 +105,7 @@ public class Player : MonoBehaviour
         // check to see if FireLaser is turned on
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _canFireLaser)
         {
-           FireLaser();
+            FireLaser();
         }
 
     }
@@ -116,8 +115,8 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 direction = new Vector3(horizontalInput, verticalInput,0);
-        
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+
         transform.Translate(_thrusterSpeed * Time.deltaTime * direction);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
@@ -144,27 +143,25 @@ public class Player : MonoBehaviour
     private void ActivateThrusters()
     {
         //_isThrusterActive = true; // set thrusters to true
-        _isThrustOnCooldown = true; // start the thrust cooldown timer
-        _thrusterSpeed = _speed * _speedMultiplier; // thrusterspeed increase
+        _isThrustOnCooldown = true;
+        _thrusterSpeed = _speed * _speedMultiplier;
 
-        // update the UIManager to show thruster activation and start countdown
         _uiManager.StartThrusterSlider(_thrustDuration, _thrustCooldown);
-        Invoke("DeactivateThrusters", _thrustDuration); // automatically deactivate thrusters after 5 seconds
+        Invoke("DeactivateThrusters", _thrustDuration);
     }
 
     private void DeactivateThrusters()
     {
         //_isThrusterActive = false; // disable thrusters
-        _thrusterSpeed = _speed; // reset speed to normal
+        _thrusterSpeed = _speed;
 
-        // delay 10 seconds then call reset
         Invoke("ResetThrusterCooldown", _thrustCooldown);
     }
 
     private void ResetThrusterCooldown()
     {
         _isThrustOnCooldown = false;
-        _uiManager.ResetThrusterSlider(); // notify UIManager that thrusters can be reactivated
+        _uiManager.ResetThrusterSlider();
     }
 
     void FireLaser()
@@ -173,9 +170,9 @@ public class Player : MonoBehaviour
         {
             _canFire = Time.time + _fireRate;
 
-            
-            if (_isMultiShotActive == true) // check if multishot power up was collected
-            {   // Instantiate multishot
+
+            if (_isMultiShotActive == true)
+            {
                 Instantiate(_multiShotPrefab, transform.position, Quaternion.identity);
             }
             else if (_isTripleShotActive == true)
@@ -189,12 +186,9 @@ public class Player : MonoBehaviour
 
             _audioSource.Play();
 
-            // decrease current ammo in increments of 1
             _currentAmmo--;
-            // Update the ammo UI
-            _uiManager.UpdateAmmoUI(_currentAmmo); 
+            _uiManager.UpdateAmmoUI(_currentAmmo);
 
-            // Check if ammo is 0 after firing
             if (_currentAmmo <= 0)
             {
                 _canFireLaser = false; // Disable firing
@@ -205,6 +199,20 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    public void DisableFireLaser()
+    {
+        StartCoroutine(DisableFireLaserRoutine());
+    }
+
+    // Coroutine to disable firing for 5 seconds
+    private IEnumerator DisableFireLaserRoutine()
+    {
+        _canFireLaser = false;  // disable firing
+        yield return new WaitForSeconds(5.0f);  // wait for 5 seconds
+        _canFireLaser = true;  // re-enable firing
+    }
+
 
     public void Damage()
     {   
@@ -248,18 +256,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void MultiShotActive() // multishot power up method
+    public void MultiShotActive() 
     {
-        // enable the Multishot
-        _isMultiShotActive = true;
-        // start a coroutine 
+        _isMultiShotActive = true; 
         StartCoroutine(MultiShotPowerDownRoutine());
     }
 
-    IEnumerator MultiShotPowerDownRoutine() // method to stop coroutine
+    IEnumerator MultiShotPowerDownRoutine() 
     {
-        yield return new WaitForSeconds(5.0f); // delay for 5 sec
-        _isMultiShotActive = false; // disable power up
+        yield return new WaitForSeconds(5.0f); 
+        _isMultiShotActive = false; 
     }
 
     public void TripleShotActive()
@@ -306,31 +312,29 @@ public class Player : MonoBehaviour
         _uiManager.UpdateAmmoUI(_currentAmmo);
     }
 
-    // method to increase player health when Health Power-Up is collected
     public void HealthPowerUp() 
     {
-        if (_lives < 3) // if lives is 3
+        if (_lives < 3) 
         {
-            _lives++; // add lives increments 1
-            _uiManager.UpdateLives(_lives); // update the UI to reflect the new lives count
+            _lives++; 
+            _uiManager.UpdateLives(_lives); 
         }
 
-        // reset any animations or settings related to lives
         ResetDamageIndicators();
     }
 
-    private void ResetDamageIndicators() // method resets damage animations and lives color
+    private void ResetDamageIndicators() 
     {
         if (_damagedRightEngine.activeSelf)
         {
-            _damagedRightEngine.SetActive(false); // set damage left enging to false
+            _damagedRightEngine.SetActive(false); 
         }
         else if (_damagedLeftEngine.activeSelf)
         {
-            _damagedRightEngine.SetActive(false); // set damage right engine false
+            _damagedRightEngine.SetActive(false); 
         }
          
-        _uiManager.ResetLivesColor(); // reset color changes to shield damage
+        _uiManager.ResetLivesColor(); 
 
     }
 

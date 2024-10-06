@@ -87,7 +87,7 @@ public class SpawnManager : MonoBehaviour
             }
             else if (randomValue < 35) 
             {
-                randomPowerUpIndex = Random.Range(0, 5); 
+                randomPowerUpIndex = Random.Range(0, 6); 
             }
             else // or else
             {

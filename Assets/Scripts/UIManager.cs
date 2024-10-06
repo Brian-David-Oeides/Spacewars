@@ -211,7 +211,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator HideWaveTextAfterDelay()
     {
-        yield return new WaitForSeconds(2f); // Display the wave text for 2 seconds
-        _waveText.gameObject.SetActive(false); // Hide the wave text
+        yield return new WaitForSeconds(2f); // display wave text for 2 seconds
+        _waveText.gameObject.SetActive(false); // hide wave text
     }
 }
