@@ -6,26 +6,24 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    protected float _speed = 2f;
-    protected float _fireRate = 3.0f;
-    protected float _canFire = -1;
-
-    protected bool _canBaseFire = true; // default for base class
+    private float _speed = 2f;
+    private float _fireRate = 3.0f;
+    private float _canFire = -1;
 
     [SerializeField]
-    protected GameObject _enemyLaserPrefab;
+    private GameObject _enemyLaserPrefab;
 
-    protected Player _player;
+    private Player _player;
     private Animator _explosionAnimation;
     private AudioSource _audioSource;
 
     private ShakeCamera _cameraShake; 
-    protected bool _isDestroyed = false;
+    private bool _isDestroyed = false;
 
-    protected float _increaseWaveSpeed;     // speed that is adjusted based on wave number
+    public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
 
     // add virtual method for calculate movement 
-    protected virtual void CalculateMovement()
+    private void CalculateMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
@@ -36,7 +34,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    protected virtual void Start()
+    void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
@@ -60,7 +58,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -68,8 +66,8 @@ public class Enemy : MonoBehaviour
         }
 
         CalculateMovement(); 
-        // _canFire enabled
-        if (_canBaseFire && Time.time > _canFire)
+       
+        if (Time.time > _canFire)
         {   
             FireLasers();
         }
@@ -83,13 +81,9 @@ public class Enemy : MonoBehaviour
         // further adjustments such as health, attack rate, etc., can be added here
     }
 
-    public void SetLaserPrefab(GameObject laserPrefab)
-    {
-        _enemyLaserPrefab = laserPrefab;
-    }
 
     // create new FireLasers() method
-    protected virtual void FireLasers()
+    public void FireLasers()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;

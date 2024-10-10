@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4592132561658774000
+--- !u!1 &4868108378113933478
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1760970152664181641}
-  - component: {fileID: 9176531017066604788}
-  - component: {fileID: 4865419724899420801}
-  - component: {fileID: -5628325015528046109}
-  - component: {fileID: 4776929378377085975}
-  - component: {fileID: -5140482719611668286}
-  - component: {fileID: -8044697490083167210}
+  - component: {fileID: 4868108378113933476}
+  - component: {fileID: 4868108378113933479}
+  - component: {fileID: 4868108378113933466}
+  - component: {fileID: 4868108378113933477}
+  - component: {fileID: 6615548024181816858}
+  - component: {fileID: 1982033758}
+  - component: {fileID: -6188006688441756290}
   m_Layer: 10
-  m_Name: Enemy
+  m_Name: Horizontal_Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1760970152664181641
+--- !u!4 &4868108378113933476
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9176531017066604788
+--- !u!212 &4868108378113933479
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -75,25 +75,25 @@ SpriteRenderer:
   m_SortingLayerID: -1617727707
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3154912113cbb4a498df6f571c74e18c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f5ab1f1381f8f4b4781a05138994361c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.12, y: 5.12}
+  m_Size: {x: 10.74, y: 5.93}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &4865419724899420801
+--- !u!50 &4868108378113933466
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -107,40 +107,55 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &-5628325015528046109
+--- !u!61 &4868108378113933477
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01708585, y: -0.051261187}
+  m_Offset: {x: 0.49444294, y: 0.07255244}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.12, y: 5.12}
-    newSize: {x: 5.12, y: 5.12}
+    pivot: {x: 0.5052661, y: 0.45708153}
+    oldSize: {x: 10.74, y: 5.93}
+    newSize: {x: 10.74, y: 5.93}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.8734723, y: 2.420257}
+  m_Size: {x: 7.0301857, y: 1.113544}
   m_EdgeRadius: 0
---- !u!95 &4776929378377085975
+--- !u!114 &6615548024181816858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4868108378113933478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2eb4ef018af4b40a81cb698ce83b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 2
+  _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+    type: 3}
+--- !u!95 &1982033758
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 03344e7b1619c9845bae615de76cb371, type: 2}
@@ -152,13 +167,13 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!82 &-5140482719611668286
+--- !u!82 &-6188006688441756290
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
+  m_GameObject: {fileID: 4868108378113933478}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -248,18 +263,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-8044697490083167210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592132561658774000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4741d70a822da149bed5177b7688fe5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 2
-  _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
-    type: 3}

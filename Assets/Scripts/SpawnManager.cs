@@ -6,7 +6,17 @@ public class SpawnManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject[] _enemyPrefab; //add array
+    private GameObject _enemyPrefab;
+    [SerializeField]
+    private GameObject _horizontalEnemyPrefab;
+    [SerializeField]
+    private GameObject _chasingEnemyPrefab;
+    [SerializeField]
+    private GameObject _sideToSideEnemyPrefab;
+    [SerializeField]
+    private GameObject _circlingRightEnemyPrefab;
+    [SerializeField]
+    private GameObject _circlingLeftEnemyPrefab;
     [SerializeField] 
     private GameObject _enemyLaserPrefab;
     [SerializeField]
@@ -31,40 +41,33 @@ public class SpawnManager : MonoBehaviour
             if (_stopSpawning) yield break;
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyPrefab[0], positionToSpawn, Quaternion.identity); //[0]
-            newEnemy.transform.parent = _enemyContainer.transform;
 
-            int randomEnemyType = Random.Range(0, 4);
-
-            switch (randomEnemyType)
+            switch (Random.Range(0, 5))
             {
                 case 0:
-                    SideToSideEnemy sideToSideEnemy = newEnemy.AddComponent<SideToSideEnemy>();
-                    sideToSideEnemy.SetLaserPrefab(_enemyLaserPrefab);
+                    GameObject sideToSideEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
+                    sideToSideEnemy.transform.parent = _enemyContainer.transform;
                     break;
-                case 1: 
-                    ChasingEnemy chasingEnemy = newEnemy.AddComponent<ChasingEnemy>();
-                    chasingEnemy.SetLaserPrefab(_enemyLaserPrefab);
+                case 1:
+                    GameObject chasingEnemy = Instantiate(_chasingEnemyPrefab, positionToSpawn, Quaternion.identity);
+                    chasingEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 case 2:
-                    CirclingEnemy circlingEnemy = newEnemy.AddComponent<CirclingEnemy>();
-                    circlingEnemy.SetLaserPrefab(_enemyLaserPrefab);
+                    GameObject circlingRightEnemy = Instantiate(_circlingRightEnemyPrefab, positionToSpawn, Quaternion.identity);
+                    circlingRightEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 case 3:
-                    Circlingleft circlingLeft = newEnemy.AddComponent<Circlingleft>();
-                    circlingLeft.SetLaserPrefab(_enemyLaserPrefab);
+                    GameObject circlingLeftEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
+                    circlingLeftEnemy.transform.parent = _enemyContainer.transform;
+                    break;
+                case 4: // Instantiate the HorizontalEnemy
+                    Vector3 horizontalEnemySpawnPos = new Vector3(-14.85f, Random.Range(5f, 7f), 0); // Spawning offscreen on the left
+                    GameObject horizontalEnemy = Instantiate(_horizontalEnemyPrefab, horizontalEnemySpawnPos, Quaternion.identity);
+                    horizontalEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 default:
-                    Debug.LogError("default enemy type");
+                    Debug.LogError("Base Enemy ");
                     break;
-            }
-            
-            // customize enemy stats for current wave (e.g., speed scaling)
-            Enemy enemyComponent = newEnemy.GetComponent<Enemy>();
-
-            if (enemyComponent != null)
-            {
-                enemyComponent.InitializeForWave(wave); // adjust stats based on wave
             }
 
             yield return new WaitForSeconds(3.0f); 
@@ -78,6 +81,7 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+
             int randomValue = Random.Range(0, 100); 
             int randomPowerUpIndex; 
 
@@ -85,11 +89,15 @@ public class SpawnManager : MonoBehaviour
             {
                 randomPowerUpIndex = 5; 
             }
+            else if (randomValue < 10) // adjust for 10%
+            {
+                randomPowerUpIndex = 6; //disable fire laser power-up
+            }
             else if (randomValue < 35) 
             {
-                randomPowerUpIndex = Random.Range(0, 6); 
+                randomPowerUpIndex = Random.Range(0, 5); 
             }
-            else // or else
+            else 
             {
                 randomPowerUpIndex = Random.Range(0, _powerUps.Length);
             }

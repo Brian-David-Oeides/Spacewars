@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4507565136240621963}
   - component: {fileID: 5531205469276721678}
   - component: {fileID: 2674693946942245410}
+  - component: {fileID: 449707175961154900}
+  - component: {fileID: 6719059289455572840}
   m_Layer: 0
   m_Name: Disable_FireLaser_Power_Up
   m_TagString: Untagged
@@ -69,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1617727707
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1087942428755817506, guid: b53fd1fbda0d20842871150a54c2e443,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -118,3 +120,40 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 6
   _clip: {fileID: 8300000, guid: 1de543e92d26f0747bf952e03a511449, type: 3}
+--- !u!58 &449707175961154900
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9050809167885638972}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.015545487, y: -0.04663527}
+  serializedVersion: 2
+  m_Radius: 0.57766974
+--- !u!50 &6719059289455572840
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9050809167885638972}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

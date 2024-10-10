@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
     private AudioClip _laserSoundClip;
     private AudioSource _audioSource;
 
-    private bool _canFireLaser = true; // disable the firelaser on EMPE pickup
+    private bool _canFireLaser = true; // disable the firelaser 
 
     [SerializeField]
     private int _maxAmmo = 15;
@@ -200,12 +200,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DisableFireLaser()
+    public void DisableFireLaser() // disable fire laser
     {
-        StartCoroutine(DisableFireLaserRoutine());
+        
+        StartCoroutine(DisableFireLaserRoutine()); // start fire laser delay
+        _audioSource.PlayOneShot(_outOfAmmo); // play out-of-ammo clip
     }
 
-    // Coroutine to disable firing for 5 seconds
+    // coroutine to disable firing for 5 seconds
     private IEnumerator DisableFireLaserRoutine()
     {
         _canFireLaser = false;  // disable firing
