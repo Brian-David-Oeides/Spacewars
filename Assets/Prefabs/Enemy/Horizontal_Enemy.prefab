@@ -146,8 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 2
-  _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+  _homingMissilePrefab: {fileID: 7768412109950812709, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4,
     type: 3}
+  _increaseWaveSpeed: 0
 --- !u!95 &1982033758
 Animator:
   serializedVersion: 3
@@ -158,7 +159,7 @@ Animator:
   m_GameObject: {fileID: 4868108378113933478}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 03344e7b1619c9845bae615de76cb371, type: 2}
+  m_Controller: {fileID: 9100000, guid: de877cdf6fcb9e34fbec9e3158e022e2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -486,7 +486,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &179868418
 MonoBehaviour:
@@ -712,7 +712,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &650424668
 MonoBehaviour:
@@ -1013,7 +1013,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &945267912
 GameObject:
@@ -2422,7 +2422,7 @@ Transform:
   m_Children:
   - {fileID: 66184067}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1810626385
 GameObject:
@@ -2525,7 +2525,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1001 &4203898106896679025
+--- !u!1001 &2024832708
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -2535,7 +2535,7 @@ PrefabInstance:
     - target: {fileID: 4203898106580836786, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4203898106580836786, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
@@ -2545,7 +2545,7 @@ PrefabInstance:
     - target: {fileID: 4203898106580836786, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.81
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4203898106580836786, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
@@ -2587,11 +2587,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4203898106580836814, guid: d7d9b211187e94449befb26baa43e71e,
-        type: 3}
-      propertyPath: _waveManager
-      value: 
-      objectReference: {fileID: 650424668}
     - target: {fileID: 4203898106580836815, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
       propertyPath: m_Name

@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     private float _thrustDuration = 5.0f;
     [SerializeField]
     private float _thrustCooldown = 10.0f;
-    //private bool _isThrusterActive = false;  // tracks if thrusters are active
+    
     private bool _isThrustOnCooldown = false;
 
 
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
 
     private void ActivateThrusters()
     {
-        //_isThrusterActive = true; // set thrusters to true
+        
         _isThrustOnCooldown = true;
         _thrusterSpeed = _speed * _speedMultiplier;
 
@@ -152,7 +152,7 @@ public class Player : MonoBehaviour
 
     private void DeactivateThrusters()
     {
-        //_isThrusterActive = false; // disable thrusters
+        
         _thrusterSpeed = _speed;
 
         Invoke("ResetThrusterCooldown", _thrustCooldown);
@@ -333,7 +333,7 @@ public class Player : MonoBehaviour
         }
         else if (_damagedLeftEngine.activeSelf)
         {
-            _damagedRightEngine.SetActive(false); 
+            _damagedLeftEngine.SetActive(false); 
         }
          
         _uiManager.ResetLivesColor(); 

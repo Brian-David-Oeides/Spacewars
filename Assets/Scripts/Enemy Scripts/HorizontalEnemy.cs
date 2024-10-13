@@ -10,7 +10,7 @@ public class HorizontalEnemy : MonoBehaviour
     private float _canFire = -1;
 
     [SerializeField]
-    private GameObject _enemyLaserPrefab;
+    private GameObject _homingMissilePrefab;
 
     private Player _player;
     private Animator _explosionAnimation;
@@ -24,17 +24,17 @@ public class HorizontalEnemy : MonoBehaviour
     private void CalculateMovement()
     {
 
-        // Move horizontally to the right
+        // move horizontally right
         transform.Translate(Vector3.right * _speed * Time.deltaTime);
 
-        // If the enemy moves off the screen on the right, reposition it at a new random Y position on the left
         if (transform.position.x > 13.80f)
         {
-            Destroy(this.gameObject);
+            float randomY = Random.Range(5f, 7f);
+            transform.position = new Vector3(-14.85f, randomY, 0);
         }
     }
 
-    protected virtual void Start()
+    void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
@@ -54,9 +54,10 @@ public class HorizontalEnemy : MonoBehaviour
         {
             Debug.LogError("The player is NULL.");
         }
+       
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -64,24 +65,23 @@ public class HorizontalEnemy : MonoBehaviour
         }
 
         CalculateMovement();
-        // _canFire enabled
-        if (Time.time > _canFire)
+
+        if (transform.position.x >= -10f)
         {
-            FireLasers();
+            if (Time.time > _canFire)
+            {
+                FireLasers();
+            }
         }
     }
-    protected virtual void FireLasers()
+    private void FireLasers()
     {
-        _fireRate = Random.Range(3f, 7f);
+        _fireRate = Random.Range(3f, 4f);
         _canFire = Time.time + _fireRate;
 
-        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);
-        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-        for (int i = 0; i < lasers.Length; i++)
-        {
-            lasers[i].AssignEnemyLaser();
-        }
+        // instantiate homing missile laser
+        GameObject homingMissile = Instantiate(_homingMissilePrefab, this.transform.position, Quaternion.identity);
+        homingMissile.GetComponent<HomingMissile>(); // use HomingMissile script
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -127,6 +127,9 @@ public class HorizontalEnemy : MonoBehaviour
         // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
+        // notify the SpawnManager that the Horizontal Enemy has been destroyed
+        SpawnManager spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
         if (waveManager != null)
         {
             waveManager.EnemyDestroyed(); // notify WaveManager about enemy's destruction
@@ -136,6 +139,17 @@ public class HorizontalEnemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
+        if (spawnManager != null) // check if SpawnManager was found
+        {
+            // notify SpawnManager Horizontal Enemy  destroyed
+            spawnManager.OnHorizontalEnemyDestroyed();
+        }
+        else
+        {
+            Debug.LogError("SpawnManager NULL! Unable to notify of HorizontalEnemy destruction.");
+        }
+
         Destroy(this.gameObject, 2.8f);
     }
+
 }

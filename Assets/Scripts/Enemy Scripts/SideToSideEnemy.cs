@@ -148,7 +148,7 @@ public class SideToSideEnemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Destroy(this.gameObject, 1.8f);
     }
 }
 
