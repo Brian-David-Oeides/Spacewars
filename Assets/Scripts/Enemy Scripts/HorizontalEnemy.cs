@@ -124,6 +124,13 @@ public class HorizontalEnemy : MonoBehaviour
         _audioSource.Play();
         _isDestroyed = true;
 
+        // Disable the collider immediately upon enemy death
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
         // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 

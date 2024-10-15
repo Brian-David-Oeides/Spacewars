@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     
     private bool _isThrustOnCooldown = false;
 
+    private SmartMissile smartMissile;
 
     [SerializeField]
     private GameObject _laserPrefab;
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _multiShotPrefab;
+    [SerializeField]
+    private GameObject _smartMissilePrefab;
 
     [SerializeField]
     private float _fireRate = 0.5f;
@@ -31,7 +34,10 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int _lives = 3;
+
     private SpawnManager _spawnManager;
+
+    private bool _isSmartMissileActive = false; // flag smart missile
 
     private bool _isTripleShotActive = false;
 
@@ -62,7 +68,7 @@ public class Player : MonoBehaviour
     private int _currentAmmo;
 
     [SerializeField]
-    private AudioClip _outOfAmmo;
+    private AudioClip _outOfAmmo; 
 
     void Start()
     {
@@ -133,10 +139,9 @@ public class Player : MonoBehaviour
 
     private void HandleThrusterInput()
     {
-        // Activate thrusters if A or D and LeftShift is pressed && not in cooldown
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKey(KeyCode.LeftShift) && !_isThrustOnCooldown)
         {
-            ActivateThrusters(); // then activate thrusters
+            ActivateThrusters(); 
         }
     }
 
@@ -151,10 +156,8 @@ public class Player : MonoBehaviour
     }
 
     private void DeactivateThrusters()
-    {
-        
+    {   
         _thrusterSpeed = _speed;
-
         Invoke("ResetThrusterCooldown", _thrustCooldown);
     }
 
@@ -170,8 +173,11 @@ public class Player : MonoBehaviour
         {
             _canFire = Time.time + _fireRate;
 
-
-            if (_isMultiShotActive == true)
+            if (_isSmartMissileActive == true)
+            {
+                FireSmartMissile();
+            }
+            else if (_isMultiShotActive == true)
             {
                 Instantiate(_multiShotPrefab, transform.position, Quaternion.identity);
             }
@@ -191,28 +197,25 @@ public class Player : MonoBehaviour
 
             if (_currentAmmo <= 0)
             {
-                _canFireLaser = false; // Disable firing
-                // play out of ammo audio one time
+                _canFireLaser = false; 
                 _audioSource.PlayOneShot(_outOfAmmo);
-                // access the UI Manager script coroutine
                 _uiManager.FlashAmmoUI();
             }
         }
     }
 
-    public void DisableFireLaser() // disable fire laser
+    public void DisableFireLaser() 
     {
         
-        StartCoroutine(DisableFireLaserRoutine()); // start fire laser delay
-        _audioSource.PlayOneShot(_outOfAmmo); // play out-of-ammo clip
+        StartCoroutine(DisableFireLaserRoutine()); 
+        _audioSource.PlayOneShot(_outOfAmmo); 
     }
 
-    // coroutine to disable firing for 5 seconds
     private IEnumerator DisableFireLaserRoutine()
     {
-        _canFireLaser = false;  // disable firing
-        yield return new WaitForSeconds(5.0f);  // wait for 5 seconds
-        _canFireLaser = true;  // re-enable firing
+        _canFireLaser = false;  
+        yield return new WaitForSeconds(5.0f);  
+        _canFireLaser = true;  
     }
 
 
@@ -257,7 +260,22 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    public void FireSmartMissile()
+    {
+        Instantiate(_smartMissilePrefab, transform.position + new Vector3(-1.0f, 0, 0), Quaternion.identity);
+        Instantiate(_smartMissilePrefab, transform.position + new Vector3(1.0f, 0, 0), Quaternion.identity);
+    }
+    public void SmartMissileActive()// custom method public void SmartMissile()
+    {
+        _isSmartMissileActive = true; // enable _isSmartMissileActive
+        StartCoroutine(SmartMissilePowerDownRoutine());// StartCoroutine power down SmartMissile
+    }
 
+    IEnumerator SmartMissilePowerDownRoutine() // coroutine for power down routine
+    {
+        yield return new WaitForSeconds(5.0f); // yield a 5 second delay 
+        _isSmartMissileActive = false; // disable _isSmartMissileActive 
+    }
     public void MultiShotActive() 
     {
         _isMultiShotActive = true; 

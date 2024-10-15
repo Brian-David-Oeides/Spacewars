@@ -7,9 +7,10 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3.0f;
-    
-    [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield, 3 = Ammo. 4 = Health, 5 = MultiShot, 6 = DisableFireLaser
+
+    [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield, 3 = Ammo. 4 = Health, 5 = MultiShot, 6 = DisableFireLaser, 7 = SmartMissile
     private int _powerUpID;
+
     [SerializeField]
     private AudioClip _clip;
 
@@ -52,8 +53,11 @@ public class PowerUp : MonoBehaviour
                 case 5: 
                     player.MultiShotActive(); 
                     break;
-                case 6: // add case 6 to disable laser
-                    player.DisableFireLaser();// call disable fire laser method 
+                case 6: 
+                    player.DisableFireLaser(); 
+                    break;
+                case 7: // add smart missile
+                    player.SmartMissileActive(); 
                     break;
                 default:
                     Debug.Log("Default Value");

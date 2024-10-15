@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -26,11 +25,11 @@ public class SpawnManager : MonoBehaviour
 
     private bool _stopSpawning = false;
 
-    private bool _horizontalEnemyActive = false; // track if a Horizontal Enemy is active
+    private bool _horizontalEnemyActive = false; 
 
     private int _enemiesSpawned = 0;
 
-    public void StartSpawning(int enemyCount, int wave) // add enemy count and wave number
+    public void StartSpawning(int enemyCount, int wave) 
     {
         StartCoroutine(SpawnEnemyRoutine(enemyCount, wave));
         StartCoroutine(SpawnPowerUpRoutine());
@@ -124,12 +123,11 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = true;
     }
 
-
-    // reset to allow spawning again if needed (for example, after restart)
     public void ResetSpawning()
     {
-        _stopSpawning = false; // enable spawning
+        _stopSpawning = false; 
     }
+
     public void OnHorizontalEnemyDestroyed()
     {
         _horizontalEnemyActive = false; // reset flag when Horizontal Enemy is destroyed

@@ -137,6 +137,13 @@ public class Enemy : MonoBehaviour
         _audioSource.Play();
         _isDestroyed = true;
 
+        // Disable the collider immediately upon enemy death
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
         // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
@@ -149,6 +156,6 @@ public class Enemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 1.8f);
+        Destroy(this.gameObject, 2.8f);
     }
 }
