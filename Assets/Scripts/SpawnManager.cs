@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    private Player player; // reference to Player
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -96,17 +97,35 @@ public class SpawnManager : MonoBehaviour
             int randomValue = Random.Range(0, 100);
             int randomPowerUpIndex;
 
-            if (randomValue < 5)
+            int healthSpawnChance = 10; // 10% chance (rare) Health
+            int ammoSpawnChance = 40; // 40% chance (frequent) Ammo
+
+            // Adjust spawn rates based on player's condition
+            if (player._lives < 2) // Low health (less than 2 lives)
             {
-                randomPowerUpIndex = 5;
+                healthSpawnChance = 30;  // Increase health spawn chance to 30%
             }
-            else if (randomValue < 10) // adjust for 10%
+            if (player._currentAmmo < player._maxAmmo * 0.2f) // Low ammo (less than 20% of max ammo)
             {
-                randomPowerUpIndex = 6; //disable fire laser power-up
+                ammoSpawnChance = 60;  // Increase ammo spawn chance to 60%
             }
-            else if (randomValue < 35)
+
+            // adust spawn rate 
+            if (randomValue < healthSpawnChance) // 10% chance (rare)
             {
-                randomPowerUpIndex = Random.Range(0, 5);
+                randomPowerUpIndex = 4; // Health - Element 4
+            }
+            else if (randomValue < healthSpawnChance + ammoSpawnChance) // 40% chance 
+            {
+                randomPowerUpIndex = 3; //Ammo - Element 3
+            }
+            else if (randomValue < 70) // 20% chance
+            {
+                randomPowerUpIndex = Random.Range(0, 2); // Speed, TripleShot, Shield - Element 0 -2
+            }
+            else if (randomValue < 80) // 10% chance
+            {
+                randomPowerUpIndex = Random.Range(5, 7); // MultiShot, EMPE, Smart Missile - Element 5-7
             }
             else
             {
