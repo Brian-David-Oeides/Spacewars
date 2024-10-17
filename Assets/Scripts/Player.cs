@@ -363,4 +363,19 @@ public class Player : MonoBehaviour
         _score += points;
         _uiManager.UpdateScore(_score);
     }
+    
+    public int GetLives() // getter for _lives
+    {
+        return _lives;
+    }
+
+    public int GetCurrentAmmo() // getter for _currentAmmo
+    {
+        return _currentAmmo;
+    }
+
+    public int GetMaxAmmo() // Getter for _maxAmmo
+    {
+        return _maxAmmo;
+    }
 }

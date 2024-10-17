@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    [SerializeField]
     private Player player; // reference to Player
     [SerializeField]
     private GameObject _enemyPrefab;
@@ -100,14 +101,17 @@ public class SpawnManager : MonoBehaviour
             int healthSpawnChance = 10; // 10% chance (rare) Health
             int ammoSpawnChance = 40; // 40% chance (frequent) Ammo
 
-            // Adjust spawn rates based on player's condition
-            if (player._lives < 2) // Low health (less than 2 lives)
+            // adjust spawn rates based on player's condition
+            if (player.GetLives() < 2) // low health (less than 2 lives)
             {
-                healthSpawnChance = 30;  // Increase health spawn chance to 30%
+                healthSpawnChance = 30;  // increase health spawn chance to 30%
+                Debug.Log("Health spawn chance increased to: " + healthSpawnChance);
             }
-            if (player._currentAmmo < player._maxAmmo * 0.2f) // Low ammo (less than 20% of max ammo)
+
+            if (player.GetCurrentAmmo() < player.GetMaxAmmo() * 0.2f) // low ammo (less than 20% of max ammo)
             {
-                ammoSpawnChance = 60;  // Increase ammo spawn chance to 60%
+                ammoSpawnChance = 60;  // increase ammo spawn chance to 60%
+                Debug.Log("Ammo spawn chance increased to: " + ammoSpawnChance);
             }
 
             // adust spawn rate 
