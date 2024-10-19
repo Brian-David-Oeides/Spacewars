@@ -32,6 +32,12 @@ public class HomingMissile : MonoBehaviour
 
     void Update()
     {
+        if (_playerTransform == null)
+        {
+            Destroy(this.gameObject); // Destroy the missile if the player is no longer alive
+            return;
+        }
+        
         if (_playerTransform != null && _isHoming)
         {
             // calculate distance to player

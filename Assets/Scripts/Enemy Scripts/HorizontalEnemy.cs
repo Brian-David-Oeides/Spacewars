@@ -19,6 +19,11 @@ public class HorizontalEnemy : MonoBehaviour
     private ShakeCamera _cameraShake;
     private bool _isDestroyed = false;
 
+    [SerializeField]
+    private int _hitPoints = 3;
+
+    private SpriteRenderer _spriteRenderer;
+
     public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
 
     private void CalculateMovement()
@@ -29,8 +34,7 @@ public class HorizontalEnemy : MonoBehaviour
 
         if (transform.position.x > 13.80f)
         {
-            float randomY = Random.Range(5f, 7f);
-            transform.position = new Vector3(-14.85f, randomY, 0);
+            Destroy(this.gameObject);
         }
     }
 
@@ -39,6 +43,7 @@ public class HorizontalEnemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+        _spriteRenderer = GetComponent<SpriteRenderer>(); // get SpriteRenderer component
 
         // set initial fire time to avoid immediate firing before spawn
         _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
@@ -106,19 +111,32 @@ public class HorizontalEnemy : MonoBehaviour
         {
             Destroy(other.gameObject);
 
-            if (_player != null)
+            // trigger flash effect on hit
+            StartCoroutine(FlashRed());
+
+            _hitPoints--; // subtract 1 hit point 
+
+            if (_hitPoints <= 0)
             {
-                _player.AddScore(10);
+                if (_player != null)
+                {
+                    _player.AddScore(10);
+                }
+
+                TriggerEnemyDeath();
             }
-
-            TriggerEnemyDeath();
         }
-
     }
-    // custom method for enemy death
+
+    private IEnumerator FlashRed()
+    {
+        _spriteRenderer.color = Color.red; // change color to red
+        yield return new WaitForSeconds(0.1f); // wait 0.1 seconds
+        _spriteRenderer.color = Color.white; // revert back to original color (white)
+    }
+
     private void TriggerEnemyDeath()
     {
-        // call method for enemy death
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();
