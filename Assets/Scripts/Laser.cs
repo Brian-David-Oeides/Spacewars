@@ -57,10 +57,6 @@ public class Laser : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    public bool IsEnemyLaser
-    {
-        get { return _isEnemyLaser; }
-    }
 
     public void AssignEnemyLaser()
     {

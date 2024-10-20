@@ -14,14 +14,69 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     private AudioClip _clip;
 
-  
+    private Transform _playerTransform; // reference to player
+    [SerializeField]
+    private float _speedToPlayer = 10.0f; // speed when moving towards player
+    [SerializeField]
+    private float _triggerRange = 4.0f; // range power-up can move to player
+    private bool _moveToPlayer = false; // enable and disable moving to Player
+    
+    private void Start()
+    {
+        // Find the player object in the scene
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
+        {
+            _playerTransform = playerObject.transform;
+        }
+
+    }
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        // move power-up normally unless 'C' is pressed
+        if (_moveToPlayer && _playerTransform != null)
+        {
+            // move toward player
+            float step = _speedToPlayer * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, _playerTransform.position, step);
 
+            Debug.Log("Speed to player: " + _speedToPlayer);
+        }
+        else
+        {
+            // normal downward movement
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
+
+        // destroy if out of bounds
         if (this.transform.position.y < -4.7f)
         {
             Destroy(this.gameObject);
+        }
+
+        // check if "C" key is pressed and if player exists
+        if (Input.GetKeyDown(KeyCode.C) && _playerTransform != null)
+        {
+            // calculate distance between power-up and player
+            float distanceToPlayer = Vector3.Distance(transform.position, _playerTransform.position);
+
+            // check if distance is in range
+            if (distanceToPlayer <= _triggerRange)
+            {
+                _moveToPlayer = true;
+            }
+
+            Debug.Log("Distance to player: " + distanceToPlayer);
+            Debug.Log("Moving to player: " + _moveToPlayer);
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (_playerTransform != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(_playerTransform.position, _triggerRange);
         }
     }
 
@@ -65,12 +120,6 @@ public class PowerUp : MonoBehaviour
             }
 
             Destroy(this.gameObject);
-        }
-
-        if (other.tag == "Enemy_Laser")
-        {
-            Destroy(other.gameObject); // destroy Enemy Laser
-            Destroy(this.gameObject); // destroy PowerUp
         }
     }
 }

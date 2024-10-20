@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
@@ -21,18 +22,6 @@ public class Enemy : MonoBehaviour
     private bool _isDestroyed = false;
 
     public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
-
-    // add virtual method for calculate movement 
-    private void CalculateMovement()
-    {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if (transform.position.y < -5f)
-        {
-            float randomX = Random.Range(-8f, 8f);
-            transform.position = new Vector3(randomX, 7, 0);
-        }
-    }
 
     void Start()
     {
@@ -73,6 +62,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void CalculateMovement()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if (transform.position.y < -5f)
+        {
+            float randomX = Random.Range(-8f, 8f);
+            transform.position = new Vector3(randomX, 7, 0);
+        }
+    }
+
+
     // method to adjust enemy stats based on the wave number
     public void InitializeForWave(int wave)
     {
@@ -81,16 +82,13 @@ public class Enemy : MonoBehaviour
         // further adjustments such as health, attack rate, etc., can be added here
     }
 
-
-    // create new FireLasers() method
-    public void FireLasers()
+    public void FireLasers(GameObject target = null)
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
 
         GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
         for (int i = 0; i < lasers.Length; i++)
         {
             lasers[i].AssignEnemyLaser();
