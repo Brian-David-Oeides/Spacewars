@@ -29,7 +29,7 @@ public class CirclingEnemy : MonoBehaviour
     private float _circleAngle = 0f; // Angle to calculate circle position
     private float _angularSpeed; // Angular speed for consistent movement
 
-    private void Start()
+    void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
@@ -53,7 +53,7 @@ public class CirclingEnemy : MonoBehaviour
         _angularSpeed = _speed * 2.5f;
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -124,7 +124,7 @@ public class CirclingEnemy : MonoBehaviour
         }
     }
 
-    protected virtual void FireLasers()
+    private void FireLasers()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
@@ -137,8 +137,6 @@ public class CirclingEnemy : MonoBehaviour
             lasers[i].AssignEnemyLaser();
         }
     }
-
-    
 
     void OnTriggerEnter2D(Collider2D other)
     {

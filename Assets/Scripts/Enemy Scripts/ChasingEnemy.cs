@@ -25,7 +25,6 @@ public class ChasingEnemy : MonoBehaviour
     private float _angularSpeed;
 
 
-
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -50,7 +49,7 @@ public class ChasingEnemy : MonoBehaviour
         _angularSpeed = _speed * 2f;
     }
 
-    protected virtual void Update()
+    private void Update()
     {
         if (_isDestroyed)
         {
@@ -68,7 +67,7 @@ public class ChasingEnemy : MonoBehaviour
 
     
 
-    protected virtual void FireLasers()
+    private void FireLasers()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;

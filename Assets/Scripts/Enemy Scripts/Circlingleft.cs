@@ -55,7 +55,7 @@ public class Circlingleft : MonoBehaviour
         _angularSpeed = _speed * 2.5f;
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -148,8 +148,6 @@ public class Circlingleft : MonoBehaviour
             lasers[i].AssignEnemyLaser();
         }
     }
-
-    
 
     void OnTriggerEnter2D(Collider2D other)
     {

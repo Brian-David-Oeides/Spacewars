@@ -49,6 +49,8 @@ public class SpawnManager : MonoBehaviour
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
 
+            
+
             switch (Random.Range(0, 5))
             {
                 case 0:
@@ -80,6 +82,8 @@ public class SpawnManager : MonoBehaviour
                     Debug.LogError("Base Enemy ");
                     break;
             }
+
+            
 
             _enemiesSpawned++;
 

@@ -126,6 +126,7 @@ public class HorizontalEnemy : MonoBehaviour
                 TriggerEnemyDeath();
             }
         }
+
     }
 
     private IEnumerator FlashRed()
