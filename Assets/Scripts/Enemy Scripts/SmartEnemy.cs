@@ -9,9 +9,9 @@ public class SmartEnemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private float _dodgeDistance = 2f;
-    private bool _dodgeLeft = true; // Starts by dodging left
-    private bool _dodging = false;
+    private float _dodgeSpeed = 5f; // Speed of the dodge
+    private float _dodgeDuration = 0.5f; // How long the dodge lasts
+    private bool _isDodging = false; // Flag to check if the enemy is currently dodging;
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -27,15 +27,14 @@ public class SmartEnemy : MonoBehaviour
     public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
 
     // New speed multiplier
-    public float speedMultiplier = 1.5f;
+    private float _speedMultiplier = 2f;
 
     // Updated method for movement to move up instead of down
     private void CalculateMovement()
     {
-        if (!_dodging)
-        {
-            transform.Translate(Vector3.up * _speed * speedMultiplier * Time.deltaTime, Space.World);
-        }
+        
+        transform.Translate(Vector3.up * _speed * _speedMultiplier * Time.deltaTime, Space.World);
+        
         // Destroy the enemy when it reaches a specific point (if needed)
         if (transform.position.y >= 9f)
         {
@@ -75,80 +74,135 @@ public class SmartEnemy : MonoBehaviour
             return;
         }
 
-        CalculateMovement();
-        // If the player's laser is fired, dodge
-        DetectPlayerFire();
+        if (!_isDodging)
+        {
+            GameObject laser = DetectIncomingLaser();
+            if (laser != null)
+            {
+                PredictiveDodge(laser);
+            }
+        }
 
-        if (Time.time > _canFire)
+        CalculateMovement();
+        
+
+        if (Time.time > _canFire && HasPassedPlayerBy(1.0f))
         {
             FireLasers();
         }
     }
 
-    void DetectPlayerFire()
-    {
-        if (Input.GetKeyDown(KeyCode.Space)) // Detects player's laser fire
-        {
-            StartCoroutine(Dodge());
-        }
-    }
-
-    IEnumerator Dodge()
-    {
-        _dodging = true;
-        Vector3 dodgeDirection;
-
-        // Toggle dodge direction
-        if (_dodgeLeft)
-        {
-            dodgeDirection = Vector3.left;
-        }
-        else
-        {
-            dodgeDirection = Vector3.right;
-        }
-
-        // Perform dodge movement
-        Vector3 dodgeTarget = transform.position + (dodgeDirection * _dodgeDistance);
-        float dodgeSpeed = 5f; // Speed of dodge
-
-        while (Vector3.Distance(transform.position, dodgeTarget) > 0.1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, dodgeTarget, dodgeSpeed * Time.deltaTime);
-            yield return null;
-        }
-
-        // Toggle direction for the next dodge
-        _dodgeLeft = !_dodgeLeft;
-        _dodging = false;
-    }
+  
 
     // method to adjust enemy stats based on the wave number
     public void InitializeForWave(int wave)
     {
         // increase enemy speed based on wave number (e.g., 10% increase per wave)
-        _increaseWaveSpeed = _speed * (1 + (wave * 0.1f));
+        _increaseWaveSpeed = _speed * _speedMultiplier * (1 + (wave * 0.1f));
+    }
+
+    // New method to check if the enemy has passed the player by a certain distance
+    private bool HasPassedPlayerBy(float distance)
+    {
+        // Check if the enemy's Y position is more than the player's Y position plus the specified distance
+        return transform.position.y > (_playerTransform.position.y + distance);
     }
 
     public void FireLasers()
     {
-        _fireRate = Random.Range(3f, 7f);
+        // Set the fire rate to 1.5 seconds
+        _fireRate = 1.5f;
         _canFire = Time.time + _fireRate;
 
-        // Null check to ensure the prefab is assigned
-        if (_enemyLaserPrefab == null)
+        if (_playerTransform == null) return; // Ensure we have a reference to the player's position
+
+        // Define the offset for the laser behind the enemy
+        Vector3 laserOffset = new Vector3(0, -1.9f, 0); // Adjust the Y value to place it behind
+
+        // Instantiate the laser
+        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position + laserOffset, Quaternion.identity);
+
+        // Calculate the direction from the enemy to the player's current position
+        Vector3 directionToPlayer = (_playerTransform.position - transform.position).normalized;
+
+
+        // Set the laser's rotation to face the player without affecting scale
+        float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg - 90f;
+        enemyLaser.transform.rotation = Quaternion.Euler(0, 0, angle);
+       
+
+        // Assign the direction to the laser's movement component (assuming the laser has its own script)
+        Laser laserScript = enemyLaser.GetComponent<Laser>();
+        if (laserScript != null)
         {
-            Debug.LogError("_enemyLaserPrefab is not assigned!");
-            return; // Exit the method to avoid further issues
+            laserScript.SetDirection(directionToPlayer);
+            laserScript.AssignEnemyLaser();  // Mark the laser as an enemy laser
+        }
+    }
+
+    // Detect incoming laser (you can adjust detection logic as needed)
+    private GameObject DetectIncomingLaser()
+    {
+        GameObject[] lasers = GameObject.FindGameObjectsWithTag("Laser");
+
+        foreach (GameObject laser in lasers)
+        {
+            float distance = Vector3.Distance(laser.transform.position, transform.position);
+
+            if (distance < 5.0f) // Detect lasers within a certain range
+            {
+                return laser;
+            }
         }
 
-        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);
-        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+        return null;
+    }
 
-        for (int i = 0; i < lasers.Length; i++)
+    // Predictive dodge based on laser's future position
+    private void PredictiveDodge(GameObject laser)
+    {
+        // Get laser's velocity and predict where it will be in 0.5 seconds
+        Vector3 laserVelocity = laser.GetComponent<Rigidbody2D>().velocity;
+        Vector3 futurePosition = laser.transform.position + (laserVelocity * 0.5f);  // Adjust 0.5f based on your desired prediction time
+
+        // If the laser's predicted future position is within a danger zone (e.g., 1 unit close on x-axis), dodge
+        if (Mathf.Abs(futurePosition.x - transform.position.x) < 1.0f)
         {
-            lasers[i].AssignEnemyLaser();
+            // Debug log to confirm player's laser is triggering the dodge
+            Debug.Log("Player's laser detected within danger zone. Enemy is initiating a dodge.");
+
+            // Choose a random dodge direction (left or right) and initiate the smooth dodge
+            Vector3 dodgeDirection = Random.value > 0.5f ? Vector3.left : Vector3.right;
+            Vector3 dodgeTarget = transform.position + dodgeDirection * 2.0f;  // Adjust dodge distance
+
+            // Start the smooth dodge coroutine
+            StartCoroutine(SmoothDodge(dodgeTarget));
         }
+    }
+
+    // Smooth dodge movement using interpolation
+    private IEnumerator SmoothDodge(Vector3 targetPosition)
+    {
+        _isDodging = true;  // Set flag to prevent multiple dodges at once
+
+        float elapsedTime = 0;
+        Vector3 startPos = transform.position;
+
+        // Calculate the dodge duration based on dodge speed (faster speed = shorter duration)
+        float dodgeTime = Vector3.Distance(startPos, targetPosition) / _dodgeSpeed;
+
+        while (elapsedTime < dodgeTime)
+        {
+            // Interpolate between the start and target position based on elapsed time
+            transform.position = Vector3.Lerp(startPos, targetPosition, elapsedTime / dodgeTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the enemy reaches the exact target position at the end of the dodge
+        transform.position = targetPosition;
+
+        _isDodging = false;  // Reset the dodge flag
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -162,7 +216,7 @@ public class SmartEnemy : MonoBehaviour
                 player.Damage();
                 if (_cameraShake != null)
                 {
-                    StartCoroutine(_cameraShake.Shake(0.3f, 0.5f));
+                    _cameraShake.TriggerShake(0.1f, 0.2f);
                 }
             }
 

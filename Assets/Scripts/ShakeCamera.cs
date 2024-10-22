@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class ShakeCamera : MonoBehaviour
 {
+
+    // Public method to trigger the camera shake
+    public void TriggerShake(float amountTimeRemaining, float amountShake)
+    {
+        StartCoroutine(Shake(amountTimeRemaining, amountShake));
+    }
     public IEnumerator Shake(float amountTimeRemaining, float amountShake) // choreograph shake movement
     {
         // get this gameobjects position

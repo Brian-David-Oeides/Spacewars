@@ -107,7 +107,7 @@ public class SideToSideEnemy : MonoBehaviour
                 player.Damage();
                 if (_cameraShake != null)
                 {
-                    StartCoroutine(_cameraShake.Shake(0.3f, 0.5f));
+                    _cameraShake.TriggerShake(0.1f, 0.2f);
                 }
             }
 
