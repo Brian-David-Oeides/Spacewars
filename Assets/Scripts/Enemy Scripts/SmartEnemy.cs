@@ -10,7 +10,6 @@ public class SmartEnemy : MonoBehaviour
     private float _canFire = -1;
 
     private float _dodgeSpeed = 5f; // Speed of the dodge
-    private float _dodgeDuration = 0.5f; // How long the dodge lasts
     private bool _isDodging = false; // Flag to check if the enemy is currently dodging;
 
     [SerializeField]
@@ -114,30 +113,14 @@ public class SmartEnemy : MonoBehaviour
         _fireRate = 1.5f;
         _canFire = Time.time + _fireRate;
 
-        if (_playerTransform == null) return; // Ensure we have a reference to the player's position
+        if (_playerTransform == null) return;
 
         // Define the offset for the laser behind the enemy
         Vector3 laserOffset = new Vector3(0, -1.9f, 0); // Adjust the Y value to place it behind
 
-        // Instantiate the laser
-        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position + laserOffset, Quaternion.identity);
-
-        // Calculate the direction from the enemy to the player's current position
-        Vector3 directionToPlayer = (_playerTransform.position - transform.position).normalized;
-
-
-        // Set the laser's rotation to face the player without affecting scale
-        float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg - 90f;
-        enemyLaser.transform.rotation = Quaternion.Euler(0, 0, angle);
-       
-
-        // Assign the direction to the laser's movement component (assuming the laser has its own script)
-        Laser laserScript = enemyLaser.GetComponent<Laser>();
-        if (laserScript != null)
-        {
-            laserScript.SetDirection(directionToPlayer);
-            laserScript.AssignEnemyLaser();  // Mark the laser as an enemy laser
-        }
+        // Instantiate the laser (the laser script will handle direction and movement)
+        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position + laserOffset, Quaternion.identity);
+        enemyLaser.GetComponent<SmartEnemyLaser>().SetPlayerTransform(_playerTransform);
     }
 
     // Detect incoming laser (you can adjust detection logic as needed)

@@ -512,12 +512,17 @@ PrefabInstance:
         type: 3}
       propertyPath: _enemyLaserPrefab
       value: 
-      objectReference: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+      objectReference: {fileID: 1757120707513840356, guid: 65faf62314371e84c9ee8503d28ceea3,
         type: 3}
     - target: {fileID: 2412171728164118370, guid: c7a9df436b144f44b9673a5cd5f40c53,
         type: 3}
       propertyPath: m_Name
       value: Smart_Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412171728164118370, guid: c7a9df436b144f44b9673a5cd5f40c53,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2412171728164118379, guid: c7a9df436b144f44b9673a5cd5f40c53,
         type: 3}
@@ -532,7 +537,7 @@ PrefabInstance:
     - target: {fileID: 2412171728164118379, guid: c7a9df436b144f44b9673a5cd5f40c53,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.47
+      value: -6.15
       objectReference: {fileID: 0}
     - target: {fileID: 2412171728164118379, guid: c7a9df436b144f44b9673a5cd5f40c53,
         type: 3}
@@ -924,7 +929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feea33f68079e604aa81ef169cf2882b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1346512263}
+  _player: {fileID: 1346512263}
   _enemyPrefab: {fileID: 4592132561658774000, guid: 9483c60c3b1925c499736f398df5fa57,
     type: 3}
   _horizontalEnemyPrefab: {fileID: 4868108378113933478, guid: 58539c90132c30d43ac0e37d023b6f6f,
@@ -940,6 +945,9 @@ MonoBehaviour:
   _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
     type: 3}
   _enemyContainer: {fileID: 956673684}
+  _smartEnemyPrefab: {fileID: 2412171728164118370, guid: c7a9df436b144f44b9673a5cd5f40c53,
+    type: 3}
+  _xOffsetFromPlayer: 5
   _powerUps:
   - {fileID: 1843770189775917078, guid: 717f97611055731458eaa87186dd6741, type: 3}
   - {fileID: 3483291870811100692, guid: 18d8a29af920edd489d3e1e529d0a811, type: 3}

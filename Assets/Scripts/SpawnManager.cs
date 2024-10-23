@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private Player player; // reference to Player
+    private Player _player; // reference to Player
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -23,6 +23,17 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
+    private GameObject _smartEnemyPrefab;
+
+    [SerializeField]
+    private float _xOffsetFromPlayer = 5.0f; // Adjustable distance on the x-axis from the player
+    private float _smartEnemySpawnY = -6.85f; // Fixed y-position for SmartEnemy
+    [SerializeField]
+    private float _xMin = -9f; // Minimum X boundary
+    [SerializeField]
+    private float _xMax = 9f;  // Maximum X boundary
+
+    [SerializeField]
     private GameObject[] _powerUps;
 
     private bool _stopSpawning = false;
@@ -30,6 +41,16 @@ public class SpawnManager : MonoBehaviour
     private bool _horizontalEnemyActive = false; 
 
     private int _enemiesSpawned = 0;
+
+    void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+
+        if (_player == null)
+        {
+            Debug.LogError("Player is NULL!");
+        }
+    }
 
     public void StartSpawning(int enemyCount, int wave) 
     {
@@ -51,7 +72,7 @@ public class SpawnManager : MonoBehaviour
 
             
 
-            switch (Random.Range(0, 5))
+            switch (Random.Range(0, 6))
             {
                 case 0:
                     GameObject sideToSideEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
@@ -77,6 +98,11 @@ public class SpawnManager : MonoBehaviour
                         horizontalEnemy.transform.parent = _enemyContainer.transform;
                         _horizontalEnemyActive = true; // set flag to true
                     }
+                    break;
+                case 5:
+                    SpawnSmartEnemy();
+                    Debug.Log("SmartEenmy is Spawning!");
+                    //Debug.Break();
                     break;
                 default:
                     Debug.LogError("Base Enemy ");
@@ -106,13 +132,13 @@ public class SpawnManager : MonoBehaviour
             int ammoSpawnChance = 40; // 40% chance (frequent) Ammo
 
             // adjust spawn rates based on player's condition
-            if (player.GetLives() < 2) // low health (less than 2 lives)
+            if (_player.GetLives() < 2) // low health (less than 2 lives)
             {
                 healthSpawnChance = 30;  // increase health spawn chance to 30%
                 Debug.Log("Health spawn chance increased to: " + healthSpawnChance);
             }
 
-            if (player.GetCurrentAmmo() < player.GetMaxAmmo() * 0.2f) // low ammo (less than 20% of max ammo)
+            if (_player.GetCurrentAmmo() < _player.GetMaxAmmo() * 0.2f) // low ammo (less than 20% of max ammo)
             {
                 ammoSpawnChance = 60;  // increase ammo spawn chance to 60%
                 Debug.Log("Ammo spawn chance increased to: " + ammoSpawnChance);
@@ -158,5 +184,30 @@ public class SpawnManager : MonoBehaviour
     public void OnHorizontalEnemyDestroyed()
     {
         _horizontalEnemyActive = false; // reset flag when Horizontal Enemy is destroyed
+    }
+
+    public void SpawnSmartEnemy()
+    {
+        if (_player != null)
+        {
+            // Determine the player's movement direction
+            float playerDirectionX = _player.GetPlayerDirectionX();
+
+            // Spawn the SmartEnemy on the opposite side of player's movement
+            float spawnPosX = _player.transform.position.x + (_xOffsetFromPlayer * -Mathf.Sign(playerDirectionX));
+
+            // Clamp the x-position to keep it within the scene boundaries
+            spawnPosX = Mathf.Clamp(spawnPosX, _xMin, _xMax);
+
+            Vector3 spawnPosition = new Vector3(spawnPosX, _smartEnemySpawnY, 0);
+
+            // Set the rotation to face Vector.up (0, 0, 0 rotation in 2D space)
+            Quaternion rotationToFaceUp = Quaternion.Euler(0, 0, 180);  // This aligns the enemy to face up
+
+            // Instantiate SmartEnemy
+            GameObject smartEnemy = Instantiate(_smartEnemyPrefab, spawnPosition, rotationToFaceUp);
+            smartEnemy.transform.parent = _enemyContainer.transform;
+
+        }
     }
 }

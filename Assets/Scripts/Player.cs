@@ -60,7 +60,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip _laserSoundClip;
     private AudioSource _audioSource;
-
     private bool _canFireLaser = true; // disable the firelaser 
 
     [SerializeField]
@@ -114,6 +113,11 @@ public class Player : MonoBehaviour
             FireLaser();
         }
 
+    }
+
+    public float GetPlayerDirectionX()
+    {
+        return Input.GetAxis("Horizontal");
     }
 
     void CalculateMovement()
