@@ -16,9 +16,13 @@ public class Smart_Enemy : MonoBehaviour
     private float _fireRate = 1.25f;
     private float _canFire = -1f;
     private bool _isDestroyed = false;
+    private ShakeCamera _cameraShake;
+    private Animator _explosionAnimation;
+    private AudioSource _audioSource;
 
     [SerializeField]
     private float _dodgeDistance = 2f; // How far the enemy moves when dodging
+
     [SerializeField]
     private float _detectionRange = 5f; // Detection range for player's laser
     private bool _dodgingRight = true; // Tracks which direction the enemy last dodged
@@ -46,7 +50,7 @@ public class Smart_Enemy : MonoBehaviour
         DetectAndDodgePlayerLaser();
 
         // Check if the SmartEnemy has passed the player by 1.5f on the y-axis
-        if (transform.position.y > _player.transform.position.y + 1.5f)
+        if (transform.position.y > _player.transform.position.y + 2.5f)
         {
             FireLasers();
         }
@@ -130,18 +134,63 @@ public class Smart_Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.tag == "Player")
         {
-            // Implement damage logic for the player if necessary
-            _isDestroyed = true;
-            Destroy(gameObject);
+            Player player = other.transform.GetComponent<Player>();
+
+            if (player != null)
+            {
+                player.Damage();
+                if (_cameraShake != null)
+                {
+                    _cameraShake.TriggerShake(0.1f, 0.2f);
+                }
+            }
+
+            TriggerEnemyDeath();
         }
 
-        if (other.CompareTag("Laser"))
+        if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            _isDestroyed = true;
-            Destroy(gameObject);
+
+            if (_player != null)
+            {
+                _player.AddScore(10);
+            }
+
+            TriggerEnemyDeath();
         }
+    }
+
+    // custom method for enemy death
+    private void TriggerEnemyDeath()
+    {
+        // call method for enemy death
+        _explosionAnimation.SetTrigger("OnEnemyDeath");
+        _speed = 0;
+        _audioSource.Play();
+        _isDestroyed = true;
+
+        // Disable the collider immediately upon enemy death
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        // inform WaveManager enemy was destroyed
+        WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
+
+        if (waveManager != null)
+        {
+            waveManager.EnemyDestroyed(); // notify WaveManager about enemy's destruction
+        }
+        else
+        {
+            Debug.LogError("WaveManager is NULL or not found!");
+        }
+
+        Destroy(this.gameObject, 2.8f);
     }
 }
