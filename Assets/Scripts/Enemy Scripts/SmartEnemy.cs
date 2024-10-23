@@ -44,11 +44,10 @@ public class SmartEnemy : MonoBehaviour
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _playerTransform = _player.transform;
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
-        _playerTransform = _player.transform;
-
-        // set initial fire time to avoid immediate firing before spawn
+        
         _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
 
         _increaseWaveSpeed = _speed; // set speed to increased speed based on wave

@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 149638757680312343, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy_Laser
+      objectReference: {fileID: 0}
     - target: {fileID: 3025446809688971966, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}
       propertyPath: m_RootOrder
@@ -142,6 +147,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 149638757680312343, guid: 801d3b62e695d43479ddaa93f8466112,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy_Laser
       objectReference: {fileID: 0}
     - target: {fileID: 3025446809688971966, guid: 801d3b62e695d43479ddaa93f8466112,
         type: 3}

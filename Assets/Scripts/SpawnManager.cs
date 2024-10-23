@@ -27,7 +27,6 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]
     private float _xOffsetFromPlayer = 5.0f; // Adjustable distance on the x-axis from the player
-    private float _smartEnemySpawnY = -6.85f; // Fixed y-position for SmartEnemy
     [SerializeField]
     private float _xMin = -9f; // Minimum X boundary
     [SerializeField]
@@ -99,17 +98,33 @@ public class SpawnManager : MonoBehaviour
                         _horizontalEnemyActive = true; // set flag to true
                     }
                     break;
-                case 5:
-                    SpawnSmartEnemy();
-                    Debug.Log("SmartEenmy is Spawning!");
-                    //Debug.Break();
+                case 5: // New case for SmartEnemy
+                    /* if (_player != null)
+                    {
+                        // Determine the player's movement direction
+                        float playerDirectionX = _player.GetPlayerDirectionX();
+
+                        // Spawn the SmartEnemy on the opposite side of player's movement
+                        float spawnPosX = _player.transform.position.x + (_xOffsetFromPlayer * -Mathf.Sign(playerDirectionX));
+
+                        // Clamp the x-position to keep it within the scene boundaries
+                        spawnPosX = Mathf.Clamp(spawnPosX, _xMin, _xMax);
+                        Quaternion rotationToFaceUp = Quaternion.Euler(0, 0, 180);  // This aligns the enemy to face up
+                        Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-8f, 8f), -6.85f, 0); // Spawn at fixed Y position
+                        GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, rotationToFaceUp);
+                        smartEnemy.transform.parent = _enemyContainer.transform;
+                        Debug.Log("SmartEenmy is Spawning!");
+                        Debug.Break();
+                    }
+                    break;*/
+                    Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-9f, 9f), -6.85f, 0); // spawn position
+                    GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, Quaternion.identity);
+                    smartEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 default:
                     Debug.LogError("Base Enemy ");
                     break;
             }
-
-            
 
             _enemiesSpawned++;
 
@@ -184,30 +199,5 @@ public class SpawnManager : MonoBehaviour
     public void OnHorizontalEnemyDestroyed()
     {
         _horizontalEnemyActive = false; // reset flag when Horizontal Enemy is destroyed
-    }
-
-    public void SpawnSmartEnemy()
-    {
-        if (_player != null)
-        {
-            // Determine the player's movement direction
-            float playerDirectionX = _player.GetPlayerDirectionX();
-
-            // Spawn the SmartEnemy on the opposite side of player's movement
-            float spawnPosX = _player.transform.position.x + (_xOffsetFromPlayer * -Mathf.Sign(playerDirectionX));
-
-            // Clamp the x-position to keep it within the scene boundaries
-            spawnPosX = Mathf.Clamp(spawnPosX, _xMin, _xMax);
-
-            Vector3 spawnPosition = new Vector3(spawnPosX, _smartEnemySpawnY, 0);
-
-            // Set the rotation to face Vector.up (0, 0, 0 rotation in 2D space)
-            Quaternion rotationToFaceUp = Quaternion.Euler(0, 0, 180);  // This aligns the enemy to face up
-
-            // Instantiate SmartEnemy
-            GameObject smartEnemy = Instantiate(_smartEnemyPrefab, spawnPosition, rotationToFaceUp);
-            smartEnemy.transform.parent = _enemyContainer.transform;
-
-        }
     }
 }
