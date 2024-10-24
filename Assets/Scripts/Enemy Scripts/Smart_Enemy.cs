@@ -31,8 +31,15 @@ public class Smart_Enemy : MonoBehaviour
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _audioSource = GetComponent<AudioSource>();
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+        _explosionAnimation = GetComponent<Animator>();
+        if (_explosionAnimation == null)
+        {
+            Debug.LogError("The player is NULL.");
+        }
+
         transform.position = new Vector3(Random.Range(_minX, _maxX), _spawnY, 0);
-        // Rotate the prefab to face upwards
         transform.rotation = Quaternion.Euler(0, 0, 180);
 
         // Check if player is at a safe distance before spawning
@@ -47,12 +54,15 @@ public class Smart_Enemy : MonoBehaviour
         if (_isDestroyed) return;
 
         MoveUpward();
-        DetectAndDodgePlayerLaser();
-
-        // Check if the SmartEnemy has passed the player by 1.5f on the y-axis
-        if (transform.position.y > _player.transform.position.y + 2.5f)
+        // If player exists, continue detecting and dodging lasers and firing
+        if (_player != null)
         {
-            FireLasers();
+            DetectAndDodgePlayerLaser();
+            // Check if the SmartEnemy has passed the player by 1.5f on the y-axis
+            if (transform.position.y > _player.transform.position.y + 2.5f)
+            {
+                FireLasers();
+            }
         }
 
         // Destroy the SmartEnemy if it reaches the top of the screen
@@ -87,7 +97,7 @@ public class Smart_Enemy : MonoBehaviour
         }
     }
 
-    private void DetectAndDodgePlayerLaser()
+    private void DetectAndDodgePlayerLaser() 
     {
         // Detect all lasers within range using a physics overlap method
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _detectionRange);
@@ -166,7 +176,6 @@ public class Smart_Enemy : MonoBehaviour
     // custom method for enemy death
     private void TriggerEnemyDeath()
     {
-        // call method for enemy death
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();
@@ -178,7 +187,7 @@ public class Smart_Enemy : MonoBehaviour
         {
             collider.enabled = false;
         }
-
+        
         // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
@@ -191,6 +200,6 @@ public class Smart_Enemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Destroy(this.gameObject, 1.8f);
     }
 }

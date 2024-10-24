@@ -263,3 +263,5 @@ MonoBehaviour:
   _speed: 2
   _smartLaserPrefab: {fileID: 1757120707513840356, guid: 65faf62314371e84c9ee8503d28ceea3,
     type: 3}
+  _dodgeDistance: 2
+  _detectionRange: 5

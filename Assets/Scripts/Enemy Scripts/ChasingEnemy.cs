@@ -107,8 +107,11 @@ public class ChasingEnemy : MonoBehaviour
             }
         }
 
-        if (_isFallingBack)  // enter fallback mode
+        if (_playerTransform == null || _isFallingBack)  // enter fallback mode
         {
+
+            _isFallingBack = true;
+
             // move down the y-axis
             this.transform.Translate(Vector3.down * _angularSpeed * Time.deltaTime);
 
@@ -160,7 +163,7 @@ public class ChasingEnemy : MonoBehaviour
     {
         // call method for enemy death
         _explosionAnimation.SetTrigger("OnEnemyDeath");
-        _speed = 0;
+        //_speed = 0;
         _audioSource.Play();
         _isDestroyed = true;
 
