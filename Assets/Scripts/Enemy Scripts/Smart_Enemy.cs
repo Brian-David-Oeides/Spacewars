@@ -8,11 +8,9 @@ public class Smart_Enemy : MonoBehaviour
     private float _speed = 2;
    
     [SerializeField]
-    private GameObject _smartLaserPrefab; // Reference to the SmartEnemy's laser prefab
+    private GameObject _smartLaserPrefab; 
     private Player _player;
-    private float _spawnY = -6.85f;
-    private float _minX = -9f;
-    private float _maxX = 9f;
+
     private float _fireRate = 1.25f;
     private float _canFire = -1f;
     private bool _isDestroyed = false;
@@ -21,12 +19,13 @@ public class Smart_Enemy : MonoBehaviour
     private AudioSource _audioSource;
 
     [SerializeField]
-    private float _dodgeDistance = 2f; // How far the enemy moves when dodging
+    private float _detectionRange = 5f; 
+    private bool _isDodging = false; 
 
     [SerializeField]
-    private float _detectionRange = 5f; // Detection range for player's laser
-    private bool _dodgingRight = true; // Tracks which direction the enemy last dodged
-    private bool _isDodging = false; // Tracks if the enemy is currently dodging
+    private float _dodgeDistance = 2f; 
+    private bool _dodgingRight = true; 
+
 
     void Start()
     {
@@ -34,15 +33,12 @@ public class Smart_Enemy : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
         _explosionAnimation = GetComponent<Animator>();
+
         if (_explosionAnimation == null)
         {
             Debug.LogError("The player is NULL.");
         }
 
-        transform.position = new Vector3(Random.Range(_minX, _maxX), _spawnY, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 180);
-
-        // Check if player is at a safe distance before spawning
         if (Vector3.Distance(_player.transform.position, transform.position) <= 6f)
         {
             Destroy(gameObject);
@@ -54,18 +50,17 @@ public class Smart_Enemy : MonoBehaviour
         if (_isDestroyed) return;
 
         MoveUpward();
-        // If player exists, continue detecting and dodging lasers and firing
+        
         if (_player != null)
         {
             DetectAndDodgePlayerLaser();
-            // Check if the SmartEnemy has passed the player by 1.5f on the y-axis
+
             if (transform.position.y > _player.transform.position.y + 2.5f)
             {
                 FireLasers();
             }
         }
 
-        // Destroy the SmartEnemy if it reaches the top of the screen
         if (transform.position.y >= 9f)
         {
             Destroy(gameObject);
@@ -83,7 +78,6 @@ public class Smart_Enemy : MonoBehaviour
         {
             _canFire = Time.time + _fireRate;
 
-            // Calculate direction to player
             Vector3 directionToPlayer = _player.transform.position - transform.position;
             float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg + 90f;
 
@@ -92,22 +86,21 @@ public class Smart_Enemy : MonoBehaviour
 
             for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser(); // Assuming this method assigns the laser to the SmartEnemy
+                lasers[i].AssignEnemyLaser(); 
             }
         }
     }
 
     private void DetectAndDodgePlayerLaser() 
-    {
-        // Detect all lasers within range using a physics overlap method
+    { 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _detectionRange);
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.CompareTag("Laser") && !_isDodging) // Assuming Player's lasers are tagged as "Laser"
+            if (hit.CompareTag("Laser") && !_isDodging) 
             {
                 StartCoroutine(Dodge());
-                break; // Dodge on detecting one laser
+                break; 
             }
         }
     }
@@ -115,16 +108,14 @@ public class Smart_Enemy : MonoBehaviour
     private IEnumerator Dodge()
     {
         _isDodging = true;
-
-        // Calculate dodge direction based on last dodge direction
+ 
         float dodgeDirection = _dodgingRight ? _dodgeDistance : -_dodgeDistance;
-        _dodgingRight = !_dodgingRight; // Alternate dodge direction
+        _dodgingRight = !_dodgingRight; 
 
-        // Perform the dodge
-        Vector3 dodgePosition = new Vector3(transform.position.x + dodgeDirection, transform.position.y, transform.position.z);
-        dodgePosition.x = Mathf.Clamp(dodgePosition.x, _minX, _maxX); // Ensure the enemy doesn't go out of bounds
+        Vector3 dodgePosition = new Vector3(transform.position.x + dodgeDirection, transform.position.y, 0);
+        dodgePosition.x = Mathf.Clamp(dodgePosition.x, -9f, 9f); 
 
-        float dodgeTime = 0.25f; // Time it takes to dodge
+        float dodgeTime = 0.10f; 
         float elapsedTime = 0f;
 
         Vector3 startPosition = transform.position;
@@ -135,9 +126,9 @@ public class Smart_Enemy : MonoBehaviour
             yield return null;
         }
 
-        transform.position = dodgePosition; // Ensure it reaches the exact dodge position
+        transform.position = dodgePosition; 
 
-        yield return new WaitForSeconds(1f); // Cooldown before detecting lasers again
+        yield return new WaitForSeconds(1f); 
 
         _isDodging = false;
     }
@@ -173,7 +164,6 @@ public class Smart_Enemy : MonoBehaviour
         }
     }
 
-    // custom method for enemy death
     private void TriggerEnemyDeath()
     {
         _explosionAnimation.SetTrigger("OnEnemyDeath");
@@ -181,19 +171,17 @@ public class Smart_Enemy : MonoBehaviour
         _audioSource.Play();
         _isDestroyed = true;
 
-        // Disable the collider immediately upon enemy death
         Collider2D collider = GetComponent<Collider2D>();
         if (collider != null)
         {
             collider.enabled = false;
         }
         
-        // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
         if (waveManager != null)
         {
-            waveManager.EnemyDestroyed(); // notify WaveManager about enemy's destruction
+            waveManager.EnemyDestroyed(); 
         }
         else
         {

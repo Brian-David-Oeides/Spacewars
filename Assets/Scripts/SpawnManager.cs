@@ -26,13 +26,6 @@ public class SpawnManager : MonoBehaviour
     private GameObject _smartEnemyPrefab;
 
     [SerializeField]
-    private float _xOffsetFromPlayer = 5.0f; // Adjustable distance on the x-axis from the player
-    [SerializeField]
-    private float _xMin = -9f; // Minimum X boundary
-    [SerializeField]
-    private float _xMax = 9f;  // Maximum X boundary
-
-    [SerializeField]
     private GameObject[] _powerUps;
 
     private bool _stopSpawning = false;
@@ -96,9 +89,10 @@ public class SpawnManager : MonoBehaviour
                         _horizontalEnemyActive = true; 
                     }
                     break;
-                case 5: // New case for SmartEnemy
-                    Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-9f, 9f), -6.85f, 0); // spawn position
-                    GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, Quaternion.identity);
+                case 5: 
+                    Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-9f, 9f), -6.85f, 0); 
+                    Quaternion smartEnemyRotation = Quaternion.Euler(0, 0, 180); 
+                    GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, smartEnemyRotation);
                     smartEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 default:
@@ -123,38 +117,36 @@ public class SpawnManager : MonoBehaviour
             int randomValue = Random.Range(0, 100);
             int randomPowerUpIndex;
 
-            int healthSpawnChance = 10; // 10% chance (rare) Health
-            int ammoSpawnChance = 40; // 40% chance (frequent) Ammo
+            int healthSpawnChance = 10; 
+            int ammoSpawnChance = 40; 
 
-            // adjust spawn rates based on player's condition
-            if (_player.GetLives() < 2) // low health (less than 2 lives)
+            if (_player.GetLives() < 2) 
             {
-                healthSpawnChance = 30;  // increase health spawn chance to 30%
+                healthSpawnChance = 30;  
                 Debug.Log("Health spawn chance increased to: " + healthSpawnChance);
             }
 
-            if (_player.GetCurrentAmmo() < _player.GetMaxAmmo() * 0.2f) // low ammo (less than 20% of max ammo)
+            if (_player.GetCurrentAmmo() < _player.GetMaxAmmo() * 0.2f) 
             {
-                ammoSpawnChance = 60;  // increase ammo spawn chance to 60%
+                ammoSpawnChance = 60;  
                 Debug.Log("Ammo spawn chance increased to: " + ammoSpawnChance);
             }
 
-            // adust spawn rate 
-            if (randomValue < healthSpawnChance) // 10% chance (rare)
+            if (randomValue < healthSpawnChance) 
             {
-                randomPowerUpIndex = 4; // Health - Element 4
+                randomPowerUpIndex = 4; 
             }
-            else if (randomValue < healthSpawnChance + ammoSpawnChance) // 40% chance 
+            else if (randomValue < healthSpawnChance + ammoSpawnChance) 
             {
-                randomPowerUpIndex = 3; //Ammo - Element 3
+                randomPowerUpIndex = 3; 
             }
-            else if (randomValue < 70) // 20% chance
+            else if (randomValue < 70) 
             {
-                randomPowerUpIndex = Random.Range(0, 2); // Speed, TripleShot, Shield - Element 0 -2
+                randomPowerUpIndex = Random.Range(0, 2); 
             }
-            else if (randomValue < 80) // 10% chance
+            else if (randomValue < 80) 
             {
-                randomPowerUpIndex = Random.Range(5, 7); // MultiShot, EMPE, Smart Missile - Element 5-7
+                randomPowerUpIndex = Random.Range(5, 7); 
             }
             else
             {
@@ -178,6 +170,6 @@ public class SpawnManager : MonoBehaviour
 
     public void OnHorizontalEnemyDestroyed()
     {
-        _horizontalEnemyActive = false; // reset flag when Horizontal Enemy is destroyed
+        _horizontalEnemyActive = false; 
     }
 }

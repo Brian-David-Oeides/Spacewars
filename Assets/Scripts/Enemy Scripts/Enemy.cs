@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
 
+
         // set initial fire time to avoid immediate firing before spawn
         _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
 
