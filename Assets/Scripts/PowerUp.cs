@@ -10,7 +10,6 @@ public class PowerUp : MonoBehaviour
 
     [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield, 3 = Ammo. 4 = Health, 5 = MultiShot, 6 = DisableFireLaser, 7 = SmartMissile
     private int _powerUpID;
-
     [SerializeField]
     private AudioClip _clip;
 
@@ -25,18 +24,17 @@ public class PowerUp : MonoBehaviour
     {
         // Find the player object in the scene
         GameObject playerObject = GameObject.FindWithTag("Player");
+
         if (playerObject != null)
         {
             _playerTransform = playerObject.transform;
         }
-
     }
+
     void Update()
     {
-        // move power-up normally unless 'C' is pressed
         if (_moveToPlayer && _playerTransform != null)
         {
-            // move toward player
             float step = _speedToPlayer * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, _playerTransform.position, step);
 
@@ -44,23 +42,18 @@ public class PowerUp : MonoBehaviour
         }
         else
         {
-            // normal downward movement
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            transform.Translate(_speed * Time.deltaTime * Vector3.down);
         }
 
-        // destroy if out of bounds
         if (this.transform.position.y < -4.7f)
         {
             Destroy(this.gameObject);
         }
 
-        // check if "C" key is pressed and if player exists
         if (Input.GetKeyDown(KeyCode.C) && _playerTransform != null)
         {
-            // calculate distance between power-up and player
             float distanceToPlayer = Vector3.Distance(transform.position, _playerTransform.position);
 
-            // check if distance is in range
             if (distanceToPlayer <= _triggerRange)
             {
                 _moveToPlayer = true;
@@ -120,6 +113,11 @@ public class PowerUp : MonoBehaviour
             }
 
             Destroy(this.gameObject);
+        }
+        else if (other.CompareTag("Enemy_Laser"))
+        {
+            Destroy(other.gameObject);  // Destroy the enemy laser
+            Destroy(this.gameObject);   // Destroy the power-up
         }
     }
 }
