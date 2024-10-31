@@ -120,6 +120,9 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 6
   _clip: {fileID: 8300000, guid: 1de543e92d26f0747bf952e03a511449, type: 3}
+  _explosionClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  _speedToPlayer: 10
+  _triggerRange: 4
 --- !u!58 &449707175961154900
 CircleCollider2D:
   m_ObjectHideFlags: 0

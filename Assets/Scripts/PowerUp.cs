@@ -12,6 +12,11 @@ public class PowerUp : MonoBehaviour
     private int _powerUpID;
     [SerializeField]
     private AudioClip _clip;
+    
+    private AudioSource _explosionAudio;  // audio for explosion
+
+    private Animator _explosionAnimation;
+    private bool _isExploding = false;  // Track if already exploding
 
     private Transform _playerTransform; // reference to player
     [SerializeField]
@@ -29,10 +34,20 @@ public class PowerUp : MonoBehaviour
         {
             _playerTransform = playerObject.transform;
         }
+
+        _explosionAnimation = GetComponent<Animator>();
+        _explosionAudio = GetComponent<AudioSource>();
+
+        if (_explosionAnimation == null)
+        {
+            Debug.LogError("Animator component missing on PowerUp.");
+        }
     }
 
     void Update()
     {
+        if (_isExploding) return;  // Prevent further movement during explosion
+
         if (_moveToPlayer && _playerTransform != null)
         {
             float step = _speedToPlayer * Time.deltaTime;
@@ -117,7 +132,15 @@ public class PowerUp : MonoBehaviour
         else if (other.CompareTag("Enemy_Laser"))
         {
             Destroy(other.gameObject);  // Destroy the enemy laser
-            Destroy(this.gameObject);   // Destroy the power-up
+            TriggerExplosion();
         }
+    }
+    private void TriggerExplosion()
+    {
+        _isExploding = true;  // Set exploding state
+        _explosionAnimation.SetTrigger("Explosion");  // Trigger explosion animation
+        _explosionAnimation.SetLayerWeight(1, 1);     // Activate ExplosionLayer by setting its weight to 1
+        _explosionAudio.Play();  // Play explosion sound
+        Destroy(this.gameObject, 3.0f);  // Delay destruction to allow explosion animation to play
     }
 }

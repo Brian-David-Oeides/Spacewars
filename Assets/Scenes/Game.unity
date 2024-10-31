@@ -508,11 +508,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1467208774, guid: 0fe1122bbda52aa4ebad4a9775521ef8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: abe5afa0c22a45841a77ab326bf54a9f, type: 2}
     - target: {fileID: 682541882998240736, guid: 0fe1122bbda52aa4ebad4a9775521ef8,
         type: 3}
       propertyPath: _speed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 682541882998240736, guid: 0fe1122bbda52aa4ebad4a9775521ef8,
+        type: 3}
+      propertyPath: _explosionClip
+      value: 
+      objectReference: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
     - target: {fileID: 5919907452362411771, guid: 0fe1122bbda52aa4ebad4a9775521ef8,
         type: 3}
       propertyPath: m_RootOrder
@@ -526,7 +535,7 @@ PrefabInstance:
     - target: {fileID: 5919907452362411771, guid: 0fe1122bbda52aa4ebad4a9775521ef8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.38
+      value: -0.46
       objectReference: {fileID: 0}
     - target: {fileID: 5919907452362411771, guid: 0fe1122bbda52aa4ebad4a9775521ef8,
         type: 3}
@@ -573,7 +582,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ammo_Power_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 0fe1122bbda52aa4ebad4a9775521ef8, type: 3}
 --- !u!1 &490120629
 GameObject:
@@ -2625,7 +2635,7 @@ PrefabInstance:
     - target: {fileID: 1760970152664181641, guid: 9483c60c3b1925c499736f398df5fa57,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.21
+      value: 7.76
       objectReference: {fileID: 0}
     - target: {fileID: 1760970152664181641, guid: 9483c60c3b1925c499736f398df5fa57,
         type: 3}
@@ -2736,6 +2746,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4203898106580836814, guid: d7d9b211187e94449befb26baa43e71e,
+        type: 3}
+      propertyPath: _waveManager
+      value: 
+      objectReference: {fileID: 650424668}
     - target: {fileID: 4203898106580836815, guid: d7d9b211187e94449befb26baa43e71e,
         type: 3}
       propertyPath: m_Name
