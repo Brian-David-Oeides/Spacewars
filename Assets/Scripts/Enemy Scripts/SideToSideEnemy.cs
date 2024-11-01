@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SideToSideEnemy : MonoBehaviour
+public class SideToSideEnemy : MonoBehaviour, IFireLaser
 {
 
     [SerializeField]
@@ -65,7 +65,7 @@ public class SideToSideEnemy : MonoBehaviour
 
     }
 
-    protected virtual void Update()
+    void Update()
     {
         if (_isDestroyed)
         {
@@ -80,7 +80,7 @@ public class SideToSideEnemy : MonoBehaviour
         }
     }
 
-    protected virtual void FireLasers()
+    public void FireLasers()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;

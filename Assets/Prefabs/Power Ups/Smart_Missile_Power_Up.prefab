@@ -137,7 +137,6 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 7
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
-  _explosionAudio: {fileID: 0}
   _speedToPlayer: 10
   _triggerRange: 4
 --- !u!82 &-2068145486651942185

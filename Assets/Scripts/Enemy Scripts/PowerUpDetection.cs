@@ -7,16 +7,17 @@ public class PowerUpDetection : MonoBehaviour
     [SerializeField] private float detectionRangeMin = 2f;
     [SerializeField] private float detectionRangeMax = 8f;
 
-    private Enemy _enemyScript;
+    private IFireLaser _fireLaserScript;
+
     private bool _hasFiredLaser = false; // single firing per detection
 
     void Start()
     {
-        _enemyScript = GetComponent<Enemy>();
+        _fireLaserScript = GetComponent<IFireLaser>();
 
-        if (_enemyScript == null)
+        if (_fireLaserScript == null)
         {
-            Debug.LogError("Enemy script is missing on this GameObject.");
+            Debug.LogError("No script implementing IFireLaser found on this GameObject.");
         }
     }
     void Update()
@@ -39,8 +40,8 @@ public class PowerUpDetection : MonoBehaviour
                 // Check if the power-up is within the specified range
                 if (distanceToPowerUp >= detectionRangeMin && distanceToPowerUp <= detectionRangeMax && !_hasFiredLaser)
                 {
-                    _enemyScript.FireLasers(); // Call the enemy's FireLasers method
-                    
+                    _fireLaserScript?.FireLasers();  // Call FireLasers() on the interface
+
                     _hasFiredLaser = true; // Laser fired once
                 }
 

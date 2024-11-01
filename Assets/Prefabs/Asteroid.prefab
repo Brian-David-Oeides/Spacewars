@@ -135,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explosionPrefab: {fileID: 2861012459071934578, guid: 46f186292a57eaa41b121928beaa67e1,
     type: 3}
+  _waveManager: {fileID: 0}

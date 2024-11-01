@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IFireLaser
 {
     [SerializeField]
     private float _speed = 2f;
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
         // further adjustments such as health, attack rate, etc., can be added here
     }
 
-    public void FireLasers(GameObject target = null)
+    public void FireLasers()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;

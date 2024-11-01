@@ -138,9 +138,17 @@ public class PowerUp : MonoBehaviour
     private void TriggerExplosion()
     {
         _isExploding = true;  // Set exploding state
+
+        // Disable collider to prevent further interactions
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
         _explosionAnimation.SetTrigger("Explosion");  // Trigger explosion animation
         _explosionAnimation.SetLayerWeight(1, 1);     // Activate ExplosionLayer by setting its weight to 1
         _explosionAudio.Play();  // Play explosion sound
-        Destroy(this.gameObject, 3.0f);  // Delay destruction to allow explosion animation to play
+        Destroy(this.gameObject, 1.0f);  // Delay destruction to allow explosion animation to play
     }
 }
