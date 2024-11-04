@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PowerUpDetection : MonoBehaviour
 {
-    [SerializeField] private float detectionRangeMin = 2f;
-    [SerializeField] private float detectionRangeMax = 8f;
+    [SerializeField] 
+    private float detectionRangeMin = 2f; // minimum detection range
+    [SerializeField] 
+    private float detectionRangeMax = 8f; // maximum detection range
 
-    private IFireLaser _fireLaserScript;
+    private IFireLaser _fireLaserScript; // reference to interface
 
-    private bool _hasFiredLaser = false; // single firing per detection
+    private bool _hasFiredLaser = false; // single firing per detection disabled
 
     void Start()
     {
@@ -20,15 +22,15 @@ public class PowerUpDetection : MonoBehaviour
             Debug.LogError("No script implementing IFireLaser found on this GameObject.");
         }
     }
+
     void Update()
     {
         DetectPowerUp();
-        Debug.Log("PowerUp detected!");
     }
 
     private void DetectPowerUp()
     {
-        // Detect all colliders in the detection range in front of the enemy
+        // detect all colliders in the detection range in front of enemy
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.down, detectionRangeMax);
 
         foreach (RaycastHit2D hit in hits)
@@ -37,18 +39,21 @@ public class PowerUpDetection : MonoBehaviour
             {
                 float distanceToPowerUp = Vector2.Distance(transform.position, hit.transform.position);
 
-                // Check if the power-up is within the specified range
+                // check if power-up is within specified range
                 if (distanceToPowerUp >= detectionRangeMin && distanceToPowerUp <= detectionRangeMax && !_hasFiredLaser)
                 {
-                    _fireLaserScript?.FireLasers();  // Call FireLasers() on the interface
+                    Debug.Log("PowerUp detected!");
+                    _fireLaserScript?.FireLasers();  // call FireLasers() in interface
+                    _hasFiredLaser = true; // laser fired once
 
-                    _hasFiredLaser = true; // Laser fired once
+                    // Destroy the power-up and log the destruction
+                    Debug.Log("PowerUp destroyed by enemy!");
                 }
 
-                return; // Exit the method once a power-up is detected and fired at
+                return; // exit method once a power-up is detected and fired at
             }
         }
 
-        _hasFiredLaser = false; // Reset if no power-up is in range
+        _hasFiredLaser = false; // reset if no power-up is in range
     }
 }

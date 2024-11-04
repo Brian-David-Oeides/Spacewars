@@ -260,8 +260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed36cbd6101bc24793130891415a2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 2
-  _smartLaserPrefab: {fileID: 1757120707513840356, guid: 65faf62314371e84c9ee8503d28ceea3,
+  _speed: 3.5
+  _smartLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
     type: 3}
-  _dodgeDistance: 2
   _detectionRange: 5
+  _dodgeDistance: 2

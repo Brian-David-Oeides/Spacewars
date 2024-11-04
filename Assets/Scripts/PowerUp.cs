@@ -7,16 +7,12 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3.0f;
-
     [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield, 3 = Ammo. 4 = Health, 5 = MultiShot, 6 = DisableFireLaser, 7 = SmartMissile
     private int _powerUpID;
     [SerializeField]
     private AudioClip _clip;
     
-    private AudioSource _explosionAudio;  // audio for explosion
-
-    private Animator _explosionAnimation;
-    private bool _isExploding = false;  // Track if already exploding
+    private bool _isDestroyed = false;  // track if already destroyed
 
     private Transform _playerTransform; // reference to player
     [SerializeField]
@@ -35,25 +31,16 @@ public class PowerUp : MonoBehaviour
             _playerTransform = playerObject.transform;
         }
 
-        _explosionAnimation = GetComponent<Animator>();
-        _explosionAudio = GetComponent<AudioSource>();
-
-        if (_explosionAnimation == null)
-        {
-            Debug.LogError("Animator component missing on PowerUp.");
-        }
     }
 
     void Update()
     {
-        if (_isExploding) return;  // Prevent further movement during explosion
+        if (_isDestroyed) return;  // prevent further movement during explosion
 
         if (_moveToPlayer && _playerTransform != null)
         {
             float step = _speedToPlayer * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, _playerTransform.position, step);
-
-            Debug.Log("Speed to player: " + _speedToPlayer);
         }
         else
         {
@@ -73,27 +60,16 @@ public class PowerUp : MonoBehaviour
             {
                 _moveToPlayer = true;
             }
-
-            Debug.Log("Distance to player: " + distanceToPlayer);
-            Debug.Log("Moving to player: " + _moveToPlayer);
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        if (_playerTransform != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(_playerTransform.position, _triggerRange);
         }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log($"Collision detected with tag: {other.tag}");
+
         if (other.tag == "Player")
         {
             Player player = other.transform.GetComponent<Player>();
-
             AudioSource.PlayClipAtPoint(_clip, transform.position); 
 
             switch(_powerUpID)
@@ -129,26 +105,12 @@ public class PowerUp : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-        else if (other.CompareTag("Enemy_Laser"))
+        else if (other.CompareTag ("Enemy_Laser"))
         {
-            Destroy(other.gameObject);  // Destroy the enemy laser
-            TriggerExplosion();
+            Debug.Log("Enemy laser collided with PowerUp, destroying laser.");
+            Destroy(other.gameObject);  // destroy enemy laser
+            Destroy(this.gameObject); // destroy power-up
+            
         }
-    }
-    private void TriggerExplosion()
-    {
-        _isExploding = true;  // Set exploding state
-
-        // Disable collider to prevent further interactions
-        Collider2D collider = GetComponent<Collider2D>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
-
-        _explosionAnimation.SetTrigger("Explosion");  // Trigger explosion animation
-        _explosionAnimation.SetLayerWeight(1, 1);     // Activate ExplosionLayer by setting its weight to 1
-        _explosionAudio.Play();  // Play explosion sound
-        Destroy(this.gameObject, 1.0f);  // Delay destruction to allow explosion animation to play
     }
 }

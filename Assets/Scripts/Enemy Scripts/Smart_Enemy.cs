@@ -55,7 +55,7 @@ public class Smart_Enemy : MonoBehaviour
         {
             DetectAndDodgePlayerLaser();
 
-            if (transform.position.y > _player.transform.position.y + 2.5f)
+            if (transform.position.y > _player.transform.position.y + 3.5f)
             {
                 FireLasers();
             }

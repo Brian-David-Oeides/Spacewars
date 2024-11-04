@@ -87,7 +87,6 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
 
         GameObject enemyLaser = Instantiate(_enemyLaserPrefab, this.transform.position, Quaternion.identity);
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
         for (int i = 0; i < lasers.Length; i++)
         {
             lasers[i].AssignEnemyLaser();

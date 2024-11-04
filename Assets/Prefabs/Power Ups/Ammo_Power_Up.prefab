@@ -98,10 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dfdf604d61215f42b75ec21dadc7d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
+  _speed: 0
   _powerUpID: 3
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
-  _explosionAudio: {fileID: 0}
   _speedToPlayer: 10
   _triggerRange: 6
 --- !u!50 &2839648112071232790

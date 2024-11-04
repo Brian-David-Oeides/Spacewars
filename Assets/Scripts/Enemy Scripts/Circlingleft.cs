@@ -31,7 +31,6 @@ public class Circlingleft : MonoBehaviour
 
     private void Start()
     { 
-        Debug.Log("Circling Left Enemy Initialized.");
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
