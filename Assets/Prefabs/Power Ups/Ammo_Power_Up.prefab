@@ -101,6 +101,8 @@ MonoBehaviour:
   _speed: 0
   _powerUpID: 3
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _powerUpExplosionPrefab: {fileID: 1014094422338385291, guid: 39e17ac31664a834c9a6e6bf5dd19ec3,
+    type: 3}
   _speedToPlayer: 10
   _triggerRange: 6
 --- !u!50 &2839648112071232790

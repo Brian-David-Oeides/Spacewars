@@ -11,6 +11,9 @@ public class PowerUp : MonoBehaviour
     private int _powerUpID;
     [SerializeField]
     private AudioClip _clip;
+    [SerializeField]
+    private GameObject _powerUpExplosionPrefab;
+    //private Animator _animator;
     
     private bool _isDestroyed = false;  // track if already destroyed
 
@@ -23,6 +26,12 @@ public class PowerUp : MonoBehaviour
     
     private void Start()
     {
+        /*_animator = GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError("Animator component missing on PowerUp");
+        }*/
+
         // Find the player object in the scene
         GameObject playerObject = GameObject.FindWithTag("Player");
 
@@ -105,12 +114,24 @@ public class PowerUp : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-        else if (other.CompareTag ("Enemy_Laser"))
+        else if (other.tag == "Enemy_Laser")
         {
-            Debug.Log("Enemy laser collided with PowerUp, destroying laser.");
+            Debug.Log("Enemy laser collided with PowerUp, destroying laser and exploding.");
             Destroy(other.gameObject);  // destroy enemy laser
-            Destroy(this.gameObject); // destroy power-up
+            TriggerExplosion();
+            //Destroy(this.gameObject); // destroy power-up
             
         }
+    }
+
+    private void TriggerExplosion()
+    {
+        _isDestroyed = true; // Prevent further movement or activation
+        Instantiate(_powerUpExplosionPrefab, transform.position, Quaternion.identity);
+        //_animator.SetLayerWeight(1, 1f); // Enable the explosion layer if it's on Layer 1
+        //_animator.SetTrigger("Explode"); // Trigger explosion animation
+
+        // Destroy after a delay to match explosion animation duration
+        Destroy(this.gameObject); // Adjust delay as needed to match animation length
     }
 }

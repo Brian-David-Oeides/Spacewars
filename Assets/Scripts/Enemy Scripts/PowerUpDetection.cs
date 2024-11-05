@@ -46,7 +46,7 @@ public class PowerUpDetection : MonoBehaviour
                     _fireLaserScript?.FireLasers();  // call FireLasers() in interface
                     _hasFiredLaser = true; // laser fired once
 
-                    // Destroy the power-up and log the destruction
+                    // destroy power-up and log the destruction
                     Debug.Log("PowerUp destroyed by enemy!");
                 }
 
