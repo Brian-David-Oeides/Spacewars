@@ -12,9 +12,10 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     private AudioClip _clip;
     [SerializeField]
+    private AudioClip _explosionClip; // explosion sound clip
+
+    [SerializeField]
     private GameObject _powerUpExplosionPrefab;
-    //private Animator _animator;
-    
     private bool _isDestroyed = false;  // track if already destroyed
 
     private Transform _playerTransform; // reference to player
@@ -23,16 +24,9 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     private float _triggerRange = 4.0f; // range power-up can move to player
     private bool _moveToPlayer = false; // enable and disable moving to Player
-    
+
     private void Start()
     {
-        /*_animator = GetComponent<Animator>();
-        if (_animator == null)
-        {
-            Debug.LogError("Animator component missing on PowerUp");
-        }*/
-
-        // Find the player object in the scene
         GameObject playerObject = GameObject.FindWithTag("Player");
 
         if (playerObject != null)
@@ -126,12 +120,11 @@ public class PowerUp : MonoBehaviour
 
     private void TriggerExplosion()
     {
-        _isDestroyed = true; // Prevent further movement or activation
-        Instantiate(_powerUpExplosionPrefab, transform.position, Quaternion.identity);
-        //_animator.SetLayerWeight(1, 1f); // Enable the explosion layer if it's on Layer 1
-        //_animator.SetTrigger("Explode"); // Trigger explosion animation
+        _isDestroyed = true; // prevent further movement or activation
 
-        // Destroy after a delay to match explosion animation duration
-        Destroy(this.gameObject); // Adjust delay as needed to match animation length
+        Instantiate(_powerUpExplosionPrefab, transform.position, Quaternion.identity);
+        AudioSource.PlayClipAtPoint(_explosionClip, Camera.main.transform.position); // Play explosion sound
+
+        Destroy(this.gameObject);
     }
 }
