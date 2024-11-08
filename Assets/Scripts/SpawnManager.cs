@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private Player _player; // reference to Player
+    private Player _player; 
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -62,23 +62,29 @@ public class SpawnManager : MonoBehaviour
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
 
-            switch (Random.Range(0, 6))
+            int enemyType = Random.Range(0, 6); 
+
+            switch (enemyType) 
             {
                 case 0:
                     GameObject sideToSideEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
                     sideToSideEnemy.transform.parent = _enemyContainer.transform;
+                    ApplyShield(sideToSideEnemy); // apply shield for sideToSideEnemy
                     break;
                 case 1:
                     GameObject chasingEnemy = Instantiate(_chasingEnemyPrefab, positionToSpawn, Quaternion.identity);
                     chasingEnemy.transform.parent = _enemyContainer.transform;
+                    ApplyShield(chasingEnemy); // apply shield for chasingEnemy
                     break;
                 case 2:
                     GameObject circlingRightEnemy = Instantiate(_circlingRightEnemyPrefab, positionToSpawn, Quaternion.identity);
                     circlingRightEnemy.transform.parent = _enemyContainer.transform;
+                    ApplyShield(circlingRightEnemy); // apply shield for circlingRightEnemy
                     break;
                 case 3:
                     GameObject circlingLeftEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
                     circlingLeftEnemy.transform.parent = _enemyContainer.transform;
+                    ApplyShield(circlingLeftEnemy); // apply shield for circlingLeftEnemy
                     break;
                 case 4: 
                     if (!_horizontalEnemyActive)
@@ -103,6 +109,20 @@ public class SpawnManager : MonoBehaviour
             _enemiesSpawned++;
 
             yield return new WaitForSeconds(3.0f);
+        }
+    }
+
+    // ApplyShield method
+    private void ApplyShield(GameObject enemy)
+    {
+        // get shield class component
+        EnemyShield shield = enemy.GetComponent<EnemyShield>();
+        // if shield is active and the random value is greater than 0.5
+        if (shield != null && Random.value > 0.5f)
+        {
+            // activate shield & debug.log
+            shield.Activate();
+            Debug.Log("Enemy shield activated!");
         }
     }
 

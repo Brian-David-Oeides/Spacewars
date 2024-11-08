@@ -9,6 +9,8 @@ public class ChasingEnemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
+    private EnemyShield _shield;
+
     [SerializeField]
     protected GameObject _enemyLaserPrefab;
 
@@ -47,6 +49,12 @@ public class ChasingEnemy : MonoBehaviour
         }
 
         _angularSpeed = _speed * 2f;
+
+        _shield = GetComponent<EnemyShield>();
+        if (_shield == null)
+        {
+            Debug.LogWarning("Shield component not found. Enemy will have no shield.");
+        }
     }
 
     private void Update()
@@ -148,6 +156,12 @@ public class ChasingEnemy : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
+
+            if (_shield != null && _shield.AbsorbHit())
+            {
+                Debug.Log("Hit was absorbed; enemy remains!");
+                return;
+            }
 
             if (_player != null)
             {

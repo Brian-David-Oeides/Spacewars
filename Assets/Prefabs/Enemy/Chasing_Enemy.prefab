@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 505195916049964844}
   - component: {fileID: 9070400025572070393}
   - component: {fileID: 1124334094875273396}
+  - component: {fileID: 4873783456498212910}
   m_Layer: 10
   m_Name: Chasing_Enemy
   m_TagString: Enemy
@@ -263,3 +264,15 @@ MonoBehaviour:
   _speed: 2
   _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
     type: 3}
+--- !u!114 &4873783456498212910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859520324098910923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b0f384095a15a4ba49093667c38181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
