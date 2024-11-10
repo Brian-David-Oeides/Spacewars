@@ -42,12 +42,12 @@ public class PowerUpDetection : MonoBehaviour
                 // check if power-up is within specified range
                 if (distanceToPowerUp >= detectionRangeMin && distanceToPowerUp <= detectionRangeMax && !_hasFiredLaser)
                 {
-                    Debug.Log("PowerUp detected!");
+                    //Debug.Log("PowerUp detected!");
                     _fireLaserScript?.FireLasers();  // call FireLasers() in interface
                     _hasFiredLaser = true; // laser fired once
 
                     // destroy power-up and log the destruction
-                    Debug.Log("PowerUp destroyed by enemy!");
+                    // Debug.Log("PowerUp destroyed by enemy!");
                 }
 
                 return; // exit method once a power-up is detected and fired at

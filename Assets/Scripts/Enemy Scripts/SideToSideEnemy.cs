@@ -10,7 +10,7 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private EnemyShield _shield;
+    private EnemyShield _shield; // reference EnemyShield class
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -50,11 +50,9 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
             Debug.LogError("The player is NULL.");
         }
 
-        _shield = GetComponent<EnemyShield>();
-        if (_shield == null)
-        {
-            Debug.LogWarning("Shield component not found. Enemy will have no shield.");
-        }
+        _shield = GetComponentInChildren<EnemyShield>();
+
+        
     }
 
     private void CalculateMovement()
@@ -101,8 +99,6 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
         }
     }
 
-    
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -125,8 +121,12 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
         {
             Destroy(other.gameObject);
 
-            if (_shield != null && _shield.AbsorbHit())
+            // Try to get the shield component dynamically
+            EnemyShield shieldComponent = GetComponentInChildren<EnemyShield>();
+
+            if (shieldComponent != null && shieldComponent.AbsorbHit())
             {
+                shieldComponent.Deactivate(); // Turn off shield animation
                 Debug.Log("Hit was absorbed; enemy remains!");
                 return;
             }
@@ -143,6 +143,7 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
     // custom method for enemy death
     private void TriggerEnemyDeath()
     {
+
         // call method for enemy death
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;

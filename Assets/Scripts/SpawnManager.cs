@@ -25,6 +25,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _smartEnemyPrefab;
 
+    [SerializeField] 
+    private GameObject enemyShieldPrefab; // Reference to the shield prefab
+
     [SerializeField]
     private GameObject[] _powerUps;
 
@@ -62,29 +65,23 @@ public class SpawnManager : MonoBehaviour
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
 
-            int enemyType = Random.Range(0, 6); 
+            int enemyType = Random.Range(0, 6);
+            
+            GameObject spawnedEnemy = null;
 
             switch (enemyType) 
             {
                 case 0:
-                    GameObject sideToSideEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    sideToSideEnemy.transform.parent = _enemyContainer.transform;
-                    ApplyShield(sideToSideEnemy); // apply shield for sideToSideEnemy
+                    spawnedEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
                     break;
                 case 1:
-                    GameObject chasingEnemy = Instantiate(_chasingEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    chasingEnemy.transform.parent = _enemyContainer.transform;
-                    ApplyShield(chasingEnemy); // apply shield for chasingEnemy
+                    spawnedEnemy = Instantiate(_chasingEnemyPrefab, positionToSpawn, Quaternion.identity);
                     break;
                 case 2:
-                    GameObject circlingRightEnemy = Instantiate(_circlingRightEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    circlingRightEnemy.transform.parent = _enemyContainer.transform;
-                    ApplyShield(circlingRightEnemy); // apply shield for circlingRightEnemy
+                    spawnedEnemy = Instantiate(_circlingRightEnemyPrefab, positionToSpawn, Quaternion.identity);
                     break;
                 case 3:
-                    GameObject circlingLeftEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    circlingLeftEnemy.transform.parent = _enemyContainer.transform;
-                    ApplyShield(circlingLeftEnemy); // apply shield for circlingLeftEnemy
+                    spawnedEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
                     break;
                 case 4: 
                     if (!_horizontalEnemyActive)
@@ -106,6 +103,13 @@ public class SpawnManager : MonoBehaviour
                     break;
             }
 
+            // Apply shield if the enemy was successfully spawned
+            if (spawnedEnemy != null)
+            {
+                ApplyShield(spawnedEnemy);
+                spawnedEnemy.transform.parent = _enemyContainer.transform; // Organize in a container
+            }
+
             _enemiesSpawned++;
 
             yield return new WaitForSeconds(3.0f);
@@ -115,14 +119,21 @@ public class SpawnManager : MonoBehaviour
     // ApplyShield method
     private void ApplyShield(GameObject enemy)
     {
-        // get shield class component
-        EnemyShield shield = enemy.GetComponent<EnemyShield>();
-        // if shield is active and the random value is greater than 0.5
-        if (shield != null && Random.value > 0.5f)
+        // Random chance to apply a shield to the enemy
+        if (Random.value > 0.5f) // Adjust probability as needed
         {
-            // activate shield & debug.log
-            shield.Activate();
-            Debug.Log("Enemy shield activated!");
+            GameObject shield = Instantiate(enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
+            shield.transform.SetParent(enemy.transform); // Set shield as child of the enemy
+            shield.SetActive(true); // Activate shield animation
+
+            EnemyShield shieldComponent = shield.GetComponent<EnemyShield>(); // get shield class component
+            // if shield is active and the random value is greater than 0.5
+            if (shieldComponent != null)
+            {
+                // activate shield & debug.log
+                shieldComponent.Activate();
+                Debug.Log("Enemy shield activated from spawn manager!");
+            }
         }
     }
 

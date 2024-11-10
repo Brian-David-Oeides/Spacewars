@@ -68,7 +68,6 @@ public class PowerUp : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"Collision detected with tag: {other.tag}");
 
         if (other.tag == "Player")
         {

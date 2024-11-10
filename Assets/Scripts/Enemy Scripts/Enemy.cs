@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour, IFireLaser
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private EnemyShield _shield;
+    private EnemyShield _shield; // reference EnemyShield class
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -49,11 +49,7 @@ public class Enemy : MonoBehaviour, IFireLaser
             Debug.LogError("The player is NULL.");
         }
 
-        _shield = GetComponent<EnemyShield>();
-        if (_shield == null)
-        {
-            Debug.LogWarning("Shield component not found. Enemy will have no shield.");
-        }
+        
     }
 
     void Update()
@@ -126,8 +122,9 @@ public class Enemy : MonoBehaviour, IFireLaser
         {
             Destroy(other.gameObject);
 
-            if (_shield != null && _shield.AbsorbHit())
+            if (_shield != null && _shield.AbsorbHit()) // if shield exists and absorbhit is true 
             {
+                _shield.Deactivate(); // Turn off shield animation
                 Debug.Log("Hit was absorbed; enemy remains!");
                 return;
             }

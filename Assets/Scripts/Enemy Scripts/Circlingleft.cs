@@ -9,7 +9,8 @@ public class Circlingleft : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private EnemyShield _shield;
+    private EnemyShield _shield; // reference EnemyShield class
+   
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -55,11 +56,7 @@ public class Circlingleft : MonoBehaviour
         // set angular speed based on the linear speed 
         _angularSpeed = _speed * 2.5f;
 
-        _shield = GetComponent<EnemyShield>();
-        if (_shield == null)
-        {
-            Debug.LogWarning("Shield component not found. Enemy will have no shield.");
-        }
+        
     }
 
     void Update()
@@ -178,8 +175,12 @@ public class Circlingleft : MonoBehaviour
         {
             Destroy(other.gameObject);
 
-            if (_shield != null && _shield.AbsorbHit())
+            // Try to get the shield component dynamically
+            EnemyShield shieldComponent = GetComponentInChildren<EnemyShield>();
+
+            if (shieldComponent != null && shieldComponent.AbsorbHit())
             {
+                shieldComponent.Deactivate(); // Turn off shield animation
                 Debug.Log("Hit was absorbed; enemy remains!");
                 return;
             }
