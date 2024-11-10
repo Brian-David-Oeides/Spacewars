@@ -126,7 +126,6 @@ public class ChasingEnemy : MonoBehaviour
                 this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0)); // face downwards
 
                 Destroy(this.gameObject);  // destroy chasingenemy
-                Debug.Log("Chasing enemy self-destructed.");
             }
         }
     }
