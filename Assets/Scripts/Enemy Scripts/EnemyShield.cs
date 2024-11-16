@@ -5,15 +5,14 @@ using UnityEngine;
 public class EnemyShield : MonoBehaviour
 {
     private bool _isActive = true;
+    
     [SerializeField]
-    private int _shieldStrength = 1; // Number of hits the shield can absorb
-
-    public bool IsActive => _isActive;
+    private int _shieldStrength = 1; // number of hits the shield can absorb
 
     public void Activate()
     {
         _isActive = true;
-        Debug.Log("Enemy shield Activate!");
+        Debug.Log("Enemy shield Activated!");
        
         // activate shield visuals or any initialization
         gameObject.SetActive(true);
@@ -32,7 +31,7 @@ public class EnemyShield : MonoBehaviour
     {
         if (_isActive && _shieldStrength > 0)
         {
-            // Shield is still active and absorbed the hit
+            // shield is still active and absorbed collision
             return true;
         }
         else

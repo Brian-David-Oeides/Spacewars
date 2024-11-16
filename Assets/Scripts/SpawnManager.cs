@@ -26,7 +26,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject _smartEnemyPrefab;
 
     [SerializeField] 
-    private GameObject enemyShieldPrefab; // Reference to the shield prefab
+    private GameObject _enemyShieldPrefab; // Reference to the shield prefab
 
     [SerializeField]
     private GameObject[] _powerUps;
@@ -103,11 +103,11 @@ public class SpawnManager : MonoBehaviour
                     break;
             }
 
-            // Apply shield if the enemy was successfully spawned
+            // apply shield if enemy was spawned
             if (spawnedEnemy != null)
             {
                 ApplyShield(spawnedEnemy);
-                spawnedEnemy.transform.parent = _enemyContainer.transform; // Organize in a container
+                spawnedEnemy.transform.parent = _enemyContainer.transform; // organize in a container
             }
 
             _enemiesSpawned++;
@@ -119,12 +119,12 @@ public class SpawnManager : MonoBehaviour
     // ApplyShield method
     private void ApplyShield(GameObject enemy)
     {
-        // Random chance to apply a shield to the enemy
-        if (Random.value > 0.5f) // Adjust probability as needed
+        // random chance to apply a shield to enemy type
+        if (Random.value > 0.5f) // adjust probability as needed
         {
-            GameObject shield = Instantiate(enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
-            shield.transform.SetParent(enemy.transform); // Set shield as child of the enemy
-            shield.SetActive(true); // Activate shield animation
+            GameObject shield = Instantiate(_enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
+            shield.transform.SetParent(enemy.transform); // set shield as child of the enemy
+            shield.SetActive(true); // activate shield animation
 
             EnemyShield shieldComponent = shield.GetComponent<EnemyShield>(); // get shield class component
             // if shield is active and the random value is greater than 0.5
