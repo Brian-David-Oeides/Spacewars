@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -11,7 +12,9 @@ public class Enemy : MonoBehaviour, IFireLaser
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private EnemyShield _shield; // reference EnemyShield class
+    private EnemyShield _shield;
+
+    private Aggression _aggression; // reference to Aggression behavior
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -23,17 +26,29 @@ public class Enemy : MonoBehaviour, IFireLaser
     private ShakeCamera _cameraShake; 
     private bool _isDestroyed = false;
 
-    public float _increaseWaveSpeed;     // speed that is adjusted based on wave numbe
+    public float _increaseWaveSpeed; // speed that is adjusted based on wave numbe
 
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
-
-
-        // set initial fire time to avoid immediate firing before spawn
         _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
+
+        // get/initialize Aggression behavior
+        _aggression = GetComponent<Aggression>();
+        // check if aggression behavior exists then
+        if ( _aggression != null )
+        {
+            // subscribe to the delegate Ramming
+            _aggression.Ramming += Ramming;
+            // set the ramming range
+            _aggression.SetRammingRange(3f);
+        }
+        else // or else log a warning the aggression component is missing
+        {
+            Debug.LogWarning($"Aggression component is missing on {gameObject.name}");
+        }
 
         _increaseWaveSpeed = _speed; // set speed to increased speed based on wave
 
@@ -48,8 +63,6 @@ public class Enemy : MonoBehaviour, IFireLaser
         {
             Debug.LogError("The player is NULL.");
         }
-
-        
     }
 
     void Update()
@@ -100,6 +113,13 @@ public class Enemy : MonoBehaviour, IFireLaser
         }
     }
 
+    // match Action delegate signature to subscribe
+    private void Ramming()
+    {
+        // Verify subscription
+        Debug.Log($"{gameObject.name} is now ramming!");
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -122,9 +142,9 @@ public class Enemy : MonoBehaviour, IFireLaser
         {
             Destroy(other.gameObject);
 
-            if (_shield != null && _shield.AbsorbHit()) // if shield exists and absorbhit is true 
+            if (_shield != null && _shield.AbsorbHit())  
             {
-                _shield.Deactivate(); // Turn off shield animation
+                _shield.Deactivate(); 
                 Debug.Log("Hit was absorbed; enemy remains!");
                 return;
             }
@@ -138,28 +158,40 @@ public class Enemy : MonoBehaviour, IFireLaser
         }
 
     }
-    // custom method for enemy death
+    
     private void TriggerEnemyDeath()
     {
-        // call method for enemy death
+        // if aggression exists unsubscribe 
+        if (_aggression != null)
+        {
+            // unsubscribe from the aggression event
+            _aggression.Ramming -= Ramming;
+        }
+
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();
         _isDestroyed = true;
 
-        // Disable the collider immediately upon enemy death
+        // Stop all movement
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero; // Stop rigidbody movement
+            rb.angularVelocity = 0f;
+        }
+
         Collider2D collider = GetComponent<Collider2D>();
         if (collider != null)
         {
             collider.enabled = false;
         }
 
-        // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
         if (waveManager != null)
         {
-            waveManager.EnemyDestroyed(); // notify WaveManager about enemy's destruction
+            waveManager.EnemyDestroyed(); 
         }
         else
         {
