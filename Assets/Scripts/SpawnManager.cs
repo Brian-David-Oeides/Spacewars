@@ -65,7 +65,7 @@ public class SpawnManager : MonoBehaviour
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
 
-            int enemyType = Random.Range(0, 6);
+            int enemyType = Random.Range(0, 7);
             
             GameObject spawnedEnemy = null;
 

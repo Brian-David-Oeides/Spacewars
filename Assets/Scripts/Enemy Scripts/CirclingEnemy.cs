@@ -24,8 +24,6 @@ public class CirclingEnemy : MonoBehaviour
     private ShakeCamera _cameraShake;
     private bool _isDestroyed = false; [SerializeField]
 
-
-
     private float _circleRadius = 3.5f; // radius of the circle
     private bool _isCircling = false; // Start by moving downward
     private bool _circleCompleted = false;  // Counter for completed circles
