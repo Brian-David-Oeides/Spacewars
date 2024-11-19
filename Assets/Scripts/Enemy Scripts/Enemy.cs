@@ -142,7 +142,10 @@ public class Enemy : MonoBehaviour, IFireLaser
         {
             Destroy(other.gameObject);
 
-            if (_shield != null && _shield.AbsorbHit())  
+            // Try to get the shield component dynamically
+            EnemyShield shieldComponent = GetComponentInChildren<EnemyShield>();
+
+            if (shieldComponent != null && shieldComponent.AbsorbHit())
             {
                 _shield.Deactivate(); 
                 Debug.Log("Hit was absorbed; enemy remains!");
@@ -172,14 +175,6 @@ public class Enemy : MonoBehaviour, IFireLaser
         _speed = 0;
         _audioSource.Play();
         _isDestroyed = true;
-
-        // Stop all movement
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.velocity = Vector2.zero; // Stop rigidbody movement
-            rb.angularVelocity = 0f;
-        }
 
         Collider2D collider = GetComponent<Collider2D>();
         if (collider != null)

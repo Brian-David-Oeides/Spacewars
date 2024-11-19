@@ -10,7 +10,8 @@ public class Circlingleft : MonoBehaviour
     private float _canFire = -1;
 
     private EnemyShield _shield; // reference EnemyShield class
-   
+
+    private Aggression _aggression; // reference to Aggression behavior
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -37,9 +38,22 @@ public class Circlingleft : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
-
-        // set initial fire time to avoid immediate firing before spawn
-        _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
+        _canFire = Time.time + Random.Range(0.2f, 3f); 
+        
+        // get/initialize Aggression behavior
+        _aggression = GetComponent<Aggression>();
+        // check if aggression behavior exists then
+        if (_aggression != null)
+        {
+            // subscribe to the delegate Ramming
+            _aggression.Ramming += Ramming;
+            // set the ramming range
+            _aggression.SetRammingRange(3f);
+        }
+        else // or else log a warning the aggression component is missing
+        {
+            Debug.LogWarning($"Aggression component is missing on {gameObject.name}");
+        }
 
         if (_player == null)
         {
@@ -53,7 +67,6 @@ public class Circlingleft : MonoBehaviour
             Debug.LogError("The player is NULL.");
         }
 
-        // set angular speed based on the linear speed 
         _angularSpeed = _speed * 2.5f;
 
         
@@ -153,6 +166,13 @@ public class Circlingleft : MonoBehaviour
         }
     }
 
+    // match Action delegate signature to subscribe
+    private void Ramming()
+    {
+        // Verify subscription
+        Debug.Log($"{gameObject.name} is now ramming!");
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -197,6 +217,13 @@ public class Circlingleft : MonoBehaviour
     // custom method for enemy death
     private void TriggerEnemyDeath()
     {
+        // if aggression exists unsubscribe 
+        if (_aggression != null)
+        {
+            // unsubscribe from the aggression event
+            _aggression.Ramming -= Ramming;
+        }
+
         // call method for enemy death
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;

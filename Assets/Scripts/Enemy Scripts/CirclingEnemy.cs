@@ -12,6 +12,8 @@ public class CirclingEnemy : MonoBehaviour
 
     private EnemyShield _shield; // reference EnemyShield class
 
+    private Aggression _aggression; // reference to Aggression behavior
+
     [SerializeField]
     private GameObject _enemyLaserPrefab;
 
@@ -36,9 +38,22 @@ public class CirclingEnemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+        _canFire = Time.time + Random.Range(0.2f, 3f); 
 
-        // set initial fire time to avoid immediate firing before spawn
-        _canFire = Time.time + Random.Range(0.2f, 3f); // random delay
+        // get/initialize Aggression behavior
+        _aggression = GetComponent<Aggression>();
+        // check if aggression behavior exists then
+        if (_aggression != null)
+        {
+            // subscribe to the delegate Ramming
+            _aggression.Ramming += Ramming;
+            // set the ramming range
+            _aggression.SetRammingRange(3f);
+        }
+        else // or else log a warning the aggression component is missing
+        {
+            Debug.LogWarning($"Aggression component is missing on {gameObject.name}");
+        }
 
         if (_player == null)
         {
@@ -133,6 +148,12 @@ public class CirclingEnemy : MonoBehaviour
         }
     }
 
+    private void Ramming()
+    {
+        // Verify subscription
+        Debug.Log($"{gameObject.name} is now ramming!");
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -177,6 +198,13 @@ public class CirclingEnemy : MonoBehaviour
     
     private void TriggerEnemyDeath()
     {
+        // if aggression exists unsubscribe 
+        if (_aggression != null)
+        {
+            // unsubscribe from the aggression event
+            _aggression.Ramming -= Ramming;
+        }
+
         _explosionAnimation.SetTrigger("OnEnemyDeath");
         _speed = 0;
         _audioSource.Play();

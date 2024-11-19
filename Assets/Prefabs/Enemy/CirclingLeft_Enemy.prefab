@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 447045287793708532}
   - component: {fileID: 8995483496398766369}
   - component: {fileID: 4442260694595563265}
+  - component: {fileID: -3993954617302670354}
   m_Layer: 10
   m_Name: CirclingLeft_Enemy
   m_TagString: Enemy
@@ -264,3 +265,16 @@ MonoBehaviour:
   _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
     type: 3}
   _circleRadius: 3.5
+--- !u!114 &-3993954617302670354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8918744213514024979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e292e34117e4347a6e85078ac864c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rammingRange: 5

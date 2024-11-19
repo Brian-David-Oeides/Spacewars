@@ -18,6 +18,9 @@ public class Aggression : MonoBehaviour
     // store the direction towards player
     private Transform _playerTransform;
 
+    // add a private bool flag to track whether log has been printed
+    private bool _hasLoggedCannotRam = false;
+
     void Start()
     {
         // set the reference to find the players stransform
@@ -61,11 +64,17 @@ public class Aggression : MonoBehaviour
         // if this transform is less than the players position then
         if (transform.position.y < _playerTransform.position.y)
         {
-            // verify passed players position 
-            Debug.Log($"{gameObject.name} cannot begin ramming as it is below the player's position.");
+            if (!_hasLoggedCannotRam) // check if log has already been printed
+            {
+                // verify passed players position 
+                Debug.Log($"{gameObject.name} cannot begin ramming as it is below the player's position.");
+                _hasLoggedCannotRam = true; // set to true
+            }
             // reset
             return false; 
         }
+        // reset if the enemy can ram again
+        _hasLoggedCannotRam = false;
         return true;
     }
 
@@ -98,7 +107,7 @@ public class Aggression : MonoBehaviour
         _rammingRange = range;
     }
 
-    // Draw the Gizmo to visualize the ramming range
+    // draw Gizmo to visualize ramming range
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow; // set Gizmo color to red

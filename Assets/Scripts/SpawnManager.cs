@@ -84,6 +84,9 @@ public class SpawnManager : MonoBehaviour
                     spawnedEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
                     break;
                 case 4: 
+                    spawnedEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
+                    break;
+                case 5:
                     if (!_horizontalEnemyActive)
                     {
                         Vector3 horizontalEnemySpawnPos = new Vector3(-14.85f, Random.Range(5f, 7f), 0);
@@ -92,14 +95,14 @@ public class SpawnManager : MonoBehaviour
                         _horizontalEnemyActive = true; 
                     }
                     break;
-                case 5: 
+                case 6: 
                     Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-9f, 9f), -6.85f, 0); 
                     Quaternion smartEnemyRotation = Quaternion.Euler(0, 0, 180); 
                     GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, smartEnemyRotation);
                     smartEnemy.transform.parent = _enemyContainer.transform;
                     break;
                 default:
-                    Debug.LogError("Base Enemy");
+                    Debug.LogError("Enemy");
                     break;
             }
 
