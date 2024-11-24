@@ -147,7 +147,7 @@ public class Enemy : MonoBehaviour, IFireLaser
 
             if (shieldComponent != null && shieldComponent.AbsorbHit())
             {
-                _shield.Deactivate(); 
+                shieldComponent.Deactivate(); 
                 Debug.Log("Hit was absorbed; enemy remains!");
                 return;
             }
