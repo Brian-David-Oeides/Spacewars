@@ -5,13 +5,15 @@ using UnityEngine;
 public class BossEvadeState : IBossState
 {
     private float evadeTimer = 6f;
-    private bool dodgeLeft = true;
     private bool isDodging = false;
+    private bool isDodgingLeft = true; // Toggle to determine dodge direction
+    private Vector3 originPosition; // Center of the circle
 
     public void Enter(Boss boss)
     {
         Debug.Log("Entered Evade State");
         isDodging = false;
+        originPosition = boss.transform.position; // Set the origin as the boss's starting position
     }
 
     public void Execute(Boss boss)
@@ -36,15 +38,37 @@ public class BossEvadeState : IBossState
     {
         if (isDodging) return;
 
-        // Determine dodge direction based on the laser's position
-        float dodgeDirection = dodgeLeft ? -1 : 1;
-        dodgeLeft = !dodgeLeft; // Alternate dodge direction
+        // Determine the dodge direction
+        Vector3 dodgeDirection = isDodgingLeft
+            ? Vector3.left
+            : Vector3.right; // Toggle between left and right
 
-        // Move boss outside the range of the laser
-        Vector3 dodgePosition = boss.transform.position + new Vector3(dodgeDirection * boss.dodgeDistance, 0, 0);
+        // Add a vertical component to the dodge for randomness
+        Vector2 randomVerticalOffset = Random.insideUnitCircle * 3f;
+        dodgeDirection = (dodgeDirection + new Vector3(0, randomVerticalOffset.y, 0)).normalized;
 
-        // Start smooth movement to dodge position
+        // Scale the dodge direction to fit within a 5f radius
+        Vector3 dodgePosition = boss.transform.position + dodgeDirection * 3f;
+
+        // Restrict the dodge position within the circular boundary
+        dodgePosition = ConstrainToCircle(dodgePosition, originPosition, 3f);
+
+        // Start smooth movement to the dodge position
         boss.StartCoroutine(SmoothDodge(boss, dodgePosition));
+
+        // Toggle the dodge direction for the next dodge
+        isDodgingLeft = !isDodgingLeft;
+    }
+    private Vector3 ConstrainToCircle(Vector3 position, Vector3 center, float radius)
+    {
+        // Calculate the offset from the center
+        Vector3 offset = position - center;
+
+        // Clamp the offset to the maximum radius
+        offset = Vector3.ClampMagnitude(offset, radius);
+
+        // Return the constrained position
+        return center + offset;
     }
 
     private System.Collections.IEnumerator SmoothDodge(Boss boss, Vector3 targetPosition)

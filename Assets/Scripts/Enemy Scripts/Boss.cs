@@ -16,9 +16,22 @@ public class Boss : MonoBehaviour
     public float dodgeRange = 5f; // Range to detect player's laser
     public float dodgeDistance = 8f;
 
+    private ShakeCamera _cameraShake;
+
+    private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer for color changes
+
     private void Start()
     {
+
+        _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+
         currentHealth = maxHealth;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer not found on the Boss GameObject!");
+        }
 
         // Setup health slider
         /*if (healthSlider != null)
@@ -88,7 +101,7 @@ public class Boss : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Check if the object entering the range is a laser
-        if (other.CompareTag("Laser"))
+        if (other.tag == "Laser")
         {
             Debug.Log("Laser detected. Triggering evade...");
             // Ensure the boss is in the EvadeState
@@ -96,6 +109,49 @@ public class Boss : MonoBehaviour
             {
                 evadeState.TriggerEvade(this, other.transform.position);
             }
+
+            // Take damage from the laser
+            TakeDamage(1); // Example: Boss takes 5 damage per laser hit
+            Debug.Log("Direct Hit!");
+            
+            // Start the flash coroutine
+            StartCoroutine(FlashRed());
+
+            // Destroy the laser after it hits the boss
+            Destroy(other.gameObject);
         }
+        // Check if the object entering the range is the player
+        else if (other.tag == "Player")
+        {
+            Debug.Log("Boss collided with Player!");
+
+            // Access the Player script to apply damage or effects
+            Player player = other.transform.GetComponent<Player>();
+            
+            if (player != null)
+            {
+                player.Damage(); // Example: Inflict 10 damage to the player
+                if (_cameraShake != null)
+                {
+                    _cameraShake.TriggerShake(0.3f, 0.5f);
+                }
+            }
+        }
+    }
+    private IEnumerator FlashRed()
+    {
+        if (spriteRenderer == null) yield break;
+
+        // Store the original color
+        Color originalColor = spriteRenderer.color;
+
+        // Change to red
+        spriteRenderer.color = Color.red;
+
+        // Wait for a short duration
+        yield return new WaitForSeconds(0.1f);
+
+        // Return to the original color
+        spriteRenderer.color = originalColor;
     }
 }
