@@ -39,6 +39,22 @@ public class BossAttackState : IBossState
             TransitionToNextState(boss);
         }
     }
+    public void FireLasers(Boss boss)
+    {
+        if (boss.bossLaserPrefab != null && boss.playerTransform != null)
+        {
+            Vector3 playerPosition = boss.playerTransform.position;
+            GameObject bossLaser = GameObject.Instantiate(boss.bossLaserPrefab, boss.transform.position, Quaternion.identity);
+
+            // Configure the laser's movement and behavior
+            BossLaser laser = bossLaser.GetComponent<BossLaser>();
+            if (laser != null)
+            {
+                laser.SetTarget(playerPosition); // Target the player's position
+                laser.SetOnMissDestroyY(-5.8f);  // Destroy the laser if it reaches -5.8f
+            }
+        }
+    }
 
     private void MoveToAttackStart(Boss boss)
     {

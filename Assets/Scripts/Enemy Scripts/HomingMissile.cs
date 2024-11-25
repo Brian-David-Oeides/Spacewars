@@ -77,7 +77,7 @@ public class HomingMissile : MonoBehaviour
 
             if (player != null)
             {
-                player.Damage(); // access player Damage() method
+                player.Damage(1); // access player Damage() method
 
                 if (_cameraShake != null)
                 {

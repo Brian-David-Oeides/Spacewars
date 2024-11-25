@@ -5,12 +5,18 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     public float speed = 4f;
-    public int maxHealth = 50;
+    public int maxHealth = 10;
     private int currentHealth;
 
     //public Slider healthSlider;
 
     private IBossState currentState;
+
+    public GameObject bossExplosionPrefab;
+
+    public GameObject bossLaserPrefab; // Reference to boss laser prefab
+    
+    private AudioSource _audioSource;
 
     public Transform playerTransform; // Reference to the player's Transform
     public float dodgeRange = 5f; // Range to detect player's laser
@@ -24,6 +30,7 @@ public class Boss : MonoBehaviour
     {
 
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
+        _audioSource = GetComponent<AudioSource>();
 
         currentHealth = maxHealth;
 
@@ -92,10 +99,54 @@ public class Boss : MonoBehaviour
 
     private void Die()
     {
-        // Play explosion animation (if any)
+        // Stop all movement and state execution
+        speed = 0; // Stop movement based on speed
+        currentState = null; // Disable state execution
+
+        // Instantiate boss-specific explosion
+        if (bossExplosionPrefab != null)
+        {
+            GameObject explosion = Instantiate(bossExplosionPrefab, transform.position, Quaternion.identity);
+
+            // Trigger the explosion animation
+            Animator explosionAnimator = explosion.GetComponent<Animator>();
+            
+            if (explosionAnimator != null)
+            {
+                explosionAnimator.SetTrigger("PlayExplosion");
+            }
+        }
+        else
+        {
+            Debug.LogError("Boss explosion prefab is not assigned!");
+        }
+
+        // Play explosion sound
+        if (_audioSource != null)
+        {
+            _audioSource.Play();
+        }
+
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.enabled = false;
+        }
+
         Debug.Log("Boss defeated!");
-        // Add animation trigger or VFX here
-        Destroy(gameObject);
+        
+        Destroy(this.gameObject, 2.8f);
+    }
+
+    public void FireLasers()
+    {
+        currentState?.FireLasers(this); // delegate firing logic to the current state
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -130,7 +181,7 @@ public class Boss : MonoBehaviour
             
             if (player != null)
             {
-                player.Damage(); // Example: Inflict 10 damage to the player
+                player.Damage(1); // Example: Inflict 10 damage to the player
                 if (_cameraShake != null)
                 {
                     _cameraShake.TriggerShake(0.3f, 0.5f);

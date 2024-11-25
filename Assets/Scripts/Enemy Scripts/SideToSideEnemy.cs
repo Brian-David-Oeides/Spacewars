@@ -107,7 +107,7 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
 
             if (player != null)
             {
-                player.Damage();
+                player.Damage(1);
                 if (_cameraShake != null)
                 {
                     _cameraShake.TriggerShake(0.1f, 0.2f);

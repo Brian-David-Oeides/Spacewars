@@ -28,7 +28,7 @@ AnimatorController:
   m_Name: Explosion
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Explosion
+  - m_Name: PlayExplosion
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -58,7 +58,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 7266762993844555467}
-    m_Position: {x: 449.29944, y: 188.16989, z: 0}
+    m_Position: {x: 410, y: 200, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

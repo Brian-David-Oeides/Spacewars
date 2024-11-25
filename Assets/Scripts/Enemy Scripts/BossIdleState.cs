@@ -32,6 +32,10 @@ public class BossIdleState : IBossState
             }
         }
     }
+    public void FireLasers(Boss boss)
+    {
+        // Do nothing, as no lasers are fired in Idle State
+    }
 
     private void MoveToCenter(Boss boss)
     {

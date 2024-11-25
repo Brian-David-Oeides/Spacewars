@@ -223,7 +223,7 @@ public class Player : MonoBehaviour
     }
 
 
-    public void Damage()
+    public void Damage(int Damage)
     {   
         if (_isShieldActive == true)
         {
