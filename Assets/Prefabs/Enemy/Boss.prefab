@@ -264,8 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   maxHealth: 10
-  attackLaserPrefab: {fileID: 111642458950884604}
-  evadeLaserPrefab: {fileID: 111642459476670805}
   playerTransform: {fileID: 0}
   bossExplosionPrefab: {fileID: 7749875097304264708, guid: b752310ad6993b14d887b69556561c9e,
     type: 3}
@@ -338,14 +336,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: AttackLaserPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 3984373871048022164, guid: 5e605479d09bcd246ade86e95f935e15,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e605479d09bcd246ade86e95f935e15, type: 3}
---- !u!1 &111642458950884604 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3984373871048022164, guid: 5e605479d09bcd246ade86e95f935e15,
-    type: 3}
-  m_PrefabInstance: {fileID: 3947392795818591336}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &111642458950884603 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3984373871048022163, guid: 5e605479d09bcd246ade86e95f935e15,
@@ -419,14 +416,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: EvadeLaserPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 6259346553961025349, guid: 7f9bfde8432729d40908029820ea6124,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f9bfde8432729d40908029820ea6124, type: 3}
---- !u!1 &111642459476670805 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6259346553961025349, guid: 7f9bfde8432729d40908029820ea6124,
-    type: 3}
-  m_PrefabInstance: {fileID: 6291819769504773648}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &111642459476670804 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6259346553961025348, guid: 7f9bfde8432729d40908029820ea6124,

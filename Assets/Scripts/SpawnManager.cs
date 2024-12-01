@@ -28,14 +28,17 @@ public class SpawnManager : MonoBehaviour
     private GameObject _bossPrefab;
 
     [SerializeField] 
-    private GameObject _enemyShieldPrefab; // Reference to the shield prefab
+    private GameObject _enemyShieldPrefab; 
 
     [SerializeField]
     private GameObject[] _powerUps;
 
     private bool _stopSpawning = false;
+    private bool _stopEnemySpawning = false;  // Controls enemy spawning (set when Boss spawns)
 
-    private bool _horizontalEnemyActive = false; 
+    private bool _horizontalEnemyActive = false;
+
+    private bool _bossSpawned = false; // track Boss spawning
 
     private int _enemiesSpawned = 0;
 
@@ -61,9 +64,9 @@ public class SpawnManager : MonoBehaviour
 
         _enemiesSpawned = 0;
 
-        while (!_stopSpawning)
+        while (!_stopSpawning && !_stopEnemySpawning)
         {
-            if (_stopSpawning) yield break;
+            if (_stopSpawning || _stopEnemySpawning) yield break;
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
 
@@ -146,7 +149,7 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
 
-        while (_stopSpawning == false)
+        while (!_stopSpawning)
         {
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
 
@@ -197,11 +200,13 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+        _stopEnemySpawning = true;
     }
 
     public void ResetSpawning()
     {
-        _stopSpawning = false; 
+        _stopSpawning = false;
+        _stopEnemySpawning = false;
     }
 
     public void OnHorizontalEnemyDestroyed()
@@ -210,8 +215,19 @@ public class SpawnManager : MonoBehaviour
     }
     public void SpawnBoss()
     {
+        if (_bossSpawned) return; // Prevent multiple Boss spawns
+
+        _bossSpawned = true; // Set Boss spawn flag
+        _stopEnemySpawning = true; // Stop enemy spawning
+        // Do not set _stopSpawning, so power-ups continue to spawn
+
         Vector3 bossSpawnPosition = new Vector3(0, 7, 0); // Spawn Boss at top-center
         GameObject boss = Instantiate(_bossPrefab, bossSpawnPosition, Quaternion.identity);
         Debug.Log("Boss spawned!");
+    }
+
+    public void StopPowerUpSpawning() // New method to stop power-ups
+    {
+        _stopSpawning = true;
     }
 }

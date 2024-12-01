@@ -6,7 +6,7 @@ public class Boss : MonoBehaviour
 {
     public float speed = 4f;
     public int maxHealth = 10;
-    private int currentHealth;
+    private int _currentHealth;
 
     //public Slider healthSlider;
 
@@ -16,21 +16,20 @@ public class Boss : MonoBehaviour
 
     public GameObject bossExplosionPrefab;
     private AudioSource _audioSource;
-
-    public float dodgeRange = 5f; // Range to detect player's laser
-    public float dodgeDistance = 8f;
-
     private ShakeCamera _cameraShake;
 
     private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer for color changes
 
+    public float dodgeRange = 5f; // Range to detect player's laser
+    public float dodgeDistance = 8f;
+    
     private void Start()
     {
 
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
         _audioSource = GetComponent<AudioSource>();
 
-        currentHealth = maxHealth;
+        _currentHealth = maxHealth;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
@@ -83,14 +82,14 @@ public class Boss : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+        _currentHealth -= damage;
 
         /*if (healthSlider != null)
         {
             healthSlider.value = currentHealth;
         }*/
 
-        if (currentHealth <= 0)
+        if (_currentHealth <= 0)
         {
             Die();
         }
@@ -136,6 +135,13 @@ public class Boss : MonoBehaviour
         if (renderer != null)
         {
             renderer.enabled = false;
+        }
+
+        // Stop power-up spawning
+        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+        if (spawnManager != null)
+        {
+            spawnManager.StopPowerUpSpawning();
         }
 
         Debug.Log("Boss defeated!");
