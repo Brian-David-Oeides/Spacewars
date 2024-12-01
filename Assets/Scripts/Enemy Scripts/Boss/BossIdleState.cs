@@ -15,10 +15,12 @@ public class BossIdleState : IBossState
         idleTimer = 1f;
         lemniscateRepetitions = Random.Range(2, 5); // Random repetitions for lemniscate
         elapsedTime = 0f;
+        Debug.Log("Boss entered Idle State.");
     }
 
     public void Execute(Boss boss)
     {
+        // perform idle behavior here
         if (!movedToCenter)
         {
             MoveToCenter(boss);
@@ -31,10 +33,6 @@ public class BossIdleState : IBossState
                 PerformLemniscateMovement(boss);
             }
         }
-    }
-    public void FireLasers(Boss boss)
-    {
-        // Do nothing, as no lasers are fired in Idle State
     }
 
     private void MoveToCenter(Boss boss)
@@ -50,7 +48,7 @@ public class BossIdleState : IBossState
 
     private void PerformLemniscateMovement(Boss boss)
     {
-        // Parameters for the lemniscate
+        // parameters for the lemniscate
         float horizontalScale = 3f; // Controls the width of the figure-eight
         float verticalScale = 1f;   // Controls the height of the figure-eight
         float centerY = 1.5f;       // Fixed y-axis position (center)
@@ -68,6 +66,7 @@ public class BossIdleState : IBossState
         // Check if the lemniscate movement is complete
         if (elapsedTime >= Mathf.PI * 2 * lemniscateRepetitions)
         {
+            Debug.Log("Lemniscate movement complete. Transitioning to Attack State.");
             boss.SetState(new BossAttackState());
         }
     }
@@ -76,5 +75,6 @@ public class BossIdleState : IBossState
     {
         // Reset elapsed time to avoid cumulative errors
         elapsedTime = 0f;
+        Debug.Log("Boss exiting Idle State.");
     }
 }

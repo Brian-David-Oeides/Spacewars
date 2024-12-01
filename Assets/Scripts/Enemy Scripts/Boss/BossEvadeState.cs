@@ -17,7 +17,7 @@ public class BossEvadeState : IBossState
     }
 
     public void Execute(Boss boss)
-    {
+    {            
         evadeTimer -= Time.deltaTime;
 
         if (evadeTimer > 0)
@@ -31,34 +31,6 @@ public class BossEvadeState : IBossState
         {
             // Return to the center and transition to the next state
             ReturnToCenter(boss);
-        }
-    }
-
-    public void FireLasers(Boss boss)
-    {
-        if (boss.bossLaserPrefab != null && boss.playerTransform != null)
-        {
-            Vector3 playerPosition = boss.playerTransform.position;
-
-            // Fire laser from the left of the boss
-            Vector3 leftPosition = boss.transform.position + new Vector3(-1f, 0, 0);
-            GameObject leftLaser = GameObject.Instantiate(boss.bossLaserPrefab, leftPosition, Quaternion.identity);
-
-            BossLaser leftLaserComponent = leftLaser.GetComponent<BossLaser>();
-            if (leftLaserComponent != null)
-            {
-                leftLaserComponent.SetArchedMovement(playerPosition, -5.8f); // Cross and destroy at -5.8f
-            }
-
-            // Fire laser from the right of the boss
-            Vector3 rightPosition = boss.transform.position + new Vector3(1f, 0, 0);
-            GameObject rightLaser = GameObject.Instantiate(boss.bossLaserPrefab, rightPosition, Quaternion.identity);
-
-            BossLaser rightLaserComponent = rightLaser.GetComponent<BossLaser>();
-            if (rightLaserComponent != null)
-            {
-                rightLaserComponent.SetArchedMovement(playerPosition, -5.8f); // Cross and destroy at -5.8f
-            }
         }
     }
 

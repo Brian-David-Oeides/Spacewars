@@ -24,6 +24,8 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyContainer;
     [SerializeField]
     private GameObject _smartEnemyPrefab;
+    [SerializeField]
+    private GameObject _bossPrefab;
 
     [SerializeField] 
     private GameObject _enemyShieldPrefab; // Reference to the shield prefab
@@ -205,5 +207,11 @@ public class SpawnManager : MonoBehaviour
     public void OnHorizontalEnemyDestroyed()
     {
         _horizontalEnemyActive = false; 
+    }
+    public void SpawnBoss()
+    {
+        Vector3 bossSpawnPosition = new Vector3(0, 7, 0); // Spawn Boss at top-center
+        GameObject boss = Instantiate(_bossPrefab, bossSpawnPosition, Quaternion.identity);
+        Debug.Log("Boss spawned!");
     }
 }

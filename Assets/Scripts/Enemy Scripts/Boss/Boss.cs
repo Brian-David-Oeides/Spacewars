@@ -12,13 +12,11 @@ public class Boss : MonoBehaviour
 
     private IBossState currentState;
 
-    public GameObject bossExplosionPrefab;
+    public Transform playerTransform; // Reference to the player's Transform
 
-    public GameObject bossLaserPrefab; // Reference to boss laser prefab
-    
+    public GameObject bossExplosionPrefab;
     private AudioSource _audioSource;
 
-    public Transform playerTransform; // Reference to the player's Transform
     public float dodgeRange = 5f; // Range to detect player's laser
     public float dodgeDistance = 8f;
 
@@ -51,8 +49,8 @@ public class Boss : MonoBehaviour
             Debug.LogWarning("Health slider not assigned in the Inspector!");
         }*/
 
-        // Find Player Transform dynamically if not assigned in Inspector
-        if (playerTransform == null)
+        // find Player Transform dynamically if not assigned in Inspector
+        if (playerTransform != null)
         {
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null)
@@ -81,6 +79,7 @@ public class Boss : MonoBehaviour
         currentState = newState;
         currentState?.Enter(this);
     }
+
 
     public void TakeDamage(int damage)
     {
@@ -144,10 +143,6 @@ public class Boss : MonoBehaviour
         Destroy(this.gameObject, 2.8f);
     }
 
-    public void FireLasers()
-    {
-        currentState?.FireLasers(this); // delegate firing logic to the current state
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

@@ -11,7 +11,7 @@ public class WaveManager : MonoBehaviour
     private int _currentWave = 1;
     private int _enemiesToSpawn;
     private int _enemiesDestroyed = 0;
-    private const int _maxWaves = 3; // maximum number of waves (3 waves)
+    private const int _maxWaves = 1; // maximum number of waves (4 waves)
 
     [SerializeField] 
     private Text _waveText; // UI Text for wave display
@@ -44,11 +44,16 @@ public class WaveManager : MonoBehaviour
             // delegate enemy spawning to SpawnManager
             _spawnManager.StartSpawning(_enemiesToSpawn, wave); // pass enemy count and wave number
         }
+        else if (wave == _maxWaves + 1)
+        {
+            Debug.Log("Spawning Boss...");
+            _spawnManager.SpawnBoss(); // Call SpawnBoss method from SpawnManager
+        }
         else
         {
-            Debug.Log("All waves destroyed!"); // no more waves to spawn
+            Debug.Log("All waves destroyed!");
         }
-           
+
     }
 
     public void EnemyDestroyed()
@@ -67,7 +72,7 @@ public class WaveManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("All waves destroyed!"); // No more waves to spawn
+                StartWave(_currentWave); // Start boss wave
             }
         }
     }

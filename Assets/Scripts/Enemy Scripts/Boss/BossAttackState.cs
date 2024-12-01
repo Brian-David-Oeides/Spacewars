@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BossAttackState : IBossState
 {
+
     private bool isMovingToStart = true;
     private bool isSideToSideComplete = false; // Tracks side-to-side completion
 
@@ -26,6 +27,7 @@ public class BossAttackState : IBossState
 
     public void Execute(Boss boss)
     {
+
         if (isMovingToStart)
         {
             MoveToAttackStart(boss);
@@ -37,22 +39,6 @@ public class BossAttackState : IBossState
         else if (isSideToSideComplete) // Transition only when side-to-side movement is complete
         {
             TransitionToNextState(boss);
-        }
-    }
-    public void FireLasers(Boss boss)
-    {
-        if (boss.bossLaserPrefab != null && boss.playerTransform != null)
-        {
-            Vector3 playerPosition = boss.playerTransform.position;
-            GameObject bossLaser = GameObject.Instantiate(boss.bossLaserPrefab, boss.transform.position, Quaternion.identity);
-
-            // Configure the laser's movement and behavior
-            BossLaser laser = bossLaser.GetComponent<BossLaser>();
-            if (laser != null)
-            {
-                laser.SetTarget(playerPosition); // Target the player's position
-                laser.SetOnMissDestroyY(-5.8f);  // Destroy the laser if it reaches -5.8f
-            }
         }
     }
 
@@ -85,10 +71,8 @@ public class BossAttackState : IBossState
         // Perform side-to-side movement using Mathf.Sin
         elapsedTime += Time.deltaTime * (boss.speed * 0.5f);
         float x = Mathf.Sin(elapsedTime) * 4f; // Oscillation amplitude
-        float y = 5f; // Fixed y-axis position
+        
         boss.transform.position = new Vector3(x, 5f, boss.transform.position.z);
-
-        Debug.Log($"Side-to-side movement: X = {x}, Repetitions Left = {sideToSideRepetitions}");
 
         // Check if a full oscillation (2π radians) is completed
         if (elapsedTime >= Mathf.PI * 2f)
