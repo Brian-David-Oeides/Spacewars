@@ -4,39 +4,46 @@ using UnityEngine;
 
 public class AttackLaser : MonoBehaviour
 {
-    private Vector3 targetPosition;
-    private Vector3 exitPosition;
-    private float speed = 8f;
-    private bool isLockingOn = true; // Controls the two-stage movement
+    private Vector3 _targetPosition;       // The position the laser will aim for initially
+    private Vector3 _exitPosition;        // The position the laser will head toward after passing the target
+    private float _speed = 8f;            // Speed of the laser
+    private float _destroyBoundary = -5.8f; // Y-axis boundary for destruction
+    private bool _isTargetLocked = true;  // Tracks if the laser is still moving toward the target
 
-    public void Initialize(Vector3 target, Vector3 exit, float destroyBoundary)
+    // Initializes the laser with its target, exit position, and destruction boundary
+    public void Initialize(Vector3 targetPosition, Vector3 exitPosition, float destroyBoundary)
     {
-        targetPosition = target;
-        exitPosition = exit;
+        _targetPosition = targetPosition;
+        _exitPosition = exitPosition;
+        _destroyBoundary = destroyBoundary;
     }
 
     private void Update()
     {
-        Vector3 direction;
-        if (isLockingOn)
-        {
-            // Move towards the player's position
-            direction = (targetPosition - transform.position).normalized;
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            {
-                isLockingOn = false; // Switch to moving towards the exit position
-            }
-        }
-        else
-        {
-            // Move towards the exit position
-            direction = (exitPosition - transform.position).normalized;
-        }
+        MoveLaser();
+        CheckBoundaryForDestruction();
+    }
 
-        transform.position += direction * speed * Time.deltaTime;
+    private void MoveLaser()
+    {
+        // Determine the current direction: toward the target or exit
+        Vector3 currentTarget = _isTargetLocked ? _targetPosition : _exitPosition;
 
-        // Destroy the laser when it moves past the destroy boundary
-        if (Mathf.Abs(transform.position.y) > 10f || Mathf.Abs(transform.position.x) > 10f)
+        // Move the laser toward the current target
+        Vector3 direction = (currentTarget - transform.position).normalized;
+        transform.position += direction * _speed * Time.deltaTime;
+
+        // Check if the laser has reached the target
+        if (_isTargetLocked && Vector3.Distance(transform.position, _targetPosition) < 0.1f)
+        {
+            _isTargetLocked = false; // Switch to moving toward the exit position
+        }
+    }
+
+    private void CheckBoundaryForDestruction()
+    {
+        // Destroy the laser if it crosses the destroy boundary
+        if (transform.position.y <= _destroyBoundary)
         {
             Destroy(gameObject);
         }
@@ -44,14 +51,16 @@ public class AttackLaser : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Handle collision with the player
         if (other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
-                player.Damage(1);
+                player.Damage(1); // Inflict damage to the player
             }
-            Destroy(gameObject);
+
+            Destroy(gameObject); // Destroy the laser on collision
         }
     }
 }

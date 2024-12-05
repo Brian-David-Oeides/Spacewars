@@ -2630,6 +2630,12 @@ PrefabInstance:
       objectReference: {fileID: 1346512265}
     - target: {fileID: 111642458626341261, guid: b5e0da43c745eb74190751451c2c74e9,
         type: 3}
+      propertyPath: evadeLaserPrefab
+      value: 
+      objectReference: {fileID: 6001851592038149232, guid: abb48e0a3d3531e4098195e38822735c,
+        type: 3}
+    - target: {fileID: 111642458626341261, guid: b5e0da43c745eb74190751451c2c74e9,
+        type: 3}
       propertyPath: attackLaserPrefab
       value: 
       objectReference: {fileID: 5189091867084441901, guid: f870bef92cfcbad4ab335356d175ca1c,
@@ -2638,6 +2644,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 111642458626341262, guid: b5e0da43c745eb74190751451c2c74e9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 111642458626341271, guid: b5e0da43c745eb74190751451c2c74e9,
         type: 3}

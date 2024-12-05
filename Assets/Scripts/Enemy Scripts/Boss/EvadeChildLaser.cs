@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackChildLaser : MonoBehaviour
+public class EvadeChildLaser : MonoBehaviour
 {
-    private Vector3 targetPosition;
-    private Vector3 moveDirection;
+    private Vector3 targetPosition; // The player's locked position
+    private Vector3 moveDirection; // Direction to continue moving
     private bool hasLockedOn = false;
     private bool continuesOnPath = false;
-    private float speed = 5f;
+    private float speed = 5f; // Vertical speed
+    private float sineAmplitude = 1f; // Amplitude of sine wave
+    private float sineFrequency = 2f; // Frequency of sine wave
     private Transform playerTransform;
     private float lockThreshold = 1f; // Distance threshold to stop following the player
+    private float time; // Tracks elapsed time for sine wave
 
     public void Initialize(Vector3 initialPlayerPosition, Transform player)
     {
@@ -20,6 +23,8 @@ public class AttackChildLaser : MonoBehaviour
 
     private void Update()
     {
+        time += Time.deltaTime;
+
         if (!hasLockedOn)
         {
             // Move towards the initial locked position
@@ -31,15 +36,17 @@ public class AttackChildLaser : MonoBehaviour
                 hasLockedOn = true;
                 // Calculate direction to continue moving
                 moveDirection = (targetPosition - transform.position).normalized;
-
-                // Automatically transition to continuesOnPath state
-                continuesOnPath = true;
+                continuesOnPath = true; // Automatically transition to path continuation
             }
         }
         else if (continuesOnPath)
         {
-            // Continue in the same direction after reaching the last known position
-            transform.position += moveDirection * speed * Time.deltaTime;
+            // Move in a sine wave motion while moving downward
+            float sineOffset = Mathf.Sin(time * sineFrequency) * sineAmplitude;
+            Vector3 sineWaveMovement = new Vector3(sineOffset, -speed * Time.deltaTime, 0);
+
+            // Continue moving in the sine wave pattern
+            transform.position += moveDirection * Time.deltaTime * speed + sineWaveMovement;
         }
 
         // Destroy the laser when it goes out of the scene bounds
@@ -55,9 +62,9 @@ public class AttackChildLaser : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
-                player.Damage(1);
+                player.Damage(1); // Inflict damage
             }
-            Destroy(gameObject);
+            Destroy(gameObject); // Destroy on collision
         }
     }
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4835756051177747822}
   m_Layer: 0
-  m_Name: Boss_Laser
+  m_Name: BossAttackLaser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,7 +99,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser_Left
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8263401373466716296, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4, type: 3}
 --- !u!4 &5506753591473342131 stripped
 Transform:
@@ -174,7 +175,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser_Right
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8263401373466716296, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4, type: 3}
 --- !u!4 &6123768162008585651 stripped
 Transform:

@@ -15,25 +15,44 @@ public class EvadeLaserHandler : ILaserHandler
     {
         if (evadeLaserPrefab != null && playerTransform != null)
         {
-            // Spawn left laser
-            Vector3 leftPosition = bossTransform.position + new Vector3(-1f, 0f, 0f);
-            GameObject leftLaser = GameObject.Instantiate(evadeLaserPrefab, leftPosition, Quaternion.identity);
-            EvadeLaser leftLaserComponent = leftLaser.GetComponent<EvadeLaser>();
-            if (leftLaserComponent != null)
+            // Instantiate the parent laser object
+            GameObject laserParent = GameObject.Instantiate(evadeLaserPrefab, bossTransform.position, Quaternion.identity);
+
+            // Access child lasers
+            Transform laserLeft = laserParent.transform.Find("Laser_Left");
+            Transform laserRight = laserParent.transform.Find("Laser_Right");
+
+            if (laserLeft != null)
             {
-                Vector3 arcTarget = playerTransform.position + new Vector3(-2f, 0, 0); // Adjust as needed for arc
-                leftLaserComponent.Initialize(arcTarget, -5.8f);
+                EvadeChildLaser leftLaser = laserLeft.GetComponent<EvadeChildLaser>();
+                if (leftLaser != null)
+                {
+                    // Initialize the left laser with the player's position
+                    leftLaser.Initialize(playerTransform.position + new Vector3(-2f, 0, 0), playerTransform);
+                }
+            }
+            else
+            {
+                Debug.LogError("Laser_Left not found in EvadeLaser prefab!");
             }
 
-            // Spawn right laser
-            Vector3 rightPosition = bossTransform.position + new Vector3(1f, 0f, 0f);
-            GameObject rightLaser = GameObject.Instantiate(evadeLaserPrefab, rightPosition, Quaternion.identity);
-            EvadeLaser rightLaserComponent = rightLaser.GetComponent<EvadeLaser>();
-            if (rightLaserComponent != null)
+            if (laserRight != null)
             {
-                Vector3 arcTarget = playerTransform.position + new Vector3(2f, 0, 0); // Adjust as needed for arc
-                rightLaserComponent.Initialize(arcTarget, -5.8f);
+                EvadeChildLaser rightLaser = laserRight.GetComponent<EvadeChildLaser>();
+                if (rightLaser != null)
+                {
+                    // Initialize the right laser with the player's position
+                    rightLaser.Initialize(playerTransform.position + new Vector3(2f, 0, 0), playerTransform);
+                }
             }
+            else
+            {
+                Debug.LogError("Laser_Right not found in EvadeLaser prefab!");
+            }
+        }
+        else
+        {
+            Debug.LogError("EvadeLaser prefab or playerTransform is null!");
         }
     }
 }

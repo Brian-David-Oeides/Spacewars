@@ -4,36 +4,55 @@ using UnityEngine;
 
 public class EvadeLaser : MonoBehaviour
 {
-    private Vector3 arcTarget;
+    private Vector3 targetPosition;
+    private Vector3 direction;
     private float speed = 8f;
-    private float destroyY;
+    private float sineAmplitude = 1f;
+    private float sineFrequency = 2f;
+    private float time = 0f;
+    private bool isTracking = true;
 
-    public void Initialize(Vector3 arcTargetPosition, float destroyBoundary)
+    public void Initialize(Vector3 playerPosition)
     {
-        arcTarget = arcTargetPosition;
-        destroyY = destroyBoundary;
+        targetPosition = playerPosition;
+        direction = (targetPosition - transform.position).normalized;
     }
 
     private void Update()
     {
-        Vector3 direction = (arcTarget - transform.position).normalized;
+        if (isTracking)
+        {
+            MoveToTarget();
+        }
+        else
+        {
+            MoveInSineWave();
+        }
+
+        if (Mathf.Abs(transform.position.y) > 10f || Mathf.Abs(transform.position.x) > 10f)
+            Destroy(gameObject);
+    }
+
+    private void MoveToTarget()
+    {
         transform.position += direction * speed * Time.deltaTime;
 
-        if (transform.position.y <= destroyY)
-        {
-            Destroy(gameObject);
-        }
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            isTracking = false;
+    }
+
+    private void MoveInSineWave()
+    {
+        float sineOffset = Mathf.Sin(time * sineFrequency) * sineAmplitude;
+        transform.position += new Vector3(sineOffset, -speed * Time.deltaTime, 0);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Handle collision with the player
         if (other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                player.Damage(1);
-            }
+            other.GetComponent<Player>()?.Damage(1);
             Destroy(gameObject);
         }
     }

@@ -264,7 +264,8 @@ MonoBehaviour:
   maxHealth: 10
   attackLaserPrefab: {fileID: 5189091867084441901, guid: f870bef92cfcbad4ab335356d175ca1c,
     type: 3}
-  evadeLaserPrefab: {fileID: 0}
+  evadeLaserPrefab: {fileID: 6001851592038149232, guid: abb48e0a3d3531e4098195e38822735c,
+    type: 3}
   playerTransform: {fileID: 0}
   bossExplosionPrefab: {fileID: 7749875097304264708, guid: b752310ad6993b14d887b69556561c9e,
     type: 3}

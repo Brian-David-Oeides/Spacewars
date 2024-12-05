@@ -6,7 +6,7 @@ public class BossEvadeState : IBossState
 {
     private Boss _boss;
     private ILaserHandler _laserHandler;
-
+    private bool hasFiredLaser = false; // Tracks if the EvadeChildLaser has been fired during dodge
 
     private float evadeTimer = 6f;
     private bool isDodging = false;
@@ -36,6 +36,7 @@ public class BossEvadeState : IBossState
             if (!isDodging)
             {
                 // Idle or wait for laser detection
+                DetectPlayerLaser(boss); // Check for player laser while idling
             }
         }
         else
@@ -45,14 +46,23 @@ public class BossEvadeState : IBossState
         }
     }
 
+    private void DetectPlayerLaser(Boss boss)
+    {
+        // Detect the player's laser using a circular detection area
+        Collider2D playerLaser = Physics2D.OverlapCircle(boss.transform.position, boss.dodgeRange, LayerMask.GetMask("Laser"));
+        if (playerLaser != null)
+        {
+            Debug.Log("Player laser detected!");
+            TriggerEvade(boss, playerLaser.transform.position);
+        }
+    }
+
     public void TriggerEvade(Boss boss, Vector3 laserPosition)
     {
         if (isDodging) return;
 
         // Determine the dodge direction
-        Vector3 dodgeDirection = isDodgingLeft
-            ? Vector3.left
-            : Vector3.right; // Toggle between left and right
+        Vector3 dodgeDirection = isDodgingLeft ? Vector3.left : Vector3.right; // Toggle between left and right
 
         // Add a vertical component to the dodge for randomness
         Vector2 randomVerticalOffset = Random.insideUnitCircle * 3f;
@@ -67,8 +77,26 @@ public class BossEvadeState : IBossState
         // Start smooth movement to the dodge position
         boss.StartCoroutine(SmoothDodge(boss, dodgePosition));
 
+        // Fire the EvadeChildLaser once during the dodge
+        if (!hasFiredLaser)
+        {
+            hasFiredLaser = true;
+            FireEvadeChildLaser(boss);
+        }
+
         // Toggle the dodge direction for the next dodge
         isDodgingLeft = !isDodgingLeft;
+    }
+
+    private void FireEvadeChildLaser(Boss boss)
+    {
+        Debug.Log("Firing EvadeChildLaser!");
+
+        // Assuming GetEvadeLaserHandler() returns a handler initialized with EvadeChildLaser prefab
+        if (_laserHandler != null)
+        {
+            _laserHandler.FireLaser(boss.transform, boss.playerTransform);
+        }
     }
     private Vector3 ConstrainToCircle(Vector3 position, Vector3 center, float radius)
     {
@@ -100,6 +128,7 @@ public class BossEvadeState : IBossState
         // Ensure final position is exactly the target position
         boss.transform.position = targetPosition;
         isDodging = false;
+        hasFiredLaser = false; // Reset firing status after the dodge
     }
 
     private void ReturnToCenter(Boss boss)
