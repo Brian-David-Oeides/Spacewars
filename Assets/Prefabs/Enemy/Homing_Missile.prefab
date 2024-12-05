@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7768412109950812715}
   - component: {fileID: 3006597340741920354}
   - component: {fileID: 3577557234510550041}
-  - component: {fileID: 7276248187051514673}
+  - component: {fileID: 2693504209368506524}
   m_Layer: 9
   m_Name: Homing_Missile
   m_TagString: Enemy_Laser
@@ -28,9 +28,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7768412109950812709}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.31, y: -1.16, z: 0}
-  m_LocalScale: {x: 0.27272728, y: 0.27272728, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -142,7 +142,7 @@ CircleCollider2D:
   m_Offset: {x: -0.09576068, y: -0.042560495}
   serializedVersion: 2
   m_Radius: 1.3151108
---- !u!114 &7276248187051514673
+--- !u!114 &2693504209368506524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,9 +151,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7768412109950812709}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 765806b2898ae5a4980509a1f6200e43, type: 3}
+  m_Script: {fileID: 11500000, guid: 329a28f78da392d42b600f8fd5082f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  homingRange: 5
-  selfDestructY: -4.7

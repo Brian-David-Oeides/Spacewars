@@ -13,27 +13,36 @@ public class AttackLaserHandler : ILaserHandler
 
     public void FireLaser(Transform bossTransform, Transform playerTransform)
     {
-        if (attackLaserPrefab == null || playerTransform == null)
+        if (attackLaserPrefab != null && playerTransform != null)
         {
-            Debug.LogError("AttackLaserPrefab is null! Cannot fire laser.");
-            return;
-        }
-        
-        GameObject laser = GameObject.Instantiate(attackLaserPrefab, bossTransform.position, Quaternion.identity);
-        //laser.transform.SetParent(bossTransform); // Make laser a child of the Boss
-        laser.SetActive(true); // Enable the laser immediately
-        Debug.Log($"Boss position during laser instantiation: {bossTransform.position}");
-        //Debug.Break();
+            // Instantiate the parent laser object
+            GameObject laserParent = GameObject.Instantiate(attackLaserPrefab, bossTransform.position, Quaternion.identity);
 
-        AttackLaser attackLaser = laser.GetComponent<AttackLaser>();
-        if (attackLaser != null)
-        {
-            attackLaser.Initialize(playerTransform.position, -5.8f);
+            // Access child lasers
+            Transform laserLeft = laserParent.transform.Find("Laser_Left");
+            Transform laserRight = laserParent.transform.Find("Laser_Right");
+
+            if (laserLeft != null)
+            {
+                AttackLaser leftLaser = laserLeft.GetComponent<AttackLaser>();
+                if (leftLaser != null)
+                {
+                    // Set the target position and exit position
+                    Vector3 leftExitPosition = playerTransform.position + new Vector3(-2f, -10f, 0f);
+                    leftLaser.Initialize(playerTransform.position, leftExitPosition, -5.8f);
+                }
+            }
+
+            if (laserRight != null)
+            {
+                AttackLaser rightLaser = laserRight.GetComponent<AttackLaser>();
+                if (rightLaser != null)
+                {
+                    // Set the target position and exit position
+                    Vector3 rightExitPosition = playerTransform.position + new Vector3(2f, -10f, 0f);
+                    rightLaser.Initialize(playerTransform.position, rightExitPosition, -5.8f);
+                }
+            }
         }
-        else
-        {
-            Debug.LogError("AttackLaserPrefab or PlayerTransform is null! Cannot fire laser.");
-        }
-        
     }
 }

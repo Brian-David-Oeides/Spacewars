@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class BossEvadeState : IBossState
 {
+    private Boss _boss;
+    private ILaserHandler _laserHandler;
+
+
     private float evadeTimer = 6f;
     private bool isDodging = false;
     private bool isDodgingLeft = true; // Toggle to determine dodge direction
     private Vector3 originPosition; // Center of the circle
+
+    public BossEvadeState(Boss boss)
+    {
+        _boss = boss;
+        _laserHandler = _boss.GetEvadeLaserHandler(); // Use Evade Laser Handler
+    }
 
     public void Enter(Boss boss)
     {
         Debug.Log("Entered Evade State");
         isDodging = false;
         originPosition = boss.transform.position; // Set the origin as the boss's starting position
+        _laserHandler.FireLaser(boss.transform, boss.playerTransform); // Fire evade lasers upon entry
     }
 
     public void Execute(Boss boss)

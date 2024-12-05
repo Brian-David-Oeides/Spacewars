@@ -67,7 +67,7 @@ public class BossIdleState : IBossState
         if (elapsedTime >= Mathf.PI * 2 * lemniscateRepetitions)
         {
             Debug.Log("Lemniscate movement complete. Transitioning to Attack State.");
-            boss.SetState(new BossAttackState());
+            boss.SetState(new BossAttackState(boss));
         }
     }
 

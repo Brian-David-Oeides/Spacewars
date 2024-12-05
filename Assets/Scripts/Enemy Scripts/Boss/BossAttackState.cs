@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossAttackState : IBossState
 {
+    private Boss _boss;
+    private ILaserHandler _laserHandler;
 
     private bool isMovingToStart = true;
     private bool isSideToSideComplete = false; // Tracks side-to-side completion
@@ -11,6 +13,16 @@ public class BossAttackState : IBossState
     private float idleTimer;
     private int sideToSideRepetitions;
     private float elapsedTime;
+
+    private float laserFireCooldown = 1.5f;
+    private float laserFireTimer = 0f;
+
+    public BossAttackState(Boss boss)
+    {  
+        _boss = boss;
+        _laserHandler = _boss.GetAttackLaserHandler(); // Use Attack Laser Handler
+    }
+   
 
     public void Enter(Boss boss)
     {
@@ -35,12 +47,20 @@ public class BossAttackState : IBossState
         else if (sideToSideRepetitions > 0)
         {
             PerformAttackBehavior(boss);
+            // Handle laser firing
+            laserFireTimer += Time.deltaTime;
+            if (laserFireTimer >= laserFireCooldown)
+            {
+                _laserHandler.FireLaser(boss.transform, boss.playerTransform);
+                laserFireTimer = 0f; // Reset the timer
+            }
         }
         else if (isSideToSideComplete) // Transition only when side-to-side movement is complete
         {
             TransitionToNextState(boss);
         }
     }
+
 
     private void MoveToAttackStart(Boss boss)
     {
@@ -100,7 +120,7 @@ public class BossAttackState : IBossState
         if (Vector3.Distance(boss.transform.position, targetPosition) < 0.1f)
         {
             Debug.Log("Boss returned to original position. Transitioning to BossEvadeState.");
-            boss.SetState(new BossEvadeState());
+            boss.SetState(new BossEvadeState(boss));
         }
     }
 

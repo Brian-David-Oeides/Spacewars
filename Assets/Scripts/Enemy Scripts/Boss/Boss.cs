@@ -12,6 +12,13 @@ public class Boss : MonoBehaviour
 
     private IBossState currentState;
 
+    // Laser handlers
+    private ILaserHandler attackLaserHandler;
+    private ILaserHandler evadeLaserHandler;
+
+    public GameObject attackLaserPrefab;
+    public GameObject evadeLaserPrefab;
+
     public Transform playerTransform; // Reference to the player's Transform
 
     public GameObject bossExplosionPrefab;
@@ -30,6 +37,10 @@ public class Boss : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
 
         _currentHealth = maxHealth;
+
+        // Setup Laser Handlers
+        attackLaserHandler = new AttackLaserHandler(attackLaserPrefab);
+        evadeLaserHandler = new EvadeLaserHandler(evadeLaserPrefab);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
@@ -79,6 +90,8 @@ public class Boss : MonoBehaviour
         currentState?.Enter(this);
     }
 
+    public ILaserHandler GetAttackLaserHandler() => attackLaserHandler;
+    public ILaserHandler GetEvadeLaserHandler() => evadeLaserHandler;
 
     public void TakeDamage(int damage)
     {

@@ -5,24 +5,40 @@ using UnityEngine;
 public class AttackLaser : MonoBehaviour
 {
     private Vector3 targetPosition;
+    private Vector3 exitPosition;
     private float speed = 8f;
-    private float destroyBoundary = -5.8f; // Y-axis boundary for destruction
+    private bool isLockingOn = true; // Controls the two-stage movement
 
-    public void Initialize(Vector3 target, float destroyBoundary)
+    public void Initialize(Vector3 target, Vector3 exit, float destroyBoundary)
     {
         targetPosition = target;
-        this.destroyBoundary = destroyBoundary; // Set the destruction boundary
+        exitPosition = exit;
     }
 
     private void Update()
     {
-        Vector3 direction = (targetPosition - transform.position).normalized;
+        Vector3 direction;
+        if (isLockingOn)
+        {
+            // Move towards the player's position
+            direction = (targetPosition - transform.position).normalized;
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            {
+                isLockingOn = false; // Switch to moving towards the exit position
+            }
+        }
+        else
+        {
+            // Move towards the exit position
+            direction = (exitPosition - transform.position).normalized;
+        }
+
         transform.position += direction * speed * Time.deltaTime;
 
-        Debug.Log($"Laser moving toward: {targetPosition} from {transform.position}");
-        if (transform.position.y <= destroyBoundary)
+        // Destroy the laser when it moves past the destroy boundary
+        if (Mathf.Abs(transform.position.y) > 10f || Mathf.Abs(transform.position.x) > 10f)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -35,7 +51,8 @@ public class AttackLaser : MonoBehaviour
             {
                 player.Damage(1);
             }
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
+
