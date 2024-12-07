@@ -14,8 +14,8 @@ public class BossAttackState : IBossState
     private int sideToSideRepetitions;
     private float elapsedTime;
 
-    private float laserFireCooldown = 1.5f;
-    private float laserFireTimer = 0f;
+    private float laserFireCooldown = 1.5f; // Time in seconds between laser spawns
+    private float laserFireTimer = 0f; // Tracks elapsed time since last fire
 
     public BossAttackState(Boss boss)
     {  

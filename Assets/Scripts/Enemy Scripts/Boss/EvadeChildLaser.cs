@@ -52,7 +52,7 @@ public class EvadeChildLaser : MonoBehaviour
         }
 
         // Destroy the laser when it goes out of the scene bounds
-        if (transform.position.y < -6f || transform.position.y > 6f || Mathf.Abs(transform.position.x) > 10f)
+        if (transform.position.y < -6f || Mathf.Abs(transform.position.x) > 11f)
         {
             // Check if the parent exists and destroy it
             if (this.transform.parent != null)

@@ -7,7 +7,6 @@ public class AttackLaser : MonoBehaviour
     private Vector3 _targetPosition;       // The position the laser will aim for initially
     private Vector3 _exitPosition;        // The position the laser will head toward after passing the target
     private float _speed = 8f;            // Speed of the laser
-    private float _destroyBoundary = -5.8f; // Y-axis boundary for destruction
     private bool _isTargetLocked = true;  // Tracks if the laser is still moving toward the target
 
     // Initializes the laser with its target, exit position, and destruction boundary
@@ -15,13 +14,11 @@ public class AttackLaser : MonoBehaviour
     {
         _targetPosition = targetPosition;
         _exitPosition = exitPosition;
-        _destroyBoundary = destroyBoundary;
     }
 
     private void Update()
     {
         MoveLaser();
-        CheckBoundaryForDestruction();
     }
 
     private void MoveLaser()
@@ -37,15 +34,6 @@ public class AttackLaser : MonoBehaviour
         if (_isTargetLocked && Vector3.Distance(transform.position, _targetPosition) < 0.1f)
         {
             _isTargetLocked = false; // Switch to moving toward the exit position
-        }
-    }
-
-    private void CheckBoundaryForDestruction()
-    {
-        // Destroy the laser if it crosses the destroy boundary
-        if (transform.position.y <= _destroyBoundary)
-        {
-            Destroy(gameObject);
         }
     }
 
