@@ -4,47 +4,50 @@ using UnityEngine;
 
 public class EvadeLaser : MonoBehaviour
 {
-    private Vector3 targetPosition;
-    private Vector3 direction;
-    private float speed = 8f;
-    private float sineAmplitude = 1f;
-    private float sineFrequency = 2f;
-    private float time = 0f;
-    private bool isTracking = true;
+    private Vector3 targetPosition;       // Player's locked position
+    private float speed = 8f;            // Movement speed
+    private float sineAmplitude = 1f;    // Amplitude of sine wave motion
+    private float sineFrequency = 2f;    // Frequency of sine wave motion
+    private float time;                  // Tracks elapsed time for sine wave
+    private float destroyBoundary = -6f; // Destruction boundary on the y-axis
 
-    public void Initialize(Vector3 playerPosition)
+    public void Initialize(Vector3 playerPosition, float destroyBoundary)
     {
         targetPosition = playerPosition;
-        direction = (targetPosition - transform.position).normalized;
+        this.destroyBoundary = destroyBoundary;
     }
 
     private void Update()
     {
-        if (isTracking)
-        {
-            MoveToTarget();
-        }
-        else
-        {
-            MoveInSineWave();
-        }
-
-        if (Mathf.Abs(transform.position.y) > 10f || Mathf.Abs(transform.position.x) > 10f)
-            Destroy(gameObject);
+        MoveInSineWaveTowardsTarget();
+        CheckDestructionBoundary();
     }
 
-    private void MoveToTarget()
+    private void MoveInSineWaveTowardsTarget()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        // Calculate the direction toward the target
+        Vector3 direction = (targetPosition - transform.position).normalized;
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            isTracking = false;
-    }
-
-    private void MoveInSineWave()
-    {
+        // Sine wave offset perpendicular to the direction of travel
         float sineOffset = Mathf.Sin(time * sineFrequency) * sineAmplitude;
-        transform.position += new Vector3(sineOffset, -speed * Time.deltaTime, 0);
+        Vector3 perpendicular = Vector3.Cross(direction, Vector3.forward).normalized * sineOffset;
+
+        // Combine forward motion with sine wave offset
+        Vector3 movement = direction * speed * Time.deltaTime + perpendicular;
+
+        transform.position += movement;
+
+        // Update time for sine wave calculation
+        time += Time.deltaTime;
+    }
+
+    private void CheckDestructionBoundary()
+    {
+        // Destroy the laser when it exits the screen bounds
+        if (transform.position.y <= destroyBoundary || Mathf.Abs(transform.position.x) > 10f)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -52,8 +55,13 @@ public class EvadeLaser : MonoBehaviour
         // Handle collision with the player
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<Player>()?.Damage(1);
-            Destroy(gameObject);
+            Player player = other.GetComponent<Player>();
+            if (player != null)
+            {
+                player.Damage(1); // Apply damage to the player
+            }
+
+            Destroy(gameObject); // Destroy the laser on collision
         }
     }
 }
