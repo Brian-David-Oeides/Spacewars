@@ -24,7 +24,15 @@ public class BossEvadeState : IBossState
         Debug.Log("Entered Evade State");
         isDodging = false;
         originPosition = boss.transform.position; // Set the origin as the boss's starting position
-        _laserHandler.FireLaser(boss.transform, boss.playerTransform); // Fire evade lasers upon entry
+        if (_laserHandler != null)
+        {
+            _laserHandler.FireLaser(boss.transform, boss.playerTransform);
+            Debug.Log("EvadeLaserHandler fired lasers.");
+        }
+        else
+        {
+            Debug.LogError("EvadeLaserHandler is null!");
+        }
     }
 
     public void Execute(Boss boss)

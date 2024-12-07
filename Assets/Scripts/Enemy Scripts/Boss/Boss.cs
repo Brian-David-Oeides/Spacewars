@@ -29,7 +29,21 @@ public class Boss : MonoBehaviour
 
     public float dodgeRange = 5f; // Range to detect player's laser
     public float dodgeDistance = 8f;
-    
+
+    public void Initialize(Transform player, GameObject attackLaserPrefab, GameObject evadeLaserPrefab)
+    {
+        this.playerTransform = player;
+        this.attackLaserPrefab = attackLaserPrefab;
+        this.evadeLaserPrefab = evadeLaserPrefab;
+
+        attackLaserHandler = new AttackLaserHandler(attackLaserPrefab);
+        evadeLaserHandler = new EvadeLaserHandler(evadeLaserPrefab);
+
+        if (playerTransform == null) Debug.LogError("Player Transform is not assigned!");
+        if (attackLaserPrefab == null) Debug.LogError("AttackLaserPrefab is not assigned!");
+        if (evadeLaserPrefab == null) Debug.LogError("EvadeLaserPrefab is not assigned!");
+    }
+
     private void Start()
     {
 

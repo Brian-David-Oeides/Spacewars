@@ -5,7 +5,9 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private Player _player; 
+    private Player _player;
+    [SerializeField]
+    private Transform playerTransform;
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -49,6 +51,10 @@ public class SpawnManager : MonoBehaviour
         if (_player == null)
         {
             Debug.LogError("Player is NULL!");
+        }
+        else
+        {
+            playerTransform = _player.transform; // Assign the player's transform
         }
     }
 
@@ -223,6 +229,17 @@ public class SpawnManager : MonoBehaviour
 
         Vector3 bossSpawnPosition = new Vector3(0, 7, 0); // Spawn Boss at top-center
         GameObject boss = Instantiate(_bossPrefab, bossSpawnPosition, Quaternion.identity);
+
+        Boss bossScript = boss.GetComponent<Boss>();
+        if (bossScript != null)
+        {
+            bossScript.Initialize(playerTransform, _bossPrefab.GetComponent<Boss>().attackLaserPrefab, _bossPrefab.GetComponent<Boss>().evadeLaserPrefab);
+        }
+        else
+        {
+            Debug.LogError("Boss script not found on the Boss prefab!");
+        }
+
         Debug.Log("Boss spawned!");
     }
 
