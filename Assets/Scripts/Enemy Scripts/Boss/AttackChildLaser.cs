@@ -45,6 +45,11 @@ public class AttackChildLaser : MonoBehaviour
         // Destroy the laser when it goes out of the scene bounds
         if (transform.position.y < -6f || transform.position.y > 6f || Mathf.Abs(transform.position.x) > 10f)
         {
+            // Check if the parent exists and destroy it
+            if (this.transform.parent != null)
+            {
+                Destroy(this.transform.parent.gameObject);
+            }
             Destroy(gameObject);
         }
     }
