@@ -221,6 +221,7 @@ public class SpawnManager : MonoBehaviour
     }
     public void SpawnBoss()
     {
+
         if (_bossSpawned) return; // Prevent multiple Boss spawns
 
         _bossSpawned = true; // Set Boss spawn flag

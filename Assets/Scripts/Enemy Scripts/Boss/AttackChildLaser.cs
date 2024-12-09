@@ -10,7 +10,6 @@ public class AttackChildLaser : MonoBehaviour
     private bool continuesOnPath = false;
     private float speed = 5f;
     private Transform playerTransform;
-    private float lockThreshold = 1f; // Distance threshold to stop following the player
 
     public void Initialize(Vector3 initialPlayerPosition, Transform player)
     {

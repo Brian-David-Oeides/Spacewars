@@ -8,14 +8,12 @@ public class Player : MonoBehaviour
     private float _speed = 3.5f;
     [SerializeField]
     private float _speedMultiplier = 2.0f;
-    private float _thrusterSpeed;
-
     [SerializeField]
     private float _thrustDuration = 5.0f;
     [SerializeField]
     private float _thrustCooldown = 10.0f;
-    
-    private bool _isThrustOnCooldown = false;
+
+    private float _thrusterSpeed;
 
     private SmartMissile smartMissile;
 
@@ -35,15 +33,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
 
+    private UIManager _uiManager;
     private SpawnManager _spawnManager;
+    private Thruster _thruster;
 
     private bool _isSmartMissileActive = false; // flag smart missile
-
     private bool _isTripleShotActive = false;
-
     private bool _isMultiShotActive = false;
-
     private bool _isShieldActive = false;
+    private bool _canFireLaser = true; // disable the firelaser
 
     [SerializeField]
     private GameObject _shield;
@@ -55,22 +53,25 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int _score;
-    private UIManager _uiManager;
-
+    
+    private AudioSource _audioSource;
     [SerializeField]
     private AudioClip _laserSoundClip;
-    private AudioSource _audioSource;
-    private bool _canFireLaser = true; // disable the firelaser 
+    [SerializeField]
+    private AudioClip _outOfAmmo;
 
     [SerializeField]
     private int _maxAmmo = 15;
     private int _currentAmmo;
 
-    [SerializeField]
-    private AudioClip _outOfAmmo; 
-
     void Start()
     {
+        _thruster = new Thruster(_speed, _speedMultiplier, _thrustDuration, _thrustCooldown);
+        
+        // Subscribe to Thruster events
+        _thruster.OnThrusterActivated += HandleThrusterActivated;
+        _thruster.OnThrusterDeactivated += HandleThrusterDeactivated;
+
         transform.position = new Vector3(0, -1.68f, 0);
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
 
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
 
         _currentAmmo = _maxAmmo;
 
-        _thrusterSpeed = _speed;
+        //_thrusterSpeed = _speed;
 
         if (_spawnManager == null)
         {
@@ -104,14 +105,18 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        CalculateMovement();
-        HandleThrusterInput();
+        CalculateMovement(_thruster.CurrentSpeed);
+        //HandleThrusterInput();
 
         // check to see if FireLaser is turned on
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _canFireLaser)
         {
             FireLaser();
         }
+
+        // Pass input to Thruster
+        bool isThrusterKeyPressed = (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKey(KeyCode.LeftShift);
+        _thruster.HandleInput(isThrusterKeyPressed);
 
     }
 
@@ -120,14 +125,14 @@ public class Player : MonoBehaviour
         return Input.GetAxis("Horizontal");
     }
 
-    void CalculateMovement()
+    void CalculateMovement(float speed)
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-        transform.Translate(_thrusterSpeed * Time.deltaTime * direction);
+        transform.Translate(speed * Time.deltaTime * direction);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -141,36 +146,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HandleThrusterInput()
+    private void HandleThrusterActivated(float newSpeed)
     {
-        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKey(KeyCode.LeftShift) && !_isThrustOnCooldown)
-        {
-            ActivateThrusters(); 
-        }
-    }
-
-    private void ActivateThrusters()
-    {
-        
-        _isThrustOnCooldown = true;
-        _thrusterSpeed = _speed * _speedMultiplier;
-
+        Debug.Log($"Thrusters Activated! Speed: {newSpeed}");
         _uiManager.StartThrusterSlider(_thrustDuration, _thrustCooldown);
-        Invoke("DeactivateThrusters", _thrustDuration);
     }
 
-    private void DeactivateThrusters()
-    {   
-        _thrusterSpeed = _speed;
-        Invoke("ResetThrusterCooldown", _thrustCooldown);
-    }
-
-    private void ResetThrusterCooldown()
+    private void HandleThrusterDeactivated()
     {
-        _isThrustOnCooldown = false;
+        Debug.Log("Thrusters Deactivated!");
         _uiManager.ResetThrusterSlider();
     }
-
+    
+    
     void FireLaser()
     {
         if (_currentAmmo > 0)
@@ -307,15 +295,15 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        _speed *= _speedMultiplier;
+        _thruster.UpdateBaseSpeed(_speed * _speedMultiplier);
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
     
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
-        _speed /= _speedMultiplier;
-        
+        _thruster.UpdateBaseSpeed(_speed);
+
     }
 
     public void ShieldActive()

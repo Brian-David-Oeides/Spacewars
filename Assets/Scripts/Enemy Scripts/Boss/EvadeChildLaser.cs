@@ -6,10 +6,10 @@ public class EvadeChildLaser : MonoBehaviour
 {
     private Vector3 targetPosition; // The player's locked position
     private Vector3 moveDirection; // Direction to continue moving
-    private bool hasLockedOn = false;
+    //private bool hasLockedOn = false;
     private bool continuesOnPath = false;
     private float speed = 5f; // Vertical speed
-    private float sineAmplitude = 0.10f; // Amplitude of sine wave
+    private float sineAmplitude = 0.2f; // Amplitude of sine wave
     private float sineFrequency = 20f; // Frequency of sine wave
     private Transform playerTransform;
     private float lockThreshold = 1f; // Distance threshold to stop following the player

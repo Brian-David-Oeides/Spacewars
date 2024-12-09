@@ -80,7 +80,8 @@ public class PowerUp : MonoBehaviour
                     player.TripleShotActive();
                     break;
                 case 1:
-                    player.SpeedBoostActive(); 
+                    player.SpeedBoostActive();
+                    Debug.Log("SpeedBoostActive triggered by PowerUp ID 1");
                     break;
                 case 2:
                     player.ShieldActive();
