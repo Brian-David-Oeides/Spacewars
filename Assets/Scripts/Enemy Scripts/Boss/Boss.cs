@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Boss : MonoBehaviour
     public int maxHealth = 10;
     private int _currentHealth;
 
-    //public Slider healthSlider;
+    public Slider healthSlider;
 
     private IBossState currentState;
 
@@ -63,15 +64,15 @@ public class Boss : MonoBehaviour
         }
 
         // Setup health slider
-        /*if (healthSlider != null)
+        if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
-            healthSlider.value = currentHealth;
+            healthSlider.value = _currentHealth;
         }
         else
         {
             Debug.LogWarning("Health slider not assigned in the Inspector!");
-        }*/
+        }
 
         // find Player Transform dynamically if not assigned in Inspector
         if (playerTransform != null)
@@ -111,10 +112,10 @@ public class Boss : MonoBehaviour
     {
         _currentHealth -= damage;
 
-        /*if (healthSlider != null)
+        if (healthSlider != null)
         {
-            healthSlider.value = currentHealth;
-        }*/
+            healthSlider.value = _currentHealth;
+        }
 
         if (_currentHealth <= 0)
         {
