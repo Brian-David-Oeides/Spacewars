@@ -37,6 +37,14 @@ public class PowerUpDetection : MonoBehaviour
         {
             if (hit.collider.CompareTag("PowerUp"))
             {
+                PowerUp powerUp = hit.collider.GetComponent<PowerUp>();
+
+                // Skip if the PowerUp is the Disable_FireLaser_Power_Up
+                if (powerUp != null && powerUp.PowerUpID == 6)
+                {
+                    continue; // Ignore this power-up and check the next one
+                }
+
                 float distanceToPowerUp = Vector2.Distance(transform.position, hit.transform.position);
 
                 // check if power-up is within specified range

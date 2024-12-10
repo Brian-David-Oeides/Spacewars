@@ -25,6 +25,12 @@ public class PowerUp : MonoBehaviour
     private float _triggerRange = 4.0f; // range power-up can move to player
     private bool _moveToPlayer = false; // enable and disable moving to Player
 
+    // Public property to expose the _powerUpID
+    public int PowerUpID
+    {
+        get { return _powerUpID; }
+    }
+
     private void Start()
     {
         GameObject playerObject = GameObject.FindWithTag("Player");
@@ -110,6 +116,12 @@ public class PowerUp : MonoBehaviour
         }
         else if (other.tag == "Enemy_Laser")
         {
+            // Check if the power-up is Disable_FireLaser_Power_Up and skip destruction
+            if (_powerUpID == 6)
+            {
+                return;
+            }
+
             Debug.Log("Enemy laser collided with PowerUp, destroying laser and exploding.");
             Destroy(other.gameObject);  // destroy enemy laser
             TriggerExplosion();
