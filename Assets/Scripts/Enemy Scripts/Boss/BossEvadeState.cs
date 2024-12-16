@@ -24,6 +24,7 @@ public class BossEvadeState : IBossState
         Debug.Log("Entered Evade State");
         isDodging = false;
         originPosition = boss.transform.position; // Set the origin as the boss's starting position
+
         if (_laserHandler != null)
         {
             _laserHandler.FireLaser(boss.transform, boss.playerTransform);
@@ -118,7 +119,7 @@ public class BossEvadeState : IBossState
         return center + offset;
     }
 
-    private System.Collections.IEnumerator SmoothDodge(Boss boss, Vector3 targetPosition)
+    private IEnumerator SmoothDodge(Boss boss, Vector3 targetPosition)
     {
         isDodging = true;
         float elapsedTime = 0f;

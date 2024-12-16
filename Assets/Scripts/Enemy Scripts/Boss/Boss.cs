@@ -165,6 +165,12 @@ public class Boss : MonoBehaviour
             renderer.enabled = false;
         }
 
+        // Destroy the health slider
+        if (healthSlider != null)
+        {
+            Destroy(healthSlider.gameObject); // Destroy the entire slider GameObject
+        }
+
         // Stop power-up spawning
         SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
         if (spawnManager != null)
