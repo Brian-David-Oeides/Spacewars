@@ -264,9 +264,9 @@ MonoBehaviour:
   speed: 4
   maxHealth: 10
   healthSlider: {fileID: 3095463532368478353}
-  attackLaserPrefab: {fileID: 5189091867084441901, guid: f870bef92cfcbad4ab335356d175ca1c,
+  attackLaserPrefab: {fileID: 1308607630279955512, guid: 2b634a70558c63d4c88989f8ed31d34a,
     type: 3}
-  evadeLaserPrefab: {fileID: 6001851592038149232, guid: abb48e0a3d3531e4098195e38822735c,
+  evadeLaserPrefab: {fileID: 5006323631357370046, guid: e5b714d9bef45d643aafe2d947541aa6,
     type: 3}
   playerTransform: {fileID: 0}
   bossExplosionPrefab: {fileID: 7749875097304264708, guid: b752310ad6993b14d887b69556561c9e,
