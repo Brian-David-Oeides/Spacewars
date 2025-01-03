@@ -5,6 +5,7 @@ using UnityEngine;
 public class BossAttackState : IBossState
 {
     private Boss _boss;
+
     private ILaserHandler _laserHandler;
 
     private bool isMovingToStart = true;
@@ -47,6 +48,7 @@ public class BossAttackState : IBossState
         else if (sideToSideRepetitions > 0)
         {
             PerformAttackBehavior(boss);
+
             // Handle laser firing
             laserFireTimer += Time.deltaTime;
             if (laserFireTimer >= laserFireCooldown)

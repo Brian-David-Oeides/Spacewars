@@ -5,13 +5,15 @@ using UnityEngine;
 public class BossEvadeState : IBossState
 {
     private Boss _boss;
+
     private ILaserHandler _laserHandler;
-    private bool hasFiredLaser = false; // Tracks if the EvadeChildLaser has been fired during dodge
 
     private float evadeTimer = 6f;
     private bool isDodging = false;
     private bool isDodgingLeft = true; // Toggle to determine dodge direction
     private Vector3 originPosition; // Center of the circle
+
+    private bool hasFiredLaser = false; // Tracks if the EvadeChildLaser has been fired during dodge
 
     public BossEvadeState(Boss boss)
     {

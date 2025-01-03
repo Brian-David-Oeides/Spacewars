@@ -4,41 +4,41 @@ using UnityEngine;
 
 public class AttackChildLaser : MonoBehaviour
 {
-    private Vector3 targetPosition;
-    private Vector3 moveDirection;
-    private bool hasLockedOn = false;
-    private bool continuesOnPath = false;
-    private float speed = 5f;
-    private Transform playerTransform;
+    private Vector3 _targetPosition;
+    private Vector3 _moveDirection;
+    private bool _hasLockedOn = false;
+    private bool _continuesOnPath = false;
+    private float _speed = 5f;
+    private Transform _playerTransform;
 
     public void Initialize(Vector3 initialPlayerPosition, Transform player)
     {
-        targetPosition = initialPlayerPosition; // Lock-on position
-        playerTransform = player; // Reference to the player for distance check
+        _targetPosition = initialPlayerPosition; // Lock-on position
+        _playerTransform = player; // Reference to the player for distance check
     }
 
     private void Update()
     {
-        if (!hasLockedOn)
+        if (!_hasLockedOn)
         {
             // Move towards the initial locked position
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
 
             // Lock onto the position once reached
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)
             {
-                hasLockedOn = true;
+                _hasLockedOn = true;
                 // Calculate direction to continue moving
-                moveDirection = (targetPosition - transform.position).normalized;
+                _moveDirection = (_targetPosition - transform.position).normalized;
 
                 // Automatically transition to continuesOnPath state
-                continuesOnPath = true;
+                _continuesOnPath = true;
             }
         }
-        else if (continuesOnPath)
+        else if (_continuesOnPath)
         {
             // Continue in the same direction after reaching the last known position
-            transform.position += moveDirection * speed * Time.deltaTime;
+            transform.position += _moveDirection * _speed * Time.deltaTime;
         }
 
         // Destroy the laser when it goes out of the scene bounds
