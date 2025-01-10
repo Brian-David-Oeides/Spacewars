@@ -19,6 +19,7 @@ MonoBehaviour:
   health: 0
   enemyLaserPrefab: {fileID: 7768412109950812709, guid: 4896cdd7628f2b74cb7b4ebd7fdb84d4,
     type: 3}
+  canReceiveShield: 0
   requiresUniqueSpawnPosition: 1
   uniqueSpawnPosition: {x: -14.85, y: 5.7, z: 0}
   requiresRotation: 0

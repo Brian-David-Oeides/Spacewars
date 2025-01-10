@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -167,7 +168,7 @@ public class SpawnManager : MonoBehaviour
             }
 
             // Apply shield if needed
-            ApplyShield(spawnedEnemy);
+            ApplyShield(spawnedEnemy, selectedEnemyType);
 
             // Track horizontal enemy
             if (selectedEnemyType.isHorizontalEnemy)
@@ -182,14 +183,17 @@ public class SpawnManager : MonoBehaviour
     }
 
     // ApplyShield method
-    private void ApplyShield(GameObject enemy)
+    private void ApplyShield(GameObject enemy, EnemyType enemyType)
     {
+        // Only apply shield if the enemyType allows it
+        if (!enemyType.canReceiveShield) return;
+
         // random chance to apply a shield to enemy type
         if (Random.value > 0.5f) // adjust probability as needed
         {
-            /*GameObject shield = Instantiate(_enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
+            GameObject shield = Instantiate(_enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
             shield.transform.SetParent(enemy.transform); // set shield as child of the enemy
-            shield.SetActive(true); // activate shield animation*/
+            shield.SetActive(true); // activate shield animation
 
             EnemyShield shieldComponent = enemy.GetComponentInChildren<EnemyShield>(); // get shield class component
             // if shield is active and the random value is greater than 0.5
@@ -200,6 +204,19 @@ public class SpawnManager : MonoBehaviour
                 Debug.Log("Enemy shield activated from spawn manager!");
             }
         }
+    }
+
+    public int GetTotalEnemiesToSpawn()
+    {
+        int count = 0;
+        foreach (EnemyType enemy in enemyTypes)
+        {
+            if (!enemy.isHorizontalEnemy || !_horizontalEnemyActive)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     IEnumerator SpawnPowerUpRoutine()
@@ -276,7 +293,6 @@ public class SpawnManager : MonoBehaviour
     }
     public void SpawnBoss()
     {
-
         if (_bossSpawned) return; // Prevent multiple Boss spawns
 
         _bossSpawned = true; // Set Boss spawn flag

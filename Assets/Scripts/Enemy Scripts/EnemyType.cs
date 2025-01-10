@@ -11,6 +11,7 @@ public class EnemyType : ScriptableObject
     public float speed;
     public int health;
     public GameObject enemyLaserPrefab;
+    public bool canReceiveShield = true; // control shield application
 
     // New fields for unique enemy types
     public bool requiresUniqueSpawnPosition = false;

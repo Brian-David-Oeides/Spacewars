@@ -39,7 +39,9 @@ public class WaveManager : MonoBehaviour
             }
 
             // dynamically calculate enemies to spawn each wave
-            _enemiesToSpawn = Random.Range(3 + (wave * 2), 5 + (wave * 3));
+            //_enemiesToSpawn = Random.Range(3 + (wave * 2), 5 + (wave * 3));
+            _enemiesToSpawn = _spawnManager.GetTotalEnemiesToSpawn();  // Get count from SpawnManager
+            _enemiesDestroyed = 0;
 
             // delegate enemy spawning to SpawnManager
             _spawnManager.StartSpawning(_enemiesToSpawn, wave); // pass enemy count and wave number
@@ -72,13 +74,15 @@ public class WaveManager : MonoBehaviour
             }
             else
             {
-                StartWave(_currentWave); // Start boss wave
+                Debug.Log("Spawning Boss... Final Wave Complete!");
+                _spawnManager.SpawnBoss();  // Corrected Boss Trigger
             }
         }
     }
     IEnumerator DisplayWaveText(int wave)
     {
         _waveText.gameObject.SetActive(true);
+        _waveText.text = "Wave " + wave;
         yield return new WaitForSeconds(2f);
         _waveText.gameObject.SetActive(false);
     }
