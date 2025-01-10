@@ -29,6 +29,12 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
     // time tracker for the cosine function
     private float _timeCounter = 0.0f;
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _enemyLaserPrefab = laserPrefab;
+    }
+
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();

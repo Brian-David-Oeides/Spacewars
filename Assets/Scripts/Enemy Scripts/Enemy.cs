@@ -28,6 +28,12 @@ public class Enemy : MonoBehaviour, IFireLaser
 
     public float _increaseWaveSpeed; // speed that is adjusted based on wave numbe
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _enemyLaserPrefab = laserPrefab;
+    }
+
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();

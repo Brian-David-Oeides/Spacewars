@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+
     [SerializeField]
     private Player _player;
     [SerializeField]
     private Transform playerTransform;
-    [SerializeField]
+
+    /*[SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
     private GameObject _horizontalEnemyPrefab;
@@ -25,7 +27,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
-    private GameObject _smartEnemyPrefab;
+    private GameObject _smartEnemyPrefab;*/
+
     [SerializeField]
     private GameObject _bossPrefab;
 
@@ -34,8 +37,13 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]
     private GameObject[] _powerUps;
+    [SerializeField] 
+    private EnemyType[] enemyTypes;  // Replaces individual prefab fields
+    [SerializeField] 
+    private GameObject _enemyContainer;
 
     private bool _stopSpawning = false;
+
     private bool _stopEnemySpawning = false;  // Controls enemy spawning (set when Boss spawns)
 
     private bool _horizontalEnemyActive = false;
@@ -56,6 +64,8 @@ public class SpawnManager : MonoBehaviour
         {
             playerTransform = _player.transform; // Assign the player's transform
         }
+
+        StartSpawning(10, 1);  // Example call, adjust as needed
     }
 
     public void StartSpawning(int enemyCount, int wave) 
@@ -70,9 +80,10 @@ public class SpawnManager : MonoBehaviour
 
         _enemiesSpawned = 0;
 
-        while (!_stopSpawning && !_stopEnemySpawning)
+        //while (!_stopSpawning && !_stopEnemySpawning)
+        while (!_stopSpawning && _enemiesSpawned < enemyCount)
         {
-            if (_stopSpawning || _stopEnemySpawning) yield break;
+            /*if (_stopSpawning || _stopEnemySpawning) yield break;
 
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
 
@@ -126,6 +137,46 @@ public class SpawnManager : MonoBehaviour
 
             _enemiesSpawned++;
 
+            yield return new WaitForSeconds(3.0f);*/
+            // Select a random enemy type
+            EnemyType selectedEnemyType = enemyTypes[Random.Range(0, enemyTypes.Length)];
+
+            // Skip HorizontalEnemy if already active
+            if (selectedEnemyType.isHorizontalEnemy && _horizontalEnemyActive)
+            {
+                yield return null;
+                continue;
+            }
+
+            Vector3 positionToSpawn = selectedEnemyType.requiresUniqueSpawnPosition
+                ? selectedEnemyType.uniqueSpawnPosition
+                : new Vector3(Random.Range(-8f, 8f), 7, 0);
+
+            Quaternion spawnRotation = selectedEnemyType.requiresRotation
+                ? selectedEnemyType.enemyRotation
+                : Quaternion.identity;
+
+            // Instantiate the enemy with special handling for HorizontalEnemy
+            GameObject spawnedEnemy = Instantiate(selectedEnemyType.enemyPrefab, positionToSpawn, spawnRotation);
+
+            // Apply properties and logic
+            Enemy enemyScript = spawnedEnemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.Initialize(selectedEnemyType.speed, selectedEnemyType.enemyLaserPrefab);
+            }
+
+            // Apply shield if needed
+            ApplyShield(spawnedEnemy);
+
+            // Track horizontal enemy
+            if (selectedEnemyType.isHorizontalEnemy)
+            {
+                _horizontalEnemyActive = true;
+            }
+
+            spawnedEnemy.transform.parent = _enemyContainer.transform;
+            _enemiesSpawned++;
             yield return new WaitForSeconds(3.0f);
         }
     }
@@ -136,11 +187,11 @@ public class SpawnManager : MonoBehaviour
         // random chance to apply a shield to enemy type
         if (Random.value > 0.5f) // adjust probability as needed
         {
-            GameObject shield = Instantiate(_enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
+            /*GameObject shield = Instantiate(_enemyShieldPrefab, enemy.transform.position, Quaternion.identity);
             shield.transform.SetParent(enemy.transform); // set shield as child of the enemy
-            shield.SetActive(true); // activate shield animation
+            shield.SetActive(true); // activate shield animation*/
 
-            EnemyShield shieldComponent = shield.GetComponent<EnemyShield>(); // get shield class component
+            EnemyShield shieldComponent = enemy.GetComponentInChildren<EnemyShield>(); // get shield class component
             // if shield is active and the random value is greater than 0.5
             if (shieldComponent != null)
             {
@@ -218,6 +269,10 @@ public class SpawnManager : MonoBehaviour
     public void OnHorizontalEnemyDestroyed()
     {
         _horizontalEnemyActive = false; 
+    }
+    public void StopSpawning()
+    {
+        _stopSpawning = true;
     }
     public void SpawnBoss()
     {

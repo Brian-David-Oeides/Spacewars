@@ -11,4 +11,11 @@ public class EnemyType : ScriptableObject
     public float speed;
     public int health;
     public GameObject enemyLaserPrefab;
+
+    // New fields for unique enemy types
+    public bool requiresUniqueSpawnPosition = false;
+    public Vector3 uniqueSpawnPosition;
+    public bool requiresRotation = false;
+    public Quaternion enemyRotation;
+    public bool isHorizontalEnemy = false;
 }

@@ -33,6 +33,12 @@ public class Circlingleft : MonoBehaviour
     private Vector3 _circleCenter; // Center of the circle
     private bool _circleCompleted = false;  // Counter for completed circles
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _enemyLaserPrefab = laserPrefab;
+    }
+
     private void Start()
     { 
         _player = GameObject.Find("Player").GetComponent<Player>();

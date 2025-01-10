@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b06158311752ed4aa7f1c3ced0f0160, type: 3}
+  m_Name: ChasingEnemy
+  m_EditorClassIdentifier: 
+  enemyName: Chasing_Enemy
+  enemyPrefab: {fileID: 8859520324098910923, guid: f18f5d9f3a2eede49b5fcfb21ee1ea5e,
+    type: 3}
+  speed: 2
+  health: 0
+  enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+    type: 3}

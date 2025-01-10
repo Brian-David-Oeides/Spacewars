@@ -26,6 +26,12 @@ public class HorizontalEnemy : MonoBehaviour
 
     public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _homingMissilePrefab = laserPrefab;
+    }
+
     private void CalculateMovement()
     {
 
@@ -34,6 +40,8 @@ public class HorizontalEnemy : MonoBehaviour
 
         if (transform.position.x > 13.80f)
         {
+            float randomY = Random.Range(5f, 7f);
+            transform.position = new Vector3(-14.85f, randomY, 0);
             Destroy(this.gameObject);
         }
     }
@@ -87,6 +95,11 @@ public class HorizontalEnemy : MonoBehaviour
         // instantiate homing missile laser
         GameObject homingMissile = Instantiate(_homingMissilePrefab, this.transform.position, Quaternion.identity);
         homingMissile.GetComponent<HomingMissile>(); // use HomingMissile script
+    }
+    private void OnDestroy()
+    {
+        // Notify SpawnManager that this enemy is destroyed
+        FindObjectOfType<SpawnManager>().OnHorizontalEnemyDestroyed();
     }
 
     void OnTriggerEnter2D(Collider2D other)

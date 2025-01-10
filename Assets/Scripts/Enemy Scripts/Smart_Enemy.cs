@@ -24,8 +24,13 @@ public class Smart_Enemy : MonoBehaviour
 
     [SerializeField]
     private float _dodgeDistance = 2f; 
-    private bool _dodgingRight = true; 
+    private bool _dodgingRight = true;
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _smartLaserPrefab = laserPrefab;
+    }
 
     void Start()
     {

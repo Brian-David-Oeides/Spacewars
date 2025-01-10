@@ -26,6 +26,11 @@ public class ChasingEnemy : MonoBehaviour
 
     private float _angularSpeed;
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _enemyLaserPrefab = laserPrefab;
+    }
 
     private void Start()
     {

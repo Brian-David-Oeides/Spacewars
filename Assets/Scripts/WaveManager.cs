@@ -11,7 +11,7 @@ public class WaveManager : MonoBehaviour
     private int _currentWave = 1;
     private int _enemiesToSpawn;
     private int _enemiesDestroyed = 0;
-    private const int _maxWaves = 1; // maximum number of waves (4 waves)
+    private const int _maxWaves = 4; // maximum number of waves (4 waves)
 
     [SerializeField] 
     private Text _waveText; // UI Text for wave display

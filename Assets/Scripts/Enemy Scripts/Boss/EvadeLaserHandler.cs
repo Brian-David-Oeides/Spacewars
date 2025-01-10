@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class EvadeLaserHandler : ILaserHandler
 {
-    private GameObject evadeLaserPrefab;
+    private GameObject _evadeLaserPrefab;
 
     public EvadeLaserHandler(GameObject prefab)
     {
-        evadeLaserPrefab = prefab;
+        _evadeLaserPrefab = prefab;
     }
 
     public void FireLaser(Transform bossTransform, Transform playerTransform)
     {
-        if (evadeLaserPrefab != null && playerTransform != null)
+        if (_evadeLaserPrefab != null && playerTransform != null)
         {
             // Instantiate the parent laser object
-            GameObject laserParent = GameObject.Instantiate(evadeLaserPrefab, bossTransform.position, Quaternion.identity);
+            GameObject laserParent = GameObject.Instantiate(_evadeLaserPrefab, bossTransform.position, Quaternion.identity);
 
             // Access child lasers
             Transform laserLeft = laserParent.transform.Find("Laser_Left");

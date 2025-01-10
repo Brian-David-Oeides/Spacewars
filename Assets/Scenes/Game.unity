@@ -851,23 +851,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 1346512263}
   playerTransform: {fileID: 1346512265}
-  _enemyPrefab: {fileID: 4592132561658774000, guid: 9483c60c3b1925c499736f398df5fa57,
-    type: 3}
-  _horizontalEnemyPrefab: {fileID: 4868108378113933478, guid: 58539c90132c30d43ac0e37d023b6f6f,
-    type: 3}
-  _chasingEnemyPrefab: {fileID: 8859520324098910923, guid: f18f5d9f3a2eede49b5fcfb21ee1ea5e,
-    type: 3}
-  _sideToSideEnemyPrefab: {fileID: 9042246972024942211, guid: 56f0aca6a2fd9744880325496bb0bd54,
-    type: 3}
-  _circlingRightEnemyPrefab: {fileID: 1854854330060046079, guid: 0028ced26fa43bd4a9f9c9a3538f6192,
-    type: 3}
-  _circlingLeftEnemyPrefab: {fileID: 8918744213514024979, guid: 6d1ab5b5fd434ec4c8b9ab0064e3a054,
-    type: 3}
-  _enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
-    type: 3}
-  _enemyContainer: {fileID: 956673684}
-  _smartEnemyPrefab: {fileID: 4779976206885684326, guid: c7a9df436b144f44b9673a5cd5f40c53,
-    type: 3}
   _bossPrefab: {fileID: 111642458626341262, guid: b5e0da43c745eb74190751451c2c74e9,
     type: 3}
   _enemyShieldPrefab: {fileID: 4978690996575354583, guid: da0d18d72b60e7b42b78be1052cf46bd,
@@ -881,6 +864,15 @@ MonoBehaviour:
   - {fileID: 5007885008027240314, guid: 33031660ad8939144b3b5963221ac435, type: 3}
   - {fileID: 9050809167885638972, guid: 97ff0400c5a8f5b41b2f35410f704875, type: 3}
   - {fileID: 2690666930965836587, guid: 955e916bb2c602745b5b5b1c4831f9ac, type: 3}
+  enemyTypes:
+  - {fileID: 11400000, guid: a98ac6bd1b3355247964d3569793848c, type: 2}
+  - {fileID: 11400000, guid: 61cebf6fcb5f11847b947ed0fc69b198, type: 2}
+  - {fileID: 11400000, guid: 83370678f9ee57c4ea64c5fbc2204d32, type: 2}
+  - {fileID: 11400000, guid: 27c906d5eb0f7054abc3aeae6d7ea407, type: 2}
+  - {fileID: 11400000, guid: 5bd9b317726cdf54f8a7310dd0a8a65c, type: 2}
+  - {fileID: 11400000, guid: e07398d861c13af47b161a08c3754391, type: 2}
+  - {fileID: 11400000, guid: 13ca6a76dfd9efc41bcec28fd0c52874, type: 2}
+  _enemyContainer: {fileID: 956673684}
 --- !u!4 &835654910
 Transform:
   m_ObjectHideFlags: 0

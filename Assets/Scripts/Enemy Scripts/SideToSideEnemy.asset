@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b06158311752ed4aa7f1c3ced0f0160, type: 3}
-  m_Name: EnemyType
+  m_Name: SideToSideEnemy
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyPrefab: {fileID: 0}
-  speed: 0
+  enemyName: SideToSide_Enemy
+  enemyPrefab: {fileID: 9042246972024942211, guid: 56f0aca6a2fd9744880325496bb0bd54,
+    type: 3}
+  speed: 2
   health: 0
-  enemyLaserPrefab: {fileID: 0}
+  enemyLaserPrefab: {fileID: 280598224497674654, guid: 9b468fa178c5cb34db1abc1a3b350575,
+    type: 3}

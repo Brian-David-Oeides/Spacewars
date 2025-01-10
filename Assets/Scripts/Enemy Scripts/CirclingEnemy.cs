@@ -31,6 +31,12 @@ public class CirclingEnemy : MonoBehaviour
     private float _circleAngle = 0f; // Angle to calculate circle position
     private float _angularSpeed; // Angular speed for consistent movement
 
+    public void Initialize(float speed, GameObject laserPrefab)
+    {
+        _speed = speed;
+        _enemyLaserPrefab = laserPrefab;
+    }
+
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
