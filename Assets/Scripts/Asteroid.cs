@@ -14,7 +14,7 @@ public class Asteroid : MonoBehaviour
 
     void Start()
     {
-        _waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
+        //_waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
         if (_waveManager == null)
         {
@@ -24,18 +24,16 @@ public class Asteroid : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
+        transform.Rotate(_rotateSpeed * Time.deltaTime * Vector3.forward);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Laser")
+        if (other.CompareTag("Laser"))
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
-
-            _waveManager.StartWave(1); // trigger the first wave after asteroid destruction
-            
+            _waveManager.StartWave(1); // trigger the first wave after asteroid destruction 
             Destroy(this.gameObject, 0.25f);
         }
     }

@@ -26,12 +26,18 @@ public class Enemy : MonoBehaviour, IFireLaser
     private ShakeCamera _cameraShake; 
     private bool _isDestroyed = false;
 
-    public float _increaseWaveSpeed; // speed that is adjusted based on wave numbe
+    public float _increaseWaveSpeed; // speed that is adjusted based on wave number
+    private WaveManager _waveManager;
 
     public void Initialize(float speed, GameObject laserPrefab)
     {
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+    }
+
+    public void SetWaveManagerReference(WaveManager waveManager)
+    {
+        _waveManager = waveManager;
     }
 
     void Start()
@@ -167,7 +173,14 @@ public class Enemy : MonoBehaviour, IFireLaser
         }
 
     }
-    
+    private void OnDestroy()
+    {
+        if (_waveManager != null)
+        {
+            _waveManager.EnemyDestroyed();  // Report destruction
+        }
+    }
+
     private void TriggerEnemyDeath()
     {
         // if aggression exists unsubscribe 

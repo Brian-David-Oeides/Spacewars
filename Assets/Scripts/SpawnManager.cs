@@ -11,30 +11,14 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private Transform playerTransform;
 
-    /*[SerializeField]
-    private GameObject _enemyPrefab;
-    [SerializeField]
-    private GameObject _horizontalEnemyPrefab;
-    [SerializeField]
-    private GameObject _chasingEnemyPrefab;
-    [SerializeField]
-    private GameObject _sideToSideEnemyPrefab;
-    [SerializeField]
-    private GameObject _circlingRightEnemyPrefab;
-    [SerializeField]
-    private GameObject _circlingLeftEnemyPrefab;
-    [SerializeField]
-    private GameObject _enemyLaserPrefab;
-    [SerializeField]
-    private GameObject _enemyContainer;
-    [SerializeField]
-    private GameObject _smartEnemyPrefab;*/
-
     [SerializeField]
     private GameObject _bossPrefab;
 
     [SerializeField] 
-    private GameObject _enemyShieldPrefab; 
+    private GameObject _enemyShieldPrefab;
+
+    [SerializeField]
+    private WaveManager _waveManager; // Added to track enemy destruction
 
     [SerializeField]
     private GameObject[] _powerUps;
@@ -66,7 +50,7 @@ public class SpawnManager : MonoBehaviour
             playerTransform = _player.transform; // Assign the player's transform
         }
 
-        StartSpawning(10, 1);  // Example call, adjust as needed
+        //StartSpawning(10, 1);  // Set enemyCount for each wave
     }
 
     public void StartSpawning(int enemyCount, int wave) 
@@ -79,66 +63,10 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
 
-        _enemiesSpawned = 0;
+        int _enemiesSpawned = 0;
 
-        //while (!_stopSpawning && !_stopEnemySpawning)
-        while (!_stopSpawning && _enemiesSpawned < enemyCount)
+        while (!_stopSpawning && _waveManager.GetEnemiesDestroyed() < enemyCount)
         {
-            /*if (_stopSpawning || _stopEnemySpawning) yield break;
-
-            Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0); 
-
-            int enemyType = Random.Range(0, 7);
-            
-            GameObject spawnedEnemy = null;
-
-            switch (enemyType) 
-            {
-                case 0:
-                    spawnedEnemy = Instantiate(_sideToSideEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    break;
-                case 1:
-                    spawnedEnemy = Instantiate(_chasingEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    break;
-                case 2:
-                    spawnedEnemy = Instantiate(_circlingRightEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    break;
-                case 3:
-                    spawnedEnemy = Instantiate(_circlingLeftEnemyPrefab, positionToSpawn, Quaternion.identity);
-                    break;
-                case 4: 
-                    spawnedEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
-                    break;
-                case 5:
-                    if (!_horizontalEnemyActive)
-                    {
-                        Vector3 horizontalEnemySpawnPos = new Vector3(-14.85f, Random.Range(5f, 7f), 0);
-                        GameObject horizontalEnemy = Instantiate(_horizontalEnemyPrefab, horizontalEnemySpawnPos, Quaternion.identity);
-                        horizontalEnemy.transform.parent = _enemyContainer.transform;
-                        _horizontalEnemyActive = true; 
-                    }
-                    break;
-                case 6: 
-                    Vector3 smartEnemySpawnPos = new Vector3(Random.Range(-9f, 9f), -6.85f, 0); 
-                    Quaternion smartEnemyRotation = Quaternion.Euler(0, 0, 180); 
-                    GameObject smartEnemy = Instantiate(_smartEnemyPrefab, smartEnemySpawnPos, smartEnemyRotation);
-                    smartEnemy.transform.parent = _enemyContainer.transform;
-                    break;
-                default:
-                    Debug.LogError("Enemy");
-                    break;
-            }
-
-            // apply shield if enemy was spawned
-            if (spawnedEnemy != null)
-            {
-                ApplyShield(spawnedEnemy);
-                spawnedEnemy.transform.parent = _enemyContainer.transform; // organize in a container
-            }
-
-            _enemiesSpawned++;
-
-            yield return new WaitForSeconds(3.0f);*/
             // Select a random enemy type
             EnemyType selectedEnemyType = enemyTypes[Random.Range(0, enemyTypes.Length)];
 
@@ -165,6 +93,7 @@ public class SpawnManager : MonoBehaviour
             if (enemyScript != null)
             {
                 enemyScript.Initialize(selectedEnemyType.speed, selectedEnemyType.enemyLaserPrefab);
+                enemyScript.SetWaveManagerReference(FindObjectOfType<WaveManager>());
             }
 
             // Apply shield if needed
@@ -180,6 +109,8 @@ public class SpawnManager : MonoBehaviour
             _enemiesSpawned++;
             yield return new WaitForSeconds(3.0f);
         }
+
+        Debug.Log("Finished spawning all enemies for this wave.");
     }
 
     // ApplyShield method
