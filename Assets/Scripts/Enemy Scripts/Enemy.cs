@@ -28,11 +28,17 @@ public class Enemy : MonoBehaviour, IFireLaser
 
     public float _increaseWaveSpeed; // speed that is adjusted based on wave number
     private WaveManager _waveManager;
+    private EnemyType _enemyType;
 
     public void Initialize(float speed, GameObject laserPrefab)
     {
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+    }
+
+    public void SetEnemyType(EnemyType enemyType)
+    {
+        _enemyType = enemyType;
     }
 
     public void SetWaveManagerReference(WaveManager waveManager)
@@ -100,6 +106,7 @@ public class Enemy : MonoBehaviour, IFireLaser
         {
             float randomX = Random.Range(-8f, 8f);
             transform.position = new Vector3(randomX, 7, 0);
+            ReturnToPool();
         }
     }
 
@@ -132,6 +139,13 @@ public class Enemy : MonoBehaviour, IFireLaser
         Debug.Log($"{gameObject.name} is now ramming!");
     }
 
+    private void ReturnToPool()
+    {
+        _isDestroyed = true;
+        EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+    }
+
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -148,6 +162,7 @@ public class Enemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
+            ReturnToPool();
         }
 
         if (other.tag == "Laser")
@@ -170,6 +185,7 @@ public class Enemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
+            ReturnToPool();
         }
 
     }

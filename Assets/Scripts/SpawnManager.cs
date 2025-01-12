@@ -10,15 +10,13 @@ public class SpawnManager : MonoBehaviour
     private Player _player;
     [SerializeField]
     private Transform playerTransform;
-
     [SerializeField]
     private GameObject _bossPrefab;
-
     [SerializeField] 
     private GameObject _enemyShieldPrefab;
 
-    [SerializeField]
-    private WaveManager _waveManager; // Added to track enemy destruction
+    [SerializeField] 
+    private WaveManager _waveManager;
 
     [SerializeField]
     private GameObject[] _powerUps;
@@ -50,7 +48,12 @@ public class SpawnManager : MonoBehaviour
             playerTransform = _player.transform; // Assign the player's transform
         }
 
-        //StartSpawning(10, 1);  // Set enemyCount for each wave
+        _waveManager = FindObjectOfType<WaveManager>();
+
+        if (_waveManager == null)
+        {
+            Debug.LogError("WaveManager not found in the scene!");
+        }
     }
 
     public void StartSpawning(int enemyCount, int wave) 
