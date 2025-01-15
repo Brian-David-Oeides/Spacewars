@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
 public class Smart_Enemy : MonoBehaviour
@@ -26,10 +27,20 @@ public class Smart_Enemy : MonoBehaviour
     private float _dodgeDistance = 2f; 
     private bool _dodgingRight = true;
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType; 
         _speed = speed;
         _smartLaserPrefab = laserPrefab;
+
+        _isDestroyed = false;
+        _isDodging = false;
+        _canFire = Time.time + Random.Range(0.2f, 3f);
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     void Start()
@@ -68,7 +79,7 @@ public class Smart_Enemy : MonoBehaviour
 
         if (transform.position.y >= 9f)
         {
-            Destroy(gameObject);
+            ReturnToPool();
         }
     }
 
@@ -138,6 +149,20 @@ public class Smart_Enemy : MonoBehaviour
         _isDodging = false;
     }
 
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -193,6 +218,6 @@ public class Smart_Enemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 1.8f);
+        Invoke(nameof(ReturnToPool), 1.8f);
     }
 }

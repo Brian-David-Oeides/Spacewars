@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -14,7 +15,7 @@ public class Enemy : MonoBehaviour, IFireLaser
 
     private EnemyShield _shield;
 
-    private Aggression _aggression; // reference to Aggression behavior
+    private Aggression _aggression; 
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -26,14 +27,21 @@ public class Enemy : MonoBehaviour, IFireLaser
     private ShakeCamera _cameraShake; 
     private bool _isDestroyed = false;
 
-    public float _increaseWaveSpeed; // speed that is adjusted based on wave number
+    public float _increaseWaveSpeed; 
     private WaveManager _waveManager;
+    
     private EnemyType _enemyType;
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType; //
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+
+        _isDestroyed = false;
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     public void SetEnemyType(EnemyType enemyType)
@@ -142,7 +150,16 @@ public class Enemy : MonoBehaviour, IFireLaser
     private void ReturnToPool()
     {
         _isDestroyed = true;
-        EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.Log($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject, 2.8f);
+        }
     }
 
 
@@ -162,7 +179,6 @@ public class Enemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
-            ReturnToPool();
         }
 
         if (other.tag == "Laser")
@@ -185,7 +201,6 @@ public class Enemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
-            ReturnToPool();
         }
 
     }
@@ -228,6 +243,6 @@ public class Enemy : MonoBehaviour, IFireLaser
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Invoke(nameof(ReturnToPool), 2.8f);
     }
 }

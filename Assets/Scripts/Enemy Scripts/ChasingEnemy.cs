@@ -26,10 +26,20 @@ public class ChasingEnemy : MonoBehaviour
 
     private float _angularSpeed;
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType;
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+
+        _isDestroyed = false;
+        _isFallingBack = false;
+        _canFire = Time.time + Random.Range(0.2f, 3f);
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     private void Start()
@@ -52,10 +62,7 @@ public class ChasingEnemy : MonoBehaviour
         {
             Debug.LogError("The player is NULL.");
         }
-
-        _angularSpeed = _speed * 2f;
-
-       
+        _angularSpeed = _speed * 2f;     
     }
 
     private void Update()
@@ -73,8 +80,6 @@ public class ChasingEnemy : MonoBehaviour
             FireLasers();
         }
     }
-
-    
 
     private void FireLasers()
     {
@@ -130,8 +135,22 @@ public class ChasingEnemy : MonoBehaviour
                 // rotate towards the negative y-axis
                 this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0)); // face downwards
 
-                Destroy(this.gameObject);  // destroy chasingenemy
+                ReturnToPool();  // destroy chasingenemy
             }
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject);
         }
     }
 
@@ -204,6 +223,6 @@ public class ChasingEnemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Invoke(nameof(ReturnToPool), 2.8f);
     }
 }

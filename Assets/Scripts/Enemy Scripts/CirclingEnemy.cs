@@ -31,10 +31,21 @@ public class CirclingEnemy : MonoBehaviour
     private float _circleAngle = 0f; // Angle to calculate circle position
     private float _angularSpeed; // Angular speed for consistent movement
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType;
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+
+        _isDestroyed = false;
+        _isCircling = false;
+        _circleCompleted = false;
+        _circleAngle = 0f;
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     void Start()
@@ -133,7 +144,7 @@ public class CirclingEnemy : MonoBehaviour
 
             if (transform.position.y < -5f)
             {
-                Destroy(this.gameObject);
+                ReturnToPool();
             }
         }
     }
@@ -158,6 +169,19 @@ public class CirclingEnemy : MonoBehaviour
         Debug.Log($"{gameObject.name} is now ramming!");
     }
 
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject);
+        }
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -231,7 +255,7 @@ public class CirclingEnemy : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Invoke(nameof(ReturnToPool), 2.8f); // Delayed return to pool
     }
 }
 

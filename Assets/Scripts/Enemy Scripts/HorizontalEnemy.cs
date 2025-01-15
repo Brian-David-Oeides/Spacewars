@@ -26,10 +26,21 @@ public class HorizontalEnemy : MonoBehaviour
 
     public float _increaseWaveSpeed;     // speed that is adjusted based on wave number
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    private SpawnManager _spawnManager;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType;
         _speed = speed;
         _homingMissilePrefab = laserPrefab;
+
+        _hitPoints = 3;
+        _isDestroyed = false;
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     private void CalculateMovement()
@@ -42,7 +53,7 @@ public class HorizontalEnemy : MonoBehaviour
         {
             float randomY = Random.Range(5f, 7f);
             transform.position = new Vector3(-14.85f, randomY, 0);
-            Destroy(this.gameObject);
+            ReturnToPool();
         }
     }
 
@@ -67,7 +78,14 @@ public class HorizontalEnemy : MonoBehaviour
         {
             Debug.LogError("The player is NULL.");
         }
-       
+
+        _spawnManager = FindObjectOfType<SpawnManager>();
+
+        if (_spawnManager == null)
+        {
+            Debug.LogError("SpawnManager not found in the scene!");
+        }
+
     }
 
     void Update()
@@ -99,7 +117,27 @@ public class HorizontalEnemy : MonoBehaviour
     private void OnDestroy()
     {
         // Notify SpawnManager that this enemy is destroyed
-        FindObjectOfType<SpawnManager>().OnHorizontalEnemyDestroyed();
+        if (_spawnManager != null)
+        {
+            _spawnManager.OnHorizontalEnemyDestroyed();
+        }
+        else
+        {
+            Debug.LogError("SpawnManager reference is missing in HorizontalEnemy.");
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -188,7 +226,7 @@ public class HorizontalEnemy : MonoBehaviour
             Debug.LogError("SpawnManager NULL! Unable to notify of HorizontalEnemy destruction.");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Invoke(nameof(ReturnToPool), 2.8f);
     }
 
 }

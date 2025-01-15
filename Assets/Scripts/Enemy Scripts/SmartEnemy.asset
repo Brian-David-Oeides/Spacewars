@@ -21,7 +21,7 @@ MonoBehaviour:
     type: 3}
   canReceiveShield: 0
   requiresUniqueSpawnPosition: 1
-  uniqueSpawnPosition: {x: -9.9, y: -6.85, z: 0}
+  uniqueSpawnPosition: {x: 0, y: -6.85, z: 0}
   requiresRotation: 1
   enemyRotation: {x: 0, y: 0, z: 1, w: 0}
   isHorizontalEnemy: 0

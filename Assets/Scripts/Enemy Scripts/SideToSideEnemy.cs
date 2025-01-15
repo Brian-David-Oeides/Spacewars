@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
 public class SideToSideEnemy : MonoBehaviour, IFireLaser
 {
-
     [SerializeField]
     private float _speed = 2f;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private EnemyShield _shield; // reference EnemyShield class
+    private EnemyShield _shield; 
 
     [SerializeField]
     private GameObject _enemyLaserPrefab;
@@ -22,17 +22,22 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
     private ShakeCamera _cameraShake;
     private bool _isDestroyed = false;
 
-    // lateral movement boundaries
     private float _amplitude = 4.0f;
-    // lateral movement speed (affects how fast the enemy moves side to side)
     private float _frequency = 6.0f;
-    // time tracker for the cosine function
     private float _timeCounter = 0.0f;
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType;
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+
+        // Reset enemy for reuse in the pool
+        _isDestroyed = false;
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     private void Start()
@@ -63,18 +68,11 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
 
     private void CalculateMovement()
     {
-        // increment based on real-time * frequency
         _timeCounter += Time.deltaTime * _frequency;
-        // calculate X position based on cosine function 
         float x = Mathf.Cos(_timeCounter) * _amplitude;
-
-        // calculate downward movement 
         float downwardSpeed = _speed; // slow down _speed = 1
         float newY = this.transform.position.y - downwardSpeed * Time.deltaTime;
-
-        // set new position for enemy (oscillating X movement + downward Y movement)
         this.transform.position = new Vector3(x, newY, this.transform.position.z);
-
     }
 
     void Update()
@@ -121,6 +119,7 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
+            ReturnToPool();
         }
 
         if (other.tag == "Laser")
@@ -143,9 +142,24 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
             }
 
             TriggerEnemyDeath();
+            ReturnToPool();
         }
 
     }
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"No EnemyType assigned for {gameObject.name}. Destroying instead.");
+            Destroy(gameObject, 2.8f);
+        }
+    }
+
     // custom method for enemy death
     private void TriggerEnemyDeath()
     {
@@ -164,7 +178,6 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
             collider.enabled = false;
         }
 
-        // inform WaveManager enemy was destroyed
         WaveManager waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
 
         if (waveManager != null)
@@ -175,8 +188,6 @@ public class SideToSideEnemy : MonoBehaviour, IFireLaser
         {
             Debug.LogError("WaveManager is NULL or not found!");
         }
-
-        Destroy(this.gameObject, 2.8f);
     }
 }
 

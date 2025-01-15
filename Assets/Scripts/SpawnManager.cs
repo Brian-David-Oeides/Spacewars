@@ -33,7 +33,7 @@ public class SpawnManager : MonoBehaviour
 
     private bool _bossSpawned = false; // track Boss spawning
 
-    private int _enemiesSpawned = 0;
+    //private int _enemiesSpawned = 0;
 
     void Start()
     {
@@ -56,12 +56,18 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the enemy and power-up spawning routines.
+    /// </summary>
     public void StartSpawning(int enemyCount, int wave) 
     {
         StartCoroutine(SpawnEnemyRoutine(enemyCount, wave));
         StartCoroutine(SpawnPowerUpRoutine());
     }
 
+    /// <summary>
+    /// Spawns enemies using object pooling instead of direct instantiation.
+    /// </summary>
     IEnumerator SpawnEnemyRoutine(int enemyCount, int wave)
     {
         yield return new WaitForSeconds(3.0f);
@@ -88,14 +94,15 @@ public class SpawnManager : MonoBehaviour
                 ? selectedEnemyType.enemyRotation
                 : Quaternion.identity;
 
-            // Instantiate the enemy with special handling for HorizontalEnemy
-            GameObject spawnedEnemy = Instantiate(selectedEnemyType.enemyPrefab, positionToSpawn, spawnRotation);
+            // Using Object Pool instead of Instantiating
+            GameObject spawnedEnemy = EnemyPoolManager.Instance.GetEnemy(selectedEnemyType, positionToSpawn, spawnRotation);
+            spawnedEnemy.transform.parent = _enemyContainer.transform;
 
             // Apply properties and logic
             Enemy enemyScript = spawnedEnemy.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                enemyScript.Initialize(selectedEnemyType.speed, selectedEnemyType.enemyLaserPrefab);
+                enemyScript.Initialize(selectedEnemyType.speed, selectedEnemyType.enemyLaserPrefab, selectedEnemyType);
                 enemyScript.SetWaveManagerReference(FindObjectOfType<WaveManager>());
             }
 
@@ -108,7 +115,6 @@ public class SpawnManager : MonoBehaviour
                 _horizontalEnemyActive = true;
             }
 
-            spawnedEnemy.transform.parent = _enemyContainer.transform;
             _enemiesSpawned++;
             yield return new WaitForSeconds(3.0f);
         }
@@ -116,7 +122,9 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("Finished spawning all enemies for this wave.");
     }
 
-    // ApplyShield method
+    /// <summary>
+    /// Applies a shield to an enemy if the ScriptableObject specifies it.
+    /// </summary>
     private void ApplyShield(GameObject enemy, EnemyType enemyType)
     {
         // Only apply shield if the enemyType allows it
@@ -153,6 +161,17 @@ public class SpawnManager : MonoBehaviour
         return count;
     }
 
+    /// <summary>
+    /// Returns an enemy to the object pool instead of destroying it.
+    /// </summary>
+    public void ReturnEnemyToPool(EnemyType enemyType, GameObject enemy)
+    {
+        EnemyPoolManager.Instance.ReturnEnemy(enemyType, enemy);
+    }
+
+    /// <summary>
+    /// Power-up spawning routine using regular instantiation logic.
+    /// </summary>
     IEnumerator SpawnPowerUpRoutine()
     {
         yield return new WaitForSeconds(3.0f);
@@ -225,6 +244,10 @@ public class SpawnManager : MonoBehaviour
     {
         _stopSpawning = true;
     }
+
+    /// <summary>
+    /// Spawns the boss without object pooling, as it is a unique event.
+    /// </summary>
     public void SpawnBoss()
     {
         if (_bossSpawned) return; // Prevent multiple Boss spawns

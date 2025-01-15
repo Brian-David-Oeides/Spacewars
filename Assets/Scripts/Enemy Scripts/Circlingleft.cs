@@ -33,10 +33,21 @@ public class Circlingleft : MonoBehaviour
     private Vector3 _circleCenter; // Center of the circle
     private bool _circleCompleted = false;  // Counter for completed circles
 
-    public void Initialize(float speed, GameObject laserPrefab)
+    private EnemyType _enemyType;
+
+    public void Initialize(float speed, GameObject laserPrefab, EnemyType enemyType)
     {
+        _enemyType = enemyType;
         _speed = speed;
         _enemyLaserPrefab = laserPrefab;
+
+        _isDestroyed = false;
+        _isCircling = false;
+        _circleCompleted = false;
+        _circleAngle = 0f;
+
+        if (GetComponent<Collider2D>() != null)
+            GetComponent<Collider2D>().enabled = true;
     }
 
     private void Start()
@@ -46,17 +57,15 @@ public class Circlingleft : MonoBehaviour
         _cameraShake = Camera.main.GetComponent<ShakeCamera>();
         _canFire = Time.time + Random.Range(0.2f, 3f); 
         
-        // get/initialize Aggression behavior
+
         _aggression = GetComponent<Aggression>();
-        // check if aggression behavior exists then
+
         if (_aggression != null)
         {
-            // subscribe to the delegate Ramming
             _aggression.Ramming += Ramming;
-            // set the ramming range
             _aggression.SetRammingRange(3f);
         }
-        else // or else log a warning the aggression component is missing
+        else
         {
             Debug.LogWarning($"Aggression component is missing on {gameObject.name}");
         }
@@ -153,7 +162,7 @@ public class Circlingleft : MonoBehaviour
             // If the enemy moves out of bounds (y < -5), destroy the object
             if (transform.position.y < -5f)
             {
-                Destroy(this.gameObject);
+                ReturnToPool();
             }
         }
     }
@@ -177,6 +186,20 @@ public class Circlingleft : MonoBehaviour
     {
         // Verify subscription
         Debug.Log($"{gameObject.name} is now ramming!");
+    }
+
+    private void ReturnToPool()
+    {
+        if (_enemyType != null)
+        {
+            gameObject.SetActive(false);
+            EnemyPoolManager.Instance.ReturnEnemy(_enemyType, this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"{gameObject.name} missing EnemyType. Destroying.");
+            Destroy(gameObject);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -255,6 +278,6 @@ public class Circlingleft : MonoBehaviour
             Debug.LogError("WaveManager is NULL or not found!");
         }
 
-        Destroy(this.gameObject, 2.8f);
+        Invoke(nameof(ReturnToPool), 2.8f);
     }
 }

@@ -450,7 +450,7 @@ RectTransform:
   - {fileID: 1076895044}
   - {fileID: 1176440200}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -486,7 +486,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &179868418
 MonoBehaviour:
@@ -602,6 +602,57 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &544736091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 544736093}
+  - component: {fileID: 544736092}
+  m_Layer: 0
+  m_Name: EnemyPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &544736092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544736091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055df467f8880e04bad3e78667a2f507, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyTypes:
+  - {fileID: 11400000, guid: a98ac6bd1b3355247964d3569793848c, type: 2}
+  - {fileID: 11400000, guid: 61cebf6fcb5f11847b947ed0fc69b198, type: 2}
+  - {fileID: 11400000, guid: 83370678f9ee57c4ea64c5fbc2204d32, type: 2}
+  - {fileID: 11400000, guid: 27c906d5eb0f7054abc3aeae6d7ea407, type: 2}
+  - {fileID: 11400000, guid: 5bd9b317726cdf54f8a7310dd0a8a65c, type: 2}
+  - {fileID: 11400000, guid: e07398d861c13af47b161a08c3754391, type: 2}
+  - {fileID: 11400000, guid: 13ca6a76dfd9efc41bcec28fd0c52874, type: 2}
+--- !u!4 &544736093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544736091}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.056758, y: 1.6049619, z: -0.64852345}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &611199035
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +732,7 @@ Transform:
   m_LocalScale: {x: 1.0675291, y: 1.2429613, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &650424666
 GameObject:
@@ -712,7 +763,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &650424668
 MonoBehaviour:
@@ -727,6 +778,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spawnManager: {fileID: 835654909}
+  _uiManager: {fileID: 178639678}
   _waveText: {fileID: 1176440198}
 --- !u!1 &705507993
 GameObject:
@@ -855,6 +907,7 @@ MonoBehaviour:
     type: 3}
   _enemyShieldPrefab: {fileID: 4978690996575354583, guid: da0d18d72b60e7b42b78be1052cf46bd,
     type: 3}
+  _waveManager: {fileID: 0}
   _powerUps:
   - {fileID: 1843770189775917078, guid: 717f97611055731458eaa87186dd6741, type: 3}
   - {fileID: 3483291870811100692, guid: 18d8a29af920edd489d3e1e529d0a811, type: 3}
@@ -1014,7 +1067,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &945267912
 GameObject:
@@ -1080,7 +1133,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956673684
 GameObject:
@@ -1959,7 +2012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d9c1fb1f5ef393478a65677d4e71b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3.5
+  _speed: 6
   _speedMultiplier: 2
   _thrustDuration: 5
   _thrustCooldown: 10
@@ -2047,7 +2100,7 @@ Transform:
   - {fileID: 1810626387}
   - {fileID: 490120631}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1346512266
 Rigidbody2D:
@@ -2425,7 +2478,7 @@ Transform:
   m_Children:
   - {fileID: 66184067}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1810626385
 GameObject:

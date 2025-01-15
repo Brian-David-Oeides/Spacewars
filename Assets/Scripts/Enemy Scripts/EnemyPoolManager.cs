@@ -47,14 +47,21 @@ public class EnemyPoolManager : MonoBehaviour
             Enemy enemyScript = enemy.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                enemyScript.Initialize(enemyType.speed, enemyType.enemyLaserPrefab);
+                enemyScript.Initialize(enemyType.speed, enemyType.enemyLaserPrefab, enemyType);
             }
+            Debug.Log($"[EnemyPoolManager] Reusing enemy of type: {enemyType.enemyName} from the pool.");
             return enemy;
         }
         else
         {
             // Expand pool if empty
             GameObject newEnemy = Instantiate(enemyType.enemyPrefab, position, rotation);
+            Enemy enemyScript = newEnemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.Initialize(enemyType.speed, enemyType.enemyLaserPrefab, enemyType);
+            }
+            Debug.LogWarning($"[EnemyPoolManager] Pool for {enemyType.enemyName} empty. Instantiating new enemy.");
             return newEnemy;
         }
     }
@@ -67,5 +74,8 @@ public class EnemyPoolManager : MonoBehaviour
             enemyPools[enemyType] = new Queue<GameObject>();
         }
         enemyPools[enemyType].Enqueue(enemy);
+
+        // Confirming enemy returned to the pool
+        Debug.Log($"[EnemyPoolManager] Returned enemy '{enemyType.enemyName}' to the pool. Total in pool: {enemyPools[enemyType].Count}");
     }
 }
